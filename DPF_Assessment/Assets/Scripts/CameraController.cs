@@ -6,19 +6,23 @@ using UnityEngine;
 public class CameraController : MonoBehaviour
 {
     [Header("Camera Movement")]
+    public bool allowMovement = true;
     [SerializeField, Range(1f, 49f)] float boarderScreenPercentage = 5f;
     [SerializeField] float scrollSpeed = 1;
+    [SerializeField, Range(0f, 1f)] float timeBeforeScrollStart;
 
     [Header("Camera Setup")]
     [SerializeField, Range(1f, 90f)] float cameraAngle = 75f;
     [SerializeField] float distanceToGround = 10;
     [SerializeField, Range(10f, 100f)] float maxDistanceToGround = 100f;
     [SerializeField, Range(1f, 20f)] float minDistanceToGround = 5f;
-    [SerializeField, Range(0f, 1f)] float timeBeforeScrollStart;
 
     [Header("UI")]
-    [SerializeField] RectTransform topUIsection;
-    [SerializeField] RectTransform bottomUIsection;
+    [SerializeField] RectTransform topHUDSection;
+    [SerializeField] RectTransform bottomHUDSection;
+
+    [Header("Terrain")]
+    [SerializeField] bool centerZero = false;
 
     private Camera _camera;
     private float currentDistanceToGround;
@@ -28,12 +32,6 @@ public class CameraController : MonoBehaviour
     float timeInScrollSpace = 0;
     float topScreenOffSet = 0;
     float bottomScreenOffSet = 0;
-
-
-    public bool allowMovement = true;
-
-    [Header("Terrain")]
-    [SerializeField] bool centerZero = false;
 
     void Awake()
     {
@@ -48,8 +46,8 @@ public class CameraController : MonoBehaviour
         ResetCameraPosition();
 
         if (Display.displays.Length > 1) Display.displays[0].Activate();
-        if (topUIsection != null) topScreenOffSet = topUIsection.rect.height;
-        if (bottomUIsection != null) bottomScreenOffSet = bottomUIsection.rect.height;
+        if (topHUDSection != null) topScreenOffSet = topHUDSection.rect.height / Screen.height;
+        if (bottomHUDSection != null) bottomScreenOffSet = bottomHUDSection.rect.height / Screen.height;
 
         if (_camera == null) Debug.LogError("Camera not found");
     }
@@ -98,26 +96,6 @@ public class CameraController : MonoBehaviour
 
         float mouseX = Input.mousePosition.x / Screen.width;
         float mouseY = Input.mousePosition.y / Screen.height;
-        float topOffSet;
-        float bottomOffSet;
-
-        if (topUIsection != null)
-        {
-            topOffSet = topScreenOffSet / Screen.height;
-        }
-        else
-        {
-            topOffSet = 0;
-        }
-
-        if (bottomUIsection != null)
-        {
-            bottomOffSet = bottomScreenOffSet / Screen.height;
-        }
-        else
-        {
-            bottomOffSet = 0;
-        }
 
         float screenBoarder = boarderScreenPercentage / 100;
         Vector3 newPosition = new Vector3();
@@ -153,9 +131,9 @@ public class CameraController : MonoBehaviour
             notInLeftOrRight = true;
         }
 
-        if (mouseY < screenBoarder + bottomOffSet && mouseY > bottomOffSet)
+        if (mouseY < screenBoarder + bottomScreenOffSet && mouseY > bottomScreenOffSet)
         {
-            float step = (((screenBoarder + bottomOffSet) - (mouseY)) * 100) * scrollSpeed * Time.deltaTime;
+            float step = (((screenBoarder + bottomScreenOffSet) - (mouseY)) * 100) * scrollSpeed * Time.deltaTime;
             if (newPosition == new Vector3())
             {
                 newPosition = transform.position;
@@ -163,9 +141,9 @@ public class CameraController : MonoBehaviour
             newPosition.z -= step;
             timeInScrollSpace += Time.deltaTime;
         }
-        else if (mouseY > 1 - (screenBoarder + topOffSet) && mouseY < 1 - topOffSet)
+        else if (mouseY > 1 - (screenBoarder + topScreenOffSet) && mouseY < 1 - topScreenOffSet)
         {
-            float step = ((mouseY - (1 - (screenBoarder + topOffSet))) * 100) * scrollSpeed * Time.deltaTime;
+            float step = ((mouseY - (1 - (screenBoarder + topScreenOffSet))) * 100) * scrollSpeed * Time.deltaTime;
             if (newPosition == new Vector3())
             {
                 newPosition = transform.position;
