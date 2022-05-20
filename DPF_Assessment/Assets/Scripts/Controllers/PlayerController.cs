@@ -40,10 +40,16 @@ public class PlayerController : MonoBehaviour
         if (_currentSelection.Count > 0)
         {
             RaycastHit _hit = UnderMouse();
+            CollectableResource _collectableResource = _hit.transform.GetComponent<CollectableResource>();
             foreach (Selectable _selectable in _currentSelection)
             {
                 Unit _unit = _selectable.GetComponent<Unit>();
-                if (_unit != null) _unit._movement.MoveTo(_hit.point);
+                if (_unit != null)
+                {
+                    if (_collectableResource != null) _unit.SetTarget(_collectableResource);
+                    else _unit.MoveTo(_hit.point);
+                }
+                
             }
         }
     }

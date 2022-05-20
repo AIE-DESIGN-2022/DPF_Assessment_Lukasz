@@ -6,4 +6,5 @@ using UnityEngine;
 public class UnitConfig : ScriptableObject
 {
     [SerializeField] private Unit unitPrefab;
+    [SerializeField] private Unit unitPrefabAlt;
 }
