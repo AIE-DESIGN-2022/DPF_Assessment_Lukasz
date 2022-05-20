@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -15,16 +16,34 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     private void Update()
     {
-        if (Input.GetMouseButtonDown(0))
-        {
-            ClearSelection();
+        if (Input.GetMouseButtonDown(0)) HandleLeftClick();
 
+        if (Input.GetMouseButtonDown(1)) HandleRightClick();
+
+    }
+
+    private void HandleLeftClick()
+    {
+        ClearSelection();
+
+        RaycastHit _hit = UnderMouse();
+        Selectable _selectable = _hit.transform.GetComponent<Selectable>();
+        if (_selectable != null)
+        {
+            _selectable.Selected(true);
+            _currentSelection.Add(_selectable);
+        }
+    }
+
+    private void HandleRightClick()
+    {
+        if (_currentSelection.Count > 0)
+        {
             RaycastHit _hit = UnderMouse();
-            Selectable _selectable = _hit.transform.GetComponent<Selectable>();
-            if (_selectable != null)
+            foreach (Selectable _selectable in _currentSelection)
             {
-                _selectable.Selected(true);
-                _currentSelection.Add(_selectable);
+                Unit _unit = _selectable.GetComponent<Unit>();
+                if (_unit != null) _unit._movement.MoveTo(_hit.point);
             }
         }
     }

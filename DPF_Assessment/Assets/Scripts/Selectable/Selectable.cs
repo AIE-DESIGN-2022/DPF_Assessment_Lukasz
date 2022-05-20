@@ -6,7 +6,7 @@ public class Selectable : MonoBehaviour
 {
     SpriteRenderer selectionIndicator;
 
-    private void Awake()
+    protected void Awake()
     {
         selectionIndicator = GetComponentInChildren<SpriteRenderer>();
     }
