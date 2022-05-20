@@ -4,22 +4,27 @@ using UnityEngine;
 
 public class Selectable : MonoBehaviour
 {
+    SpriteRenderer selectionIndicator;
 
+    private void Awake()
+    {
+        selectionIndicator = GetComponentInChildren<SpriteRenderer>();
+    }
 
     // Start is called before the first frame update
-    void Start()
+    protected void Start()
     {
-        
+        Selected(false);
     }
 
     // Update is called once per frame
-    void Update()
+    protected void Update()
     {
         
     }
 
-    public void Selected()
+    public void Selected(bool isSelected)
     {
-
+        selectionIndicator.enabled = isSelected;
     }
 }

@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CameraController : MonoBehaviour
+public class GameCameraController : MonoBehaviour
 {
     [Header("Camera Movement")]
     public bool allowMovement = true;
@@ -29,9 +29,9 @@ public class CameraController : MonoBehaviour
     private float currentCameraAngle;
     private float terrainX;
     private float terrainZ;
-    float timeInScrollSpace = 0;
-    float topScreenOffSet = 0;
-    float bottomScreenOffSet = 0;
+    private float timeInScrollSpace = 0;
+    private float topScreenOffSet = 0;
+    private float bottomScreenOffSet = 0;
 
     void Awake()
     {

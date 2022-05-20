@@ -5,5 +5,5 @@ using UnityEngine;
 [CreateAssetMenu(menuName ="RTS/Unit")]
 public class UnitConfig : ScriptableObject
 {
-    [SerializeField] Unit unitPrefab;
+    [SerializeField] private Unit unitPrefab;
 }
