@@ -44,16 +44,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4081dcbf5d4db3c489976fd485924d0d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  boarderScreenPercentage: 5
-  scrollSpeed: 1
+  allowMovement: 1
+  boarderScreenPercentage: 10
+  scrollSpeed: 5
+  timeBeforeScrollStart: 0.2
   cameraAngle: 75
   distanceToGround: 20
   maxDistanceToGround: 100
   minDistanceToGround: 5
-  timeBeforeScrollStart: 0
-  topUIsection: {fileID: 0}
-  bottomUIsection: {fileID: 0}
-  allowMovement: 1
+  topHUDSection: {fileID: 0}
+  bottomHUDSection: {fileID: 0}
   centerZero: 0
 --- !u!1 &1315889075613357444
 GameObject:

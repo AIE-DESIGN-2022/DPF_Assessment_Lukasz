@@ -15,6 +15,8 @@ public class Selectable : MonoBehaviour
     protected void Start()
     {
         Selected(false);
+
+        if (selectionIndicator == null) Debug.Log("Selection Indicator Missing");
     }
 
     // Update is called once per frame
@@ -25,6 +27,10 @@ public class Selectable : MonoBehaviour
 
     public void Selected(bool isSelected)
     {
-        selectionIndicator.enabled = isSelected;
+        if (selectionIndicator != null)
+        {
+            selectionIndicator.enabled = isSelected;
+        }
+        
     }
 }
