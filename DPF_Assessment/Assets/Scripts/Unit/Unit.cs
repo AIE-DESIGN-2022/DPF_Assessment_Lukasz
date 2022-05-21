@@ -41,6 +41,7 @@ public class Unit : Selectable
     {
         base.Start();
         if (_navMeshAgent != null) _navMeshAgent.updateRotation = false;
+        GetComponent<Rigidbody>().interpolation = RigidbodyInterpolation.Extrapolate;
     }
 
     private void Update()
