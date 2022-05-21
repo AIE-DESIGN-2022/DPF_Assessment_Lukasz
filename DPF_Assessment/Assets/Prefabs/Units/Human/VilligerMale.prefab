@@ -131,6 +131,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9edc562fbbac8f54b87dc19dd68b9a67, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _owningPlayerNumber: 0
+  _leftHand: {fileID: 1284416943382685881}
+  _rightHand: {fileID: 1282531379147671419}
+  _unitType: 0
 --- !u!136 &1496767705
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -198,6 +202,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1e84dc7e3e8b4af47b530b781408c2e7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _gatherRange: 2
+  _woodCuttingTool: {fileID: 0}
 --- !u!1001 &1279590327590248293
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -259,5 +265,15 @@ PrefabInstance:
 --- !u!4 &1282711206823964977 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4256847283187284, guid: 80deacc8c7395be4b87ed134de6f0a32, type: 3}
+  m_PrefabInstance: {fileID: 1279590327590248293}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1284416943382685881 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4836718160885724, guid: 80deacc8c7395be4b87ed134de6f0a32, type: 3}
+  m_PrefabInstance: {fileID: 1279590327590248293}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1282531379147671419 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4068060238010398, guid: 80deacc8c7395be4b87ed134de6f0a32, type: 3}
   m_PrefabInstance: {fileID: 1279590327590248293}
   m_PrefabAsset: {fileID: 0}

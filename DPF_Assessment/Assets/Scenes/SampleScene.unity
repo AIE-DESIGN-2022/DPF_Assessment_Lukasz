@@ -270,14 +270,13 @@ PrefabInstance:
       propertyPath: _gatherRange
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 2010097402, guid: 512c384db0095b4418e060762a33f289, type: 3}
+      propertyPath: _woodCuttingTool
+      value: 
+      objectReference: {fileID: 11400000, guid: 5c81ba8a793b19a41b9e59c2d5a3dcc0, type: 2}
     - target: {fileID: 2210010318463215739, guid: 512c384db0095b4418e060762a33f289, type: 3}
       propertyPath: m_WarningMessage
-      value: "\nBinding warning: Some generic clip(s) animate transforms that are
-        already bound by a Humanoid avatar. These transforms can only be changed
-        by Humanoid clips.\n\tTransform 'root'\n\tTransform 'lowerarm_l'\n\tTransform
-        'root'\n\tTransform 'neck_01'\n\tTransform 'clavicle_l'\n\tTransform 'hand_l'\n\tTransform
-        'spine_02'\n\tTransform 'upperarm_r'\n\tTransform 'upperarm_l'\n\tTransform
-        'thigh_l'\n\tand more ...\n\tFrom animation clip 'Stable Sword Outward Slash'"
+      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 5425037167713423769, guid: 512c384db0095b4418e060762a33f289, type: 3}
       propertyPath: m_Radius
@@ -342,12 +341,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2210010318463215739, guid: 91dbe919e3dcd904ab6e064a7478edda, type: 3}
       propertyPath: m_WarningMessage
-      value: "\nBinding warning: Some generic clip(s) animate transforms that are
-        already bound by a Humanoid avatar. These transforms can only be changed
-        by Humanoid clips.\n\tTransform 'root'\n\tTransform 'lowerarm_l'\n\tTransform
-        'root'\n\tTransform 'neck_01'\n\tTransform 'clavicle_l'\n\tTransform 'hand_l'\n\tTransform
-        'spine_02'\n\tTransform 'upperarm_r'\n\tTransform 'upperarm_l'\n\tTransform
-        'thigh_l'\n\tand more ...\n\tFrom animation clip 'Stable Sword Outward Slash'"
+      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 8418730917576266224, guid: 91dbe919e3dcd904ab6e064a7478edda, type: 3}
       propertyPath: m_RootOrder
@@ -1027,6 +1021,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1086134340, guid: 26591ff36cb5ef440843000e2bb69096, type: 3}
+      propertyPath: _amount
+      value: 100
+      objectReference: {fileID: 0}
     - target: {fileID: 8802002943941821610, guid: 26591ff36cb5ef440843000e2bb69096, type: 3}
       propertyPath: m_RootOrder
       value: 12

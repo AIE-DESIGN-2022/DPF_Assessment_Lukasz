@@ -29,7 +29,7 @@ public class PlayerController : MonoBehaviour
 
         RaycastHit _hit = UnderMouse();
         Selectable _selectable = _hit.transform.GetComponent<Selectable>();
-        if (_selectable != null)
+        if (_selectable != null && (_selectable.PlayerNumber() == _playerNumber || _selectable.PlayerNumber() == 0))
         {
             _selectable.Selected(true);
             _currentSelection.Add(_selectable);
