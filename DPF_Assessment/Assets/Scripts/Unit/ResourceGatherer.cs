@@ -40,7 +40,7 @@ public class ResourceGatherer : MonoBehaviour
 
     private void GatherResource()
     {
-        if (!_targetResource.HasResource()) ClearTargetResource();
+        if (!_targetResource.HasResource() || _gatheredAmmount >= _maxCarry) ClearTargetResource();
         _unit.StopMoveTo();
         if (_gatheringTool == null) EquipTool();
         _unit.Animator().SetBool("working", true);
@@ -103,12 +103,22 @@ public class ResourceGatherer : MonoBehaviour
 
     private void GatherEffect()
     {
+        if (_gatheredAmmount >= _maxCarry) return;
+
         if (_targetResource.ResourceType() != _gatheringType)
         {
             _gatheringType = _targetResource.ResourceType();
             _gatheredAmmount = 0;
         }
         
-        _gatheredAmmount += _targetResource.Gather(_gatherRate);
+        if (_gatheredAmmount + _gatherRate > _maxCarry)
+        {
+            _gatheredAmmount += _targetResource.Gather(_maxCarry - _gatheredAmmount);
+        }
+        else
+        {
+            _gatheredAmmount += _targetResource.Gather(_gatherRate);
+        }
+        
     }
 }

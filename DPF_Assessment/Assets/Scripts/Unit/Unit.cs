@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-[RequireComponent(typeof(NavMeshAgent)),RequireComponent(typeof(Animator))]
+[RequireComponent(typeof(NavMeshAgent)),RequireComponent(typeof(Animator)), RequireComponent(typeof(Health))]
 public class Unit : Selectable
 {
     private Animator _animator;
@@ -33,6 +33,8 @@ public class Unit : Selectable
         _animator = GetComponent<Animator>();
         _resourceGatherer = GetComponent<ResourceGatherer>();
         _attacker = GetComponent<Attacker>();
+        if (_leftHand == null) _leftHand = FindByName("hand_l");
+        if (_rightHand == null) _rightHand = FindByName("hand_r");
     }
 
     private new void Start()
@@ -128,4 +130,20 @@ public class Unit : Selectable
     }
 
     public EUnitType UnitType() { return _unitType; }
+
+    private Transform FindByName(string _name)
+    {
+        Transform _returnTransform = null;
+        Transform[] _children = GetComponentsInChildren<Transform>();
+        foreach (Transform _child in _children)
+        {
+            if (_child.name == _name)
+            {
+                _returnTransform = _child;
+                break;
+            }
+            
+        }
+        return _returnTransform;
+    }
 }

@@ -7,6 +7,7 @@ public class EquipmentConfig : ScriptableObject
 {
     [SerializeField] private GameObject _equipmentPrefab;
     [SerializeField] private bool _heldInLeftHand = false;
+    [SerializeField] private AnimatorOverrideController _animatorOverrideController;
 
     public GameObject Spawn(Unit _unit)
     {
