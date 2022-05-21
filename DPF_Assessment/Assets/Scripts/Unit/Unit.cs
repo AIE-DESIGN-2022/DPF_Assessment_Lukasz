@@ -11,6 +11,7 @@ public class Unit : Selectable
     private NavMeshAgent _navMeshAgent;
     private ResourceGatherer _resourceGatherer;
 
+    [Header("Unit Config")]
     [SerializeField] private Transform _leftHand;
     [SerializeField] private Transform _rightHand;
 
@@ -59,6 +60,11 @@ public class Unit : Selectable
     public void MoveTo(CollectableResource _collectableResource)
     {
         Move(_collectableResource.transform.position);
+    }
+
+    public void MoveTo(Selectable _selectable)
+    {
+        Move(_selectable.transform.position);
     }
 
     private void Move(Vector3 _newLocation)

@@ -4,11 +4,13 @@ using UnityEngine;
 
 public class Selectable : MonoBehaviour
 {
-    SpriteRenderer selectionIndicator;
+    private SpriteRenderer _selectionIndicator;
+
+    [SerializeField, Range(0,4)] private int _owningPlayerNumber = 0;
 
     protected void Awake()
     {
-        selectionIndicator = GetComponentInChildren<SpriteRenderer>();
+        _selectionIndicator = GetComponentInChildren<SpriteRenderer>();
     }
 
     // Start is called before the first frame update
@@ -16,15 +18,24 @@ public class Selectable : MonoBehaviour
     {
         Selected(false);
 
-        if (selectionIndicator == null) Debug.Log("Selection Indicator Missing");
+        if (_selectionIndicator == null) Debug.Log("Selection Indicator Missing");
     }
 
     public void Selected(bool isSelected)
     {
-        if (selectionIndicator != null)
+        if (_selectionIndicator != null)
         {
-            selectionIndicator.enabled = isSelected;
+            _selectionIndicator.enabled = isSelected;
         }
         
     }
+
+    public bool IsSelected() { return _selectionIndicator.enabled; }
+
+    public void SetPlayerNumber(int _playerNumber)
+    {
+        _owningPlayerNumber = _playerNumber;
+    }
+
+    public int PlayerNumber() { return _owningPlayerNumber; }
 }
