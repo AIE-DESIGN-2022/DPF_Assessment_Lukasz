@@ -18,6 +18,7 @@ public class Attacker : MonoBehaviour
     private float _timeSinceLastAttack = Mathf.Infinity;
     private Unit _unit;
     private GameObject _weapon;
+    private bool _hasProjectileWeapon;
 
     private void Awake()
     {
@@ -27,7 +28,7 @@ public class Attacker : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        Equip(_unitWeapon);
+        if (_unitWeapon != null) Equip(_unitWeapon);
     }
 
     private void Equip(EquipmentConfig _newEquipment)
@@ -35,6 +36,8 @@ public class Attacker : MonoBehaviour
         if (_unitWeapon != null && _unit != null)
         {
             _weapon = _unitWeapon.Spawn(_unit);
+            _hasProjectileWeapon = _unitWeapon.HasProjectile();
+            if (_unitWeapon.AnimatorOverrideController() != null) _unit.Animator().runtimeAnimatorController = _unitWeapon.AnimatorOverrideController();
         }
     }
 
@@ -62,6 +65,7 @@ public class Attacker : MonoBehaviour
     {
         if (_timeSinceLastAttack > _attackRate)
         {
+            transform.LookAt(_target.transform);
             _unit.Animator().SetTrigger("attack");
             _timeSinceLastAttack = 0;
         }
@@ -92,7 +96,17 @@ public class Attacker : MonoBehaviour
     {
         if (_target != null)
         {
-            _target.TakeDamage(_attackDamage);
+            if (_hasProjectileWeapon)
+            {
+                Vector3 spawnLocation = transform.position;
+                spawnLocation.y += 1;
+                Projectile projectile = Instantiate(_unitWeapon.Projectile(), spawnLocation, transform.rotation);
+                projectile.Setup(_unit, _attackDamage);
+            }
+            else
+            {
+                _target.TakeDamage(_attackDamage);
+            }
         }
     }
 }

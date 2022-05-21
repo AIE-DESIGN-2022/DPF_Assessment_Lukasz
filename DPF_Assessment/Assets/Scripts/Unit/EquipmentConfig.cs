@@ -8,6 +8,7 @@ public class EquipmentConfig : ScriptableObject
     [SerializeField] private GameObject _equipmentPrefab;
     [SerializeField] private bool _heldInLeftHand = false;
     [SerializeField] private AnimatorOverrideController _animatorOverrideController;
+    [SerializeField] private Projectile _projectilePrefab;
 
     public GameObject Spawn(Unit _unit)
     {
@@ -22,4 +23,21 @@ public class EquipmentConfig : ScriptableObject
 
     public GameObject Prefab() { return _equipmentPrefab; }
 
+    public bool HasProjectile()
+    {
+        if (_projectilePrefab == null) return false;
+        else return true;
+    }
+
+    public Projectile Projectile()
+    {
+        if (_projectilePrefab != null) return _projectilePrefab;
+        else return null;
+    }
+
+    public AnimatorOverrideController AnimatorOverrideController()
+    {
+        if (_animatorOverrideController != null) return _animatorOverrideController;
+        else return null;
+    }
 }

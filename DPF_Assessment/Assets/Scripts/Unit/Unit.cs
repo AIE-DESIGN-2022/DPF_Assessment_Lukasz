@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-[RequireComponent(typeof(NavMeshAgent)),RequireComponent(typeof(Animator)), RequireComponent(typeof(Health))]
+[RequireComponent(typeof(NavMeshAgent)), RequireComponent(typeof(Animator)), RequireComponent(typeof(Health)), RequireComponent(typeof(Rigidbody))]
 public class Unit : Selectable
 {
     private Animator _animator;
@@ -100,7 +100,6 @@ public class Unit : Selectable
         {
             _resourceGatherer.SetTargetResource(_newCollectableResource);
         }
-        else Debug.LogError("No Collectable Resource");
     }
 
     public void SetTarget(Selectable _newTarget)
@@ -118,7 +117,7 @@ public class Unit : Selectable
         if (_navMeshAgent != null)
         {
             _navMeshAgent.isStopped = true;
-            _navMeshAgent.destination = new Vector3();
+            //_navMeshAgent.destination = new Vector3();
         }
     }
 
@@ -142,7 +141,7 @@ public class Unit : Selectable
                 _returnTransform = _child;
                 break;
             }
-            
+
         }
         return _returnTransform;
     }
