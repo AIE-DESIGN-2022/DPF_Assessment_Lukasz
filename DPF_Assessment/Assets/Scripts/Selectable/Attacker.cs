@@ -5,9 +5,13 @@ using UnityEngine;
 
 public class Attacker : MonoBehaviour
 {
+    [Tooltip("Weapon used by this unit.")]
     [SerializeField] private EquipmentConfig _unitWeapon;
+    [Tooltip("Base level of damage given by this unit upon attack.")]
     [SerializeField] private float _attackDamage = 10;
+    [Tooltip("Time between the start  of each attack in seconds.")]
     [SerializeField] private float _attackRate = 1;
+    [Tooltip("How close to target the unit has to be for an attack.")]
     [SerializeField] private float _attackRange = 1;
 
     private Selectable _target;
@@ -23,14 +27,14 @@ public class Attacker : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        EquipWeapon();
+        Equip(_unitWeapon);
     }
 
-    private void EquipWeapon()
+    private void Equip(EquipmentConfig _newEquipment)
     {
         if (_unitWeapon != null && _unit != null)
         {
-            _weapon = _unitWeapon.Spawn(_unit.HandTransform(_unitWeapon.HeldInLeftHand()));
+            _weapon = _unitWeapon.Spawn(_unit);
         }
     }
 
@@ -39,9 +43,8 @@ public class Attacker : MonoBehaviour
     {
         _timeSinceLastAttack += Time.deltaTime;
 
-        if (_target != null)
+        if (_target != null && _target.IsAlive())
         {
-
             if (TargetIsInRange())
             {
                 _unit.StopMoveTo();
@@ -52,6 +55,7 @@ public class Attacker : MonoBehaviour
                 _unit.MoveTo(_target);
             }
         }
+        else if (_target != null && !_target.IsAlive()) ClearTarget();
     }
 
     private void AttackTarget()
@@ -81,5 +85,14 @@ public class Attacker : MonoBehaviour
     public void ClearTarget()
     {
         _target = null;
+    }
+
+    // Function called by Animation at the point impact on target occurs.
+    private void AttackEffect()
+    {
+        if (_target != null)
+        {
+            _target.TakeDamage(_attackDamage);
+        }
     }
 }

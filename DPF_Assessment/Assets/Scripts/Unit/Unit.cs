@@ -67,6 +67,7 @@ public class Unit : Selectable
     {
         if (_resourceGatherer != null) _resourceGatherer.ClearTargetResource();
         if (_attacker != null) _attacker.ClearTarget();
+        if (_animator != null) _animator.SetTrigger("stop");
         Move(_newLocation);
     }
 

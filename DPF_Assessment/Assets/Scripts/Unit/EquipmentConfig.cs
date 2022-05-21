@@ -8,14 +8,17 @@ public class EquipmentConfig : ScriptableObject
     [SerializeField] private GameObject _equipmentPrefab;
     [SerializeField] private bool _heldInLeftHand = false;
 
-    public GameObject Spawn(Transform handTransform)
+    public GameObject Spawn(Unit _unit)
     {
-        GameObject _newObject = Instantiate(_equipmentPrefab, handTransform);
-        //_newObject.transform.parent = handTransform;
+        Transform _handTransform = _unit.HandTransform(_heldInLeftHand);
+        GameObject _newObject = Instantiate(_equipmentPrefab, _handTransform.position, _handTransform.rotation);
+        _newObject.transform.parent = _handTransform;
         return _newObject;
     }
 
     public bool HeldInLeftHand()
         { return _heldInLeftHand; }
+
+    public GameObject Prefab() { return _equipmentPrefab; }
 
 }

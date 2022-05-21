@@ -6,11 +6,14 @@ public class Selectable : MonoBehaviour
 {
     private SpriteRenderer _selectionIndicator;
 
+    [Tooltip("The player number whom owns this unit. 0 = none")]
     [SerializeField, Range(0,4)] private int _owningPlayerNumber = 0;
+    Health _health;
 
     protected void Awake()
     {
         _selectionIndicator = GetComponentInChildren<SpriteRenderer>();
+        _health = GetComponent<Health>();
     }
 
     // Start is called before the first frame update
@@ -38,4 +41,31 @@ public class Selectable : MonoBehaviour
     }
 
     public int PlayerNumber() { return _owningPlayerNumber; }
+
+    public void TakeDamage(float _damageAmound)
+    {
+        if (_health != null)
+        {
+            _health.TakeDamage(_damageAmound);
+        }
+    }
+
+    public void Heal(float _healAmount)
+    {
+        if (_health != null)
+        {
+            _health.Heal(_healAmount);
+        }
+    }
+
+    public bool IsAlive() 
+    { 
+        if (_health != null) return _health.IsAlive();
+        else return false;
+    }
+
+    private void DeathEnd()
+    {
+        Destroy(gameObject);
+    }    
 }
