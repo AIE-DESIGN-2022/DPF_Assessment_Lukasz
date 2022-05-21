@@ -28,7 +28,10 @@ public class Attacker : MonoBehaviour
 
     private void EquipWeapon()
     {
-        throw new NotImplementedException();
+        if (_unitWeapon != null && _unit != null)
+        {
+            _weapon = _unitWeapon.Spawn(_unit.HandTransform(_unitWeapon.HeldInLeftHand()));
+        }
     }
 
     // Update is called once per frame
@@ -53,11 +56,30 @@ public class Attacker : MonoBehaviour
 
     private void AttackTarget()
     {
-        throw new NotImplementedException();
+        if (_timeSinceLastAttack > _attackRate)
+        {
+            _unit.Animator().SetTrigger("attack");
+            _timeSinceLastAttack = 0;
+        }
     }
 
     private bool TargetIsInRange()
     {
-        throw new NotImplementedException();
+        if (_target != null)
+        {
+            float _distance = Vector3.Distance(transform.position, _target.transform.position);
+            return _distance < _attackRange;
+        }
+        else return false;
+    }
+
+    public void SetTarget(Selectable _newTarget)
+    {
+        _target = _newTarget;
+    }
+
+    public void ClearTarget()
+    {
+        _target = null;
     }
 }

@@ -10,10 +10,21 @@ public class Unit : Selectable
     private Animator _animator;
     private NavMeshAgent _navMeshAgent;
     private ResourceGatherer _resourceGatherer;
+    private Attacker _attacker;
 
     [Header("Unit Config")]
     [SerializeField] private Transform _leftHand;
     [SerializeField] private Transform _rightHand;
+    [SerializeField] private EUnitType _unitType;
+
+    public enum EUnitType
+    {
+        Worker,
+        Melee,
+        Ranged,
+        Magic,
+        Healer
+    }
 
     private new void Awake()
     {
@@ -21,6 +32,7 @@ public class Unit : Selectable
         _navMeshAgent = GetComponent<NavMeshAgent>();
         _animator = GetComponent<Animator>();
         _resourceGatherer = GetComponent<ResourceGatherer>();
+        _attacker = GetComponent<Attacker>();
     }
 
     private new void Start()
@@ -54,6 +66,7 @@ public class Unit : Selectable
     public void MoveTo(Vector3 _newLocation)
     {
         if (_resourceGatherer != null) _resourceGatherer.ClearTargetResource();
+        if (_attacker != null) _attacker.ClearTarget();
         Move(_newLocation);
     }
 
@@ -87,10 +100,31 @@ public class Unit : Selectable
         else Debug.LogError("No Collectable Resource");
     }
 
+    public void SetTarget(Selectable _newTarget)
+    {
+        if (_attacker != null)
+        {
+            _attacker.SetTarget(_newTarget);
+        }
+    }
+
     public Animator Animator() { return _animator; }
 
     public void StopMoveTo()
     {
-        if (_navMeshAgent != null) _navMeshAgent.isStopped = true;
+        if (_navMeshAgent != null)
+        {
+            _navMeshAgent.isStopped = true;
+            _navMeshAgent.destination = new Vector3();
+        }
     }
+
+    public Transform HandTransform(bool _requestingLeftHand)
+    {
+        if (_requestingLeftHand && _leftHand != null) return _leftHand;
+        else if (!_requestingLeftHand && _rightHand != null) return _rightHand;
+        else return null;
+    }
+
+    public EUnitType UnitType() { return _unitType; }
 }

@@ -6,6 +6,7 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     private List<Selectable> _currentSelection;
+    private int _playerNumber = 1;
 
     // Start is called before the first frame update
     private void Start()
@@ -40,17 +41,30 @@ public class PlayerController : MonoBehaviour
         if (_currentSelection.Count > 0)
         {
             RaycastHit _hit = UnderMouse();
-            CollectableResource _collectableResource = _hit.transform.GetComponent<CollectableResource>();
-            foreach (Selectable _selectable in _currentSelection)
+            Selectable _hitSelectable = _hit.transform.GetComponent<Selectable>();
+            CollectableResource _collectableResource;
+            Building _building;
+            Unit _unit;
+
+            if (_hitSelectable != null)
             {
-                Unit _unit = _selectable.GetComponent<Unit>();
-                if (_unit != null)
-                {
-                    if (_collectableResource != null) _unit.SetTarget(_collectableResource);
-                    else _unit.MoveTo(_hit.point);
-                }
-                
+                _collectableResource = _hitSelectable.GetComponent<CollectableResource>();
+                _building = _hitSelectable.GetComponent<Building>();
+                _unit = _hitSelectable.GetComponent<Unit>();
+
+                if (_collectableResource != null) GiveCollectResourceOrder(_collectableResource);
+
+                if (_building != null && _building.PlayerNumber() != _playerNumber) GiveAttackOrder(_building);
+
+                if (_unit != null && _unit.PlayerNumber() != _playerNumber) GiveAttackOrder(_unit);
             }
+            else
+            {
+                GiveMoveOrder(_hit.point);
+            }
+
+
+            
         }
     }
 
@@ -72,5 +86,49 @@ public class PlayerController : MonoBehaviour
             _selectable.Selected(false);
         }
         _currentSelection.Clear();
+    }
+
+    private void GiveMoveOrder(Vector3 _newLocation)
+    {
+        foreach (Selectable _selectable in _currentSelection)
+        {
+            Unit _unit = _selectable.GetComponent<Unit>();
+            if (_unit != null)
+            {
+                _unit.MoveTo(_newLocation);
+            }
+        }
+    }
+
+    private void GiveAttackOrder(Selectable _newTarget)
+    {
+        foreach (Selectable _selectable in _currentSelection)
+        {
+            Unit _unit = _selectable.GetComponent<Unit>();
+            if (_unit != null && _unit.UnitType() != Unit.EUnitType.Worker)
+            {
+                _unit.SetTarget(_newTarget);
+            }
+            else
+            {
+                Building _building = _selectable.GetComponent<Building>();
+                if (_building != null)
+                {
+
+                }
+            }
+        }
+    }
+
+    private void GiveCollectResourceOrder(CollectableResource _newResource)
+    {
+        foreach (Selectable _selectable in _currentSelection)
+        {
+            Unit _unit = _selectable.GetComponent<Unit>();
+            if (_unit != null && _unit.UnitType() == Unit.EUnitType.Worker)
+            {
+                _unit.SetTarget(_newResource);
+            }
+        }
     }
 }

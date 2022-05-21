@@ -130,9 +130,18 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2210010318463215739, guid: 5420c44299a835e4a9f6f0dd2a927164, type: 3}
+      propertyPath: m_WarningMessage
+      value: "\nBinding warning: Some generic clip(s) animate transforms that are
+        already bound by a Humanoid avatar. These transforms can only be changed
+        by Humanoid clips.\n\tTransform 'root'\n\tTransform 'lowerarm_l'\n\tTransform
+        'root'\n\tTransform 'neck_01'\n\tTransform 'clavicle_l'\n\tTransform 'hand_l'\n\tTransform
+        'spine_02'\n\tTransform 'upperarm_r'\n\tTransform 'upperarm_l'\n\tTransform
+        'thigh_l'\n\tand more ...\n\tFrom animation clip 'Stable Sword Outward Slash'"
+      objectReference: {fileID: 0}
     - target: {fileID: 8418730917576266224, guid: 5420c44299a835e4a9f6f0dd2a927164, type: 3}
       propertyPath: m_RootOrder
-      value: 4
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 8418730917576266224, guid: 5420c44299a835e4a9f6f0dd2a927164, type: 3}
       propertyPath: m_LocalPosition.x
@@ -185,6 +194,71 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 1743207524655591006, guid: 7d626b8a5af6f2243b69898673ba916d, type: 3}
   m_PrefabInstance: {fileID: 1743207524118971835}
   m_PrefabAsset: {fileID: 0}
+--- !u!1001 &755764842
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 2210010318463215739, guid: 50ea675e450a47a4581431bfa39c3c89, type: 3}
+      propertyPath: m_WarningMessage
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 2210010318463215739, guid: 50ea675e450a47a4581431bfa39c3c89, type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8418730917576266224, guid: 50ea675e450a47a4581431bfa39c3c89, type: 3}
+      propertyPath: m_RootOrder
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8418730917576266224, guid: 50ea675e450a47a4581431bfa39c3c89, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 47.83271
+      objectReference: {fileID: 0}
+    - target: {fileID: 8418730917576266224, guid: 50ea675e450a47a4581431bfa39c3c89, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.0000014305115
+      objectReference: {fileID: 0}
+    - target: {fileID: 8418730917576266224, guid: 50ea675e450a47a4581431bfa39c3c89, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 65.042366
+      objectReference: {fileID: 0}
+    - target: {fileID: 8418730917576266224, guid: 50ea675e450a47a4581431bfa39c3c89, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8418730917576266224, guid: 50ea675e450a47a4581431bfa39c3c89, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8418730917576266224, guid: 50ea675e450a47a4581431bfa39c3c89, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8418730917576266224, guid: 50ea675e450a47a4581431bfa39c3c89, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8418730917576266224, guid: 50ea675e450a47a4581431bfa39c3c89, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8418730917576266224, guid: 50ea675e450a47a4581431bfa39c3c89, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 180
+      objectReference: {fileID: 0}
+    - target: {fileID: 8418730917576266224, guid: 50ea675e450a47a4581431bfa39c3c89, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8418730917576266226, guid: 50ea675e450a47a4581431bfa39c3c89, type: 3}
+      propertyPath: m_Name
+      value: Goblin_Swordsman
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 50ea675e450a47a4581431bfa39c3c89, type: 3}
 --- !u!1001 &942198235
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -196,13 +270,22 @@ PrefabInstance:
       propertyPath: _gatherRange
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 2210010318463215739, guid: 512c384db0095b4418e060762a33f289, type: 3}
+      propertyPath: m_WarningMessage
+      value: "\nBinding warning: Some generic clip(s) animate transforms that are
+        already bound by a Humanoid avatar. These transforms can only be changed
+        by Humanoid clips.\n\tTransform 'root'\n\tTransform 'lowerarm_l'\n\tTransform
+        'root'\n\tTransform 'neck_01'\n\tTransform 'clavicle_l'\n\tTransform 'hand_l'\n\tTransform
+        'spine_02'\n\tTransform 'upperarm_r'\n\tTransform 'upperarm_l'\n\tTransform
+        'thigh_l'\n\tand more ...\n\tFrom animation clip 'Stable Sword Outward Slash'"
+      objectReference: {fileID: 0}
     - target: {fileID: 5425037167713423769, guid: 512c384db0095b4418e060762a33f289, type: 3}
       propertyPath: m_Radius
       value: 0.55
       objectReference: {fileID: 0}
     - target: {fileID: 8418730917576266224, guid: 512c384db0095b4418e060762a33f289, type: 3}
       propertyPath: m_RootOrder
-      value: 5
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 8418730917576266224, guid: 512c384db0095b4418e060762a33f289, type: 3}
       propertyPath: m_LocalPosition.x
@@ -257,9 +340,18 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2210010318463215739, guid: 91dbe919e3dcd904ab6e064a7478edda, type: 3}
+      propertyPath: m_WarningMessage
+      value: "\nBinding warning: Some generic clip(s) animate transforms that are
+        already bound by a Humanoid avatar. These transforms can only be changed
+        by Humanoid clips.\n\tTransform 'root'\n\tTransform 'lowerarm_l'\n\tTransform
+        'root'\n\tTransform 'neck_01'\n\tTransform 'clavicle_l'\n\tTransform 'hand_l'\n\tTransform
+        'spine_02'\n\tTransform 'upperarm_r'\n\tTransform 'upperarm_l'\n\tTransform
+        'thigh_l'\n\tand more ...\n\tFrom animation clip 'Stable Sword Outward Slash'"
+      objectReference: {fileID: 0}
     - target: {fileID: 8418730917576266224, guid: 91dbe919e3dcd904ab6e064a7478edda, type: 3}
       propertyPath: m_RootOrder
-      value: 6
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 8418730917576266224, guid: 91dbe919e3dcd904ab6e064a7478edda, type: 3}
       propertyPath: m_LocalPosition.x
@@ -337,9 +429,18 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2210010318463215739, guid: 1f66a6b75d26c2145883edecb3cd1c6f, type: 3}
+      propertyPath: m_WarningMessage
+      value: "\nBinding warning: Some generic clip(s) animate transforms that are
+        already bound by a Humanoid avatar. These transforms can only be changed
+        by Humanoid clips.\n\tTransform 'root'\n\tTransform 'lowerarm_l'\n\tTransform
+        'root'\n\tTransform 'neck_01'\n\tTransform 'clavicle_l'\n\tTransform 'hand_l'\n\tTransform
+        'spine_02'\n\tTransform 'upperarm_r'\n\tTransform 'upperarm_l'\n\tTransform
+        'thigh_l'\n\tand more ...\n\tFrom animation clip 'Stable Sword Outward Slash'"
+      objectReference: {fileID: 0}
     - target: {fileID: 8418730917576266224, guid: 1f66a6b75d26c2145883edecb3cd1c6f, type: 3}
       propertyPath: m_RootOrder
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 8418730917576266224, guid: 1f66a6b75d26c2145883edecb3cd1c6f, type: 3}
       propertyPath: m_LocalPosition.x
@@ -461,7 +562,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 11
+  m_RootOrder: 13
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!224 &1664455577 stripped
 RectTransform:
@@ -475,9 +576,25 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2210010318463215739, guid: d9cfb853a33a7f2488eb25dc2dd59c0d, type: 3}
+      propertyPath: m_Avatar
+      value: 
+      objectReference: {fileID: 9000000, guid: e6f8c6b4cd0c5d24fbefebd224edfdb5, type: 3}
+    - target: {fileID: 2210010318463215739, guid: d9cfb853a33a7f2488eb25dc2dd59c0d, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: d566cad41ccebf04e81855a73c4f88f2, type: 2}
+    - target: {fileID: 2210010318463215739, guid: d9cfb853a33a7f2488eb25dc2dd59c0d, type: 3}
+      propertyPath: m_WarningMessage
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 2210010318463215739, guid: d9cfb853a33a7f2488eb25dc2dd59c0d, type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8418730917576266224, guid: d9cfb853a33a7f2488eb25dc2dd59c0d, type: 3}
       propertyPath: m_RootOrder
-      value: 2
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 8418730917576266224, guid: d9cfb853a33a7f2488eb25dc2dd59c0d, type: 3}
       propertyPath: m_LocalPosition.x
@@ -485,7 +602,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8418730917576266224, guid: d9cfb853a33a7f2488eb25dc2dd59c0d, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.0000014305115
+      value: 0.008
       objectReference: {fileID: 0}
     - target: {fileID: 8418730917576266224, guid: d9cfb853a33a7f2488eb25dc2dd59c0d, type: 3}
       propertyPath: m_LocalPosition.z
@@ -625,9 +742,18 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2210010318463215739, guid: f1f9b38630a6aa348868c59a6cf46d1b, type: 3}
+      propertyPath: m_WarningMessage
+      value: "\nBinding warning: Some generic clip(s) animate transforms that are
+        already bound by a Humanoid avatar. These transforms can only be changed
+        by Humanoid clips.\n\tTransform 'root'\n\tTransform 'lowerarm_l'\n\tTransform
+        'root'\n\tTransform 'neck_01'\n\tTransform 'clavicle_l'\n\tTransform 'hand_l'\n\tTransform
+        'spine_02'\n\tTransform 'upperarm_r'\n\tTransform 'upperarm_l'\n\tTransform
+        'thigh_l'\n\tand more ...\n\tFrom animation clip 'Stable Sword Outward Slash'"
+      objectReference: {fileID: 0}
     - target: {fileID: 8418730917576266224, guid: f1f9b38630a6aa348868c59a6cf46d1b, type: 3}
       propertyPath: m_RootOrder
-      value: 3
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 8418730917576266224, guid: f1f9b38630a6aa348868c59a6cf46d1b, type: 3}
       propertyPath: m_LocalPosition.x
@@ -739,7 +865,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 13
+  m_RootOrder: 14
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1315889074324993167
 PrefabInstance:
@@ -750,7 +876,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1315889075191875591, guid: b2abf92b6dd021040b8b5af54088989a, type: 3}
       propertyPath: m_RootOrder
-      value: 7
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 1315889075191875591, guid: b2abf92b6dd021040b8b5af54088989a, type: 3}
       propertyPath: m_LocalPosition.x
@@ -831,7 +957,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1743207524382535249, guid: 7d626b8a5af6f2243b69898673ba916d, type: 3}
       propertyPath: m_RootOrder
-      value: 9
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 1743207524382535249, guid: 7d626b8a5af6f2243b69898673ba916d, type: 3}
       propertyPath: m_LocalPosition.x
@@ -954,7 +1080,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6392865342641546343, guid: 6c445f2284c829c49bc1099b080394a8, type: 3}
       propertyPath: m_RootOrder
-      value: 8
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 6392865342641546343, guid: 6c445f2284c829c49bc1099b080394a8, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1007,7 +1133,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1711498797100917276, guid: 1c97d715a7e39914abd558b4b7c215a9, type: 3}
       propertyPath: m_RootOrder
-      value: 10
+      value: 11
       objectReference: {fileID: 0}
     - target: {fileID: 1711498797100917276, guid: 1c97d715a7e39914abd558b4b7c215a9, type: 3}
       propertyPath: m_LocalPosition.x

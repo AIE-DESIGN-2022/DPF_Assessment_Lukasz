@@ -11,7 +11,7 @@ public class EquipmentConfig : ScriptableObject
     public GameObject Spawn(Transform handTransform)
     {
         GameObject _newObject = Instantiate(_equipmentPrefab, handTransform);
-        _newObject.transform.parent = handTransform;
+        //_newObject.transform.parent = handTransform;
         return _newObject;
     }
 
