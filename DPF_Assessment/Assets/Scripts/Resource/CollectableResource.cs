@@ -44,6 +44,7 @@ public class CollectableResource : Selectable
 
     private void ResourceDepleted()
     {
+        Debug.LogWarning("Resource Depleted");
         throw new NotImplementedException();
     }
 

@@ -6,10 +6,12 @@ using UnityEngine;
 public class ResourceGatherer : MonoBehaviour
 {
     private CollectableResource _targetResource;
+    private CollectableResource _lastTargetResource;
     private Unit _unit;
-    private int _gatheredAmmount = 0;
+    private int _gatheredAmount = 0;
     private CollectableResource.EResourceType _gatheringType;
     private int _gatherRate;
+    private Building _dropOff;
 
 
     [SerializeField] private float _gatherRange = 2.0f;
@@ -26,7 +28,28 @@ public class ResourceGatherer : MonoBehaviour
 
     private void Update()
     {
-        if (_targetResource == null) return;
+        Gathering();
+        DropOff();
+    }
+
+    private void DropOff()
+    {
+        if (_targetResource == null && _dropOff != null)
+        {
+            if (_gatheredAmount > 0)
+            {
+                if (_unit != null && _unit.Animator().GetBool("working")) _unit.Animator().SetBool("working", false);
+                _unit.MoveTo(_dropOff);
+            }
+        }
+    }
+
+    private void Gathering()
+    {
+        if (_targetResource == null)
+        {
+            return;
+        }    
 
         if (IsInRange())
         {
@@ -40,7 +63,16 @@ public class ResourceGatherer : MonoBehaviour
 
     private void GatherResource()
     {
-        if (!_targetResource.HasResource() || _gatheredAmmount >= _maxCarry) ClearTargetResource();
+        if (_gatheredAmount >= _maxCarry)
+        {
+            ClearTargetResource(true);
+            return;
+        }
+        if (!_targetResource.HasResource())
+        {
+            ClearTargetResource();
+            return;
+        }
         _unit.StopMoveTo();
         if (_gatheringTool == null) EquipTool();
         _unit.Animator().SetBool("working", true);
@@ -49,13 +81,29 @@ public class ResourceGatherer : MonoBehaviour
     public void SetTargetResource(CollectableResource _newResource)
     {
         _targetResource = _newResource;
+        SetTargetDropOffPoint(FindObjectOfType<GameController>().GetFaction(_unit.PlayerNumber()).ClosestResourceDropPoint(_targetResource));
     }
 
-    public void ClearTargetResource()
+    public void SetTargetDropOffPoint(Building building)
     {
-        if (_targetResource != null) _targetResource = null;
+        _dropOff = building;
+    }    
+
+    public void ClearTargetResource(bool _rememberForLater = false)
+    {
+        if (_targetResource != null)
+        {
+            if (_rememberForLater) _lastTargetResource = _targetResource;
+            _targetResource = null;
+        }
         if (_unit != null) _unit.Animator().SetBool("working", false);
+        else Debug.LogError(gameObject.name + " Gatherer's unit referance missing.");
         UnequipTool();
+    }
+
+    public void ClearDropOffPoint()
+    {
+        if (_dropOff != null) _dropOff = null;
     }
 
     private bool IsInRange()
@@ -103,22 +151,46 @@ public class ResourceGatherer : MonoBehaviour
 
     private void GatherEffect()
     {
-        if (_gatheredAmmount >= _maxCarry) return;
+        if (_gatheredAmount >= _maxCarry) return;
 
         if (_targetResource.ResourceType() != _gatheringType)
         {
             _gatheringType = _targetResource.ResourceType();
-            _gatheredAmmount = 0;
+            _gatheredAmount = 0;
         }
         
-        if (_gatheredAmmount + _gatherRate > _maxCarry)
+        if (_gatheredAmount + _gatherRate > _maxCarry)
         {
-            _gatheredAmmount += _targetResource.Gather(_maxCarry - _gatheredAmmount);
+            _gatheredAmount += _targetResource.Gather(_maxCarry - _gatheredAmount);
         }
         else
         {
-            _gatheredAmmount += _targetResource.Gather(_gatherRate);
+            _gatheredAmount += _targetResource.Gather(_gatherRate);
         }
-        
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.collider.GetComponent<Building>() == _dropOff)
+        {
+            _gatheredAmount = 0;
+            _unit.StopMoveTo();
+
+            if (_lastTargetResource != null && _lastTargetResource.HasResource())
+            {
+                SetTargetResource(_lastTargetResource);
+                _lastTargetResource = null;
+            }
+        }
+    }
+
+    public int GatheredResourcesAmount()
+    {
+        return _gatheredAmount;
+    }
+
+    public CollectableResource.EResourceType GatheredResourceType()
+    {
+        return _gatheringType;
     }
 }

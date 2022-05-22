@@ -13,8 +13,8 @@ public class Faction : MonoBehaviour
     private int _food;
     private int _gold;
 
-    private List<Unit> _units;
-    private List<Building> _buildings;
+    private List<Unit> _units = new List<Unit>();
+    private List<Building> _buildings = new List<Building>();
 
     public enum EFaction
     {
@@ -26,16 +26,24 @@ public class Faction : MonoBehaviour
     void Start()
     {
         NameFaction();
-        SetChildrenPlayerNumber();
+        SetupChildren();
         _config = FindObjectOfType<GameController>().GetFactionConfig(_faction);
     }
 
-    private void SetChildrenPlayerNumber()
+    private void SetupChildren()
     {
         Selectable[] children = GetComponentsInChildren<Selectable>();
         foreach (Selectable child in children)
         {
             child.SetPlayerNumber(_playerNumber);
+            
+            Unit unit = child.GetComponent<Unit>();
+            if (unit != null) _units.Add(unit);
+            else
+            {
+                Building building = child.GetComponent<Building>();
+                if (building != null) _buildings.Add(building);
+            }
         }
     }
 
@@ -76,6 +84,12 @@ public class Faction : MonoBehaviour
     public Building ClosestResourceDropPoint(CollectableResource collectableResource)
     {
         List<Building> _dropPoints = new List<Building>();
+
+        if (_buildings.Count <= 0)
+        {
+            Debug.LogError(gameObject.name + " has no list of buildings.");
+            return null;
+        }
 
         foreach (Building building in _buildings)
         {

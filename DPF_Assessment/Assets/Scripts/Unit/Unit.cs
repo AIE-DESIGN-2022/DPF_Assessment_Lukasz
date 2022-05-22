@@ -41,7 +41,14 @@ public class Unit : Selectable
     {
         base.Start();
         if (_navMeshAgent != null) _navMeshAgent.updateRotation = false;
-        GetComponent<Rigidbody>().interpolation = RigidbodyInterpolation.Extrapolate;
+        SetupRigidbody();
+    }
+
+    private void SetupRigidbody()
+    {
+        Rigidbody rb = GetComponent<Rigidbody>();
+        rb.interpolation = RigidbodyInterpolation.Extrapolate;
+        rb.constraints = RigidbodyConstraints.FreezeAll;
     }
 
     private void Update()
@@ -68,7 +75,11 @@ public class Unit : Selectable
 
     public void MoveTo(Vector3 _newLocation)
     {
-        if (_resourceGatherer != null) _resourceGatherer.ClearTargetResource();
+        if (_resourceGatherer != null)
+        {
+            _resourceGatherer.ClearTargetResource();
+            _resourceGatherer.ClearDropOffPoint();
+        }
         if (_attacker != null) _attacker.ClearTarget();
         if (_animator != null) _animator.SetTrigger("stop");
         Move(_newLocation);
@@ -82,6 +93,11 @@ public class Unit : Selectable
     public void MoveTo(Selectable _selectable)
     {
         Move(_selectable.transform.position);
+    }
+
+    public void MoveTo(Building _building)
+    {
+        Move(_building.transform.position);
     }
 
     private void Move(Vector3 _newLocation)
@@ -145,5 +161,26 @@ public class Unit : Selectable
 
         }
         return _returnTransform;
+    }
+
+    public bool IsCarryingResource()
+    {
+        if (_resourceGatherer != null)
+        {
+            return _resourceGatherer.GatheredResourcesAmount() > 0;
+        }
+        else
+        {
+            return false;
+        }
+
+    }
+
+    public void SetResourceDropOffPoint(Building _newDropPoint)
+    {
+        if (_resourceGatherer != null)
+        {
+            _resourceGatherer.SetTargetDropOffPoint(_newDropPoint);
+        }
     }
 }

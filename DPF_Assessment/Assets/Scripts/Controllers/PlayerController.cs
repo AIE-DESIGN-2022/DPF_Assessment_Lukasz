@@ -59,6 +59,8 @@ public class PlayerController : MonoBehaviour
                 if (_building != null && _building.PlayerNumber() != _playerNumber) GiveAttackOrder(_building);
 
                 if (_unit != null && _unit.PlayerNumber() != _playerNumber) GiveAttackOrder(_unit);
+
+                if (_building != null && _building.PlayerNumber() == _playerNumber) GiveUnitToBuildingOrder(_building);
             }
             else
             {
@@ -67,6 +69,21 @@ public class PlayerController : MonoBehaviour
 
 
             
+        }
+    }
+
+    private void GiveUnitToBuildingOrder(Building _building)
+    {
+        if (_building.IsResourceDropPoint())
+        {
+            foreach (Selectable _selectable in _currentSelection)
+            {
+                Unit unit = _selectable.GetComponent<Unit>();
+                if (unit != null && unit.IsCarryingResource())
+                {
+                    unit.SetResourceDropOffPoint(_building);
+                }
+            }
         }
     }
 
