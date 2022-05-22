@@ -7,6 +7,7 @@ public class Faction : MonoBehaviour
 {
     [SerializeField] private EFaction _faction;
     [SerializeField] private int _playerNumber;
+    [SerializeField] private FactionConfig _config;
 
     private int _wood;
     private int _food;
@@ -26,6 +27,7 @@ public class Faction : MonoBehaviour
     {
         NameFaction();
         SetChildrenPlayerNumber();
+        _config = FindObjectOfType<GameController>().GetFactionConfig(_faction);
     }
 
     private void SetChildrenPlayerNumber()
@@ -57,4 +59,17 @@ public class Faction : MonoBehaviour
     }
 
     public int PlayerNumber() { return _playerNumber; }
+
+    public Unit SpawnUnit(Unit.EUnitType _newUnitType, Transform _spawnLocation)
+    {
+        Unit _newUnit = Instantiate(_config.GetUnitPrefab(_newUnitType), _spawnLocation.position, _spawnLocation.rotation);
+        _newUnit.transform.parent = transform;
+        _units.Add(_newUnit);
+        return _newUnit;
+    }
+
+    public FactionConfig Config()
+    {
+        return _config;
+    }
 }

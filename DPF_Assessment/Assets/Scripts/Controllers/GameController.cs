@@ -6,12 +6,15 @@ using UnityEngine;
 public class GameController : MonoBehaviour
 {
     [SerializeField] private bool _newGame;
+    private FactionConfig[] _playableFactions;
 
     private List<Faction> _factions;
 
     // Start is called before the first frame update
     void Start()
     {
+        _playableFactions = Resources.FindObjectsOfTypeAll<FactionConfig>();
+
         if (_newGame) SetupNewGame();
         else SetupNewGame();
     }
@@ -54,6 +57,15 @@ public class GameController : MonoBehaviour
             }
         }
 
+        return null;
+    }
+
+    public FactionConfig GetFactionConfig(Faction.EFaction _faction)
+    {
+        foreach (FactionConfig factionConfig in _playableFactions)
+        {
+            if (factionConfig.Faction() == _faction) return factionConfig;
+        }
         return null;
     }
 }
