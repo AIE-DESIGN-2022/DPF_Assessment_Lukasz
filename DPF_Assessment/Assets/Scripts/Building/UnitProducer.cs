@@ -65,7 +65,6 @@ public class UnitProducer : MonoBehaviour
         if (_building.PlayerNumber() != 0 && _faction == null)
         {
             _faction = FindObjectOfType<GameController>().GetFaction(_building.PlayerNumber());
-            //Debug.Log(gameObject.name + " setting faction as " + _faction);
         }
     }
 
@@ -75,7 +74,6 @@ public class UnitProducer : MonoBehaviour
 
         if (_faction != null && _buildableUnits == null)
         {
-            Debug.Log("Checking config of " + _faction.Config().ToString());
             _buildableUnits = _faction.Config().BuildableUnits(_building.BuildingType());
         }
     }
@@ -86,7 +84,6 @@ public class UnitProducer : MonoBehaviour
 
         if (_buildableUnits != null)
         {
-            print("Returning list of buildable units with " + _buildableUnits.Count);
             return _buildableUnits;
         }
         else return null;

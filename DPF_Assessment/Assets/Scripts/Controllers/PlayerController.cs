@@ -8,6 +8,12 @@ public class PlayerController : MonoBehaviour
     private List<Selectable> _currentSelection;
     private int _playerNumber = 1;
     private HUD_Manager _hudManager;
+    private GameCameraController _cameraController;
+
+    private void Awake()
+    {
+        _cameraController = FindObjectOfType<GameCameraController>();
+    }
 
     // Start is called before the first frame update
     private void Start()
@@ -18,6 +24,8 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     private void Update()
     {
+        if (_cameraController.IsInUIOffset()) return;
+
         if (Input.GetMouseButtonDown(0)) HandleLeftClick();
 
         if (Input.GetMouseButtonDown(1)) HandleRightClick();
@@ -107,6 +115,7 @@ public class PlayerController : MonoBehaviour
             _selectable.Selected(false);
         }
         _currentSelection.Clear();
+        _hudManager.ClearSelection();
     }
 
     private void GiveMoveOrder(Vector3 _newLocation)

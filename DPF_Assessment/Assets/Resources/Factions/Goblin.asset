@@ -10,5 +10,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4fb8759c0a421254c964441fd98d61c0, type: 3}
-  m_Name: Goblins
+  m_Name: Goblin
   m_EditorClassIdentifier: 
+  _faction: 1
+  _buildings: []
+  _units: []

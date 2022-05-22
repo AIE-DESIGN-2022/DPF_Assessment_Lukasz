@@ -19,10 +19,11 @@ public class UI_Action_Button : MonoBehaviour
         _button.onClick.AddListener(OnClick);
     }
 
-    public void SetupButton(UnitProducer _newUnitProducer, Unit.EUnitType _newBuildableUnit)
+    public void SetupButton(UnitProducer _newUnitProducer, Unit.EUnitType _newBuildableUnit, Texture _newIcon)
     {
         _unitProducer = _newUnitProducer;
         _buildableUnit = _newBuildableUnit;
+        _button.GetComponent<RawImage>().texture = _newIcon;
     }
 
     private void OnClick()

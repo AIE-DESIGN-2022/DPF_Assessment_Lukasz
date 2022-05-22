@@ -23,6 +23,11 @@ public class Faction : MonoBehaviour
         Goblin
     }
 
+    private void Awake()
+    {
+        LoadFactoryConfig();
+    }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -75,6 +80,7 @@ public class Faction : MonoBehaviour
     public Unit SpawnUnit(Unit.EUnitType _newUnitType, Transform _spawnLocation)
     {
         Unit _newUnit = Instantiate(_config.GetUnitPrefab(_newUnitType), _spawnLocation.position, _spawnLocation.rotation);
+        _newUnit.SetPlayerNumber(_playerNumber);
         _newUnit.transform.parent = transform;
         _units.Add(_newUnit);
         return _newUnit;
@@ -234,6 +240,8 @@ public class Faction : MonoBehaviour
         _food -= _unitConfig.foodCost;
         _wood -= _unitConfig.woodCost;
         _gold -= _unitConfig.goldCost;
+
+        if (_gameController.IsPlayerFaction(_playerNumber)) _gameController.HUD_Manager().Resource_HUD().UpdateResources();
     }
 
     public void SubtractFromStockpileCostOf(Building.EBuildingType _newBuilding)
@@ -243,5 +251,27 @@ public class Faction : MonoBehaviour
         _food -= _buildingConfig.foodCost;
         _wood -= _buildingConfig.woodCost;
         _gold -= _buildingConfig.goldCost;
+
+        if (_gameController.IsPlayerFaction(_playerNumber)) _gameController.HUD_Manager().Resource_HUD().UpdateResources();
+    }
+
+    private void LoadFactoryConfig()
+    {
+        FactionConfig[] _loadedConfigs = Resources.LoadAll<FactionConfig>("Factions/");
+        //Debug.Log(_loadedConfigs.Length + " FactoryConfigs loaded for " + name);
+        foreach (var _loadedConfig in _loadedConfigs)
+        {
+            //Debug.Log("Checking loadedConfig " + _loadedConfig.ToString());
+            if (_loadedConfig.Faction() == _faction)
+            {
+                //Debug.Log("Found match: loadedConfig " + _loadedConfig.Faction().ToString() + " and " + _faction.ToString());
+                _config = _loadedConfig;
+            }
+
+        }
+
+        if (_config == null) Debug.LogError(name + " could not load FactionConfig.");
+        if (_config.Faction() != _faction) Debug.LogError(name + "has FactionConfig mismatch.");
+        
     }
 }

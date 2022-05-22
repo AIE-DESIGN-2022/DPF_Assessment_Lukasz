@@ -1,15 +1,31 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class UI_Action : MonoBehaviour
 {
-    List<UI_Action_Button> _actionButtons = new List<UI_Action_Button>();
+    private List<UI_Action_Button> _actionButtons = new List<UI_Action_Button>();
     private UI_Action_Button _actionButtonPrefab;
+    private FactionConfig _config;
 
     private void Awake()
     {
-        _actionButtonPrefab = Resources.Load<UI_Action_Button>("UI/");
+        _actionButtonPrefab = (UI_Action_Button)Resources.Load<UI_Action_Button>("HUD_Prefabs/UI_Action_Button");
+    }
+
+    private void Start()
+    {
+        if (_actionButtonPrefab == null)
+        {
+            Debug.LogError(name + " is missing ActionButtonPrefab.");
+            return;
+        }
+    }
+
+    public void SetFactionConfig(FactionConfig _newConfig)
+    {
+        _config = _newConfig;
     }
 
     public void BuildingSelected(Building _selectedBuilding)
@@ -22,11 +38,22 @@ public class UI_Action : MonoBehaviour
 
             foreach (Unit.EUnitType _buildableUnit in _buildableUnits)
             {
-                print("Creating button for " + _buildableUnit.ToString());
                 UI_Action_Button _newButton = Instantiate(_actionButtonPrefab, transform);
+                _newButton.SetupButton(_unitProducer, _buildableUnit, _config.Icon(_buildableUnit));
                 _actionButtons.Add(_newButton);
-                _newButton.SetupButton(_unitProducer, _buildableUnit);
             }
+        }
+    }
+
+    public void Clear()
+    {
+        if (_actionButtons.Count > 0)
+        {
+            foreach (UI_Action_Button _button in _actionButtons)
+            {
+                Destroy(_button.gameObject);
+            }
+            _actionButtons.Clear();
         }
     }
 }

@@ -18,6 +18,7 @@ public class FactionConfig : ScriptableObject
         public int foodCost = 0;
         public int woodCost = 0;
         public int goldCost = 0;
+        public Texture buildingIcon;
         public Building buildingPrefab;
     }
 
@@ -30,6 +31,7 @@ public class FactionConfig : ScriptableObject
         public int foodCost = 0;
         public int woodCost = 0;
         public int goldCost = 0;
+        public Texture unitIcon;
         public List<Unit> unitPrefabVariations;
     }
 
@@ -90,7 +92,6 @@ public class FactionConfig : ScriptableObject
     public List<Unit.EUnitType> BuildableUnits(Building.EBuildingType _buildingType)
     {
         List<Unit.EUnitType> _list = new List<Unit.EUnitType>();
-        Debug.Log("Making New List for " + _buildingType);
 
         if (_units == null || _units.Length == 0)
         {
@@ -100,11 +101,9 @@ public class FactionConfig : ScriptableObject
 
         foreach (FactionUnit _factionUnit in _units)
         {
-            Debug.Log("Checking " + _factionUnit.builtFrom.ToString());
             if (_factionUnit.builtFrom == _buildingType)
             {
                 _list.Add(_factionUnit.unitType);
-                Debug.Log("Adding " + _factionUnit.unitType.ToString());
             }
         }
 
@@ -126,6 +125,26 @@ public class FactionConfig : ScriptableObject
         foreach (FactionUnit _unit in _units)
         {
             if (_unit.unitType == _type) return _unit;
+        }
+
+        return null;
+    }
+
+    public Texture Icon(Building.EBuildingType _type)
+    {
+        foreach (FactionBuilding _building in _buildings)
+        {
+            if (_building.buildingType == _type) return _building.buildingIcon;
+        }
+
+        return null;
+    }
+
+    public Texture Icon(Unit.EUnitType _type)
+    {
+        foreach (FactionUnit _unit in _units)
+        {
+            if (_unit.unitType == _type) return _unit.unitIcon;
         }
 
         return null;

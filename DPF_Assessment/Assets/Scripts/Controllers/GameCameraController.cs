@@ -201,7 +201,6 @@ public class GameCameraController : MonoBehaviour
     public bool IsInUIOffset()
     {
         float mouseY = Input.mousePosition.y / Screen.height;
-        float offSet = bottomScreenOffSet / Screen.height;
-        return mouseY < offSet;
+        return mouseY < bottomScreenOffSet;
     }
 }

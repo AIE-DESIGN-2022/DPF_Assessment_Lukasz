@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,6 +8,7 @@ public class HUD_Manager : MonoBehaviour
     private UI_Resources _resourcesUI;
     private UI_Action _actionsUI;
     private List<Selectable> _selection;
+    private FactionConfig _config;
 
     private void Awake()
     {
@@ -17,6 +19,8 @@ public class HUD_Manager : MonoBehaviour
     public void SetPlayerFaction(Faction _playerFaction)
     {
         if (_resourcesUI != null) _resourcesUI.SetPlayerFaction(_playerFaction);
+        _config = _playerFaction.Config();
+        if (_actionsUI != null) _actionsUI.SetFactionConfig(_config);
     }
     
     public UI_Resources Resource_HUD()
@@ -34,5 +38,11 @@ public class HUD_Manager : MonoBehaviour
         {
             _actionsUI.BuildingSelected(_selection[0].GetComponent<Building>());
         }
+    }
+
+    public void ClearSelection()
+    {
+        _selection = null;
+        _actionsUI.Clear();
     }
 }
