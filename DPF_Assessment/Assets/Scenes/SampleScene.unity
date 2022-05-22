@@ -677,6 +677,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f00d94e5d2d99b248b3047beef30e948, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _spawnTransform: {fileID: 0}
+  _rallyPoint: {fileID: 0}
   _buildableUnits:
   - {fileID: 0}
 --- !u!1001 &942198235
@@ -1497,6 +1499,10 @@ PrefabInstance:
     - target: {fileID: 4531869063087608862, guid: 1ea37eef814277f4f8d96f5c83a930c4, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6842617767896643849, guid: 1ea37eef814277f4f8d96f5c83a930c4, type: 3}
+      propertyPath: _playableFactions.Array.size
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6867176360101429541, guid: 1ea37eef814277f4f8d96f5c83a930c4, type: 3}
       propertyPath: m_Name

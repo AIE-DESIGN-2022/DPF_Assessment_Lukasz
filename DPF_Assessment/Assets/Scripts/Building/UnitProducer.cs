@@ -7,8 +7,8 @@ public class UnitProducer : MonoBehaviour
 {
     [SerializeField] private Transform _spawnTransform;
     [SerializeField] private Transform _rallyPoint;
-    [SerializeField] private List<UnitConfig> _buildableUnits;
-
+    
+    private List<Unit.EUnitType> _buildableUnits;
     private bool _isCurrentlyBuilding;
     private Unit.EUnitType _currentlyBuilding;
     private List<Unit.EUnitType> _buildQue;
@@ -25,6 +25,7 @@ public class UnitProducer : MonoBehaviour
     private void Start()
     {
         SetFaction();
+        SetListOfBuildableUnits();
     }
 
     private void Update()
@@ -66,6 +67,11 @@ public class UnitProducer : MonoBehaviour
         {
             _faction = FindObjectOfType<GameController>().GetFaction(_building.PlayerNumber());
         }
+    }
+
+    private void SetListOfBuildableUnits()
+    {
+        _buildableUnits = _faction.Config().BuildableUnits(_building.BuildingType());
     }
 
 }

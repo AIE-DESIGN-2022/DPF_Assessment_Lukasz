@@ -22,7 +22,7 @@ public class FactionConfig : ScriptableObject
     public class FactionUnit
     {
         public Unit.EUnitType unitType;
-        public Building.EBuildingType _uiltFrom;
+        public Building.EBuildingType builtFrom;
         public float buildTime = 10;
         public List<Unit> unitPrefabVariations;
     }
@@ -79,5 +79,17 @@ public class FactionConfig : ScriptableObject
         }
 
         return 0;
+    }
+
+    public List<Unit.EUnitType> BuildableUnits(Building.EBuildingType buildingType)
+    {
+        List<Unit.EUnitType> list = new List<Unit.EUnitType>();
+
+        foreach (FactionUnit _factionUnit in _units)
+        {
+            if (_factionUnit.builtFrom == buildingType) list.Add(_factionUnit.unitType);
+        }
+
+        return list;
     }
 }

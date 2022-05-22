@@ -72,4 +72,6 @@ public class Faction : MonoBehaviour
     {
         return _config;
     }
+
+    
 }

@@ -15,4 +15,6 @@ public class Building : Selectable
         Farm,
         Tower
     }
+
+    public EBuildingType BuildingType() { return _buildingType; }
 }
