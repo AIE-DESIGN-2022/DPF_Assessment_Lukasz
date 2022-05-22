@@ -40,7 +40,7 @@ public class Projectile : MonoBehaviour
         if (!_flyingInAir) return;
 
         Unit _unit = other.transform.GetComponent<Unit>();
-        if (_unit != null && _unit != _owner)
+        if (_unit != null && _unit != _owner && _unit.PlayerNumber() != _owner.PlayerNumber())
         {
             Hit(_unit);
         }

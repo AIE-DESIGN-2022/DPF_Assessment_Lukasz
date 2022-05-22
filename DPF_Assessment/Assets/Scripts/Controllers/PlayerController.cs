@@ -31,11 +31,11 @@ public class PlayerController : MonoBehaviour
         Selectable _selectable = _hit.transform.GetComponent<Selectable>();
         if (_selectable != null && (_selectable.PlayerNumber() == _playerNumber || _selectable.PlayerNumber() == 0))
         {
-            Debug.Log("Selectable");
+            //Debug.Log("Selectable");
             _selectable.Selected(true);
             _currentSelection.Add(_selectable);
         }
-        Debug.Log("Not Selectable " + _hit.transform.gameObject.name);
+        //Debug.Log("Not Selectable " + _hit.transform.gameObject.name);
     }
 
     private void HandleRightClick()
