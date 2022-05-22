@@ -31,17 +31,6 @@ public class UnitProducer : MonoBehaviour
     {
         ProcessBuildQue();
         ProcessCurrentBuild();
-
-        WhenSelected();
-    }
-
-    private void WhenSelected()
-    {
-        if (_building.IsSelected())
-        {
-            SetFaction();
-            SetListOfBuildableUnits();
-        }
     }
 
     private void ProcessCurrentBuild()
@@ -76,15 +65,47 @@ public class UnitProducer : MonoBehaviour
         if (_building.PlayerNumber() != 0 && _faction == null)
         {
             _faction = FindObjectOfType<GameController>().GetFaction(_building.PlayerNumber());
+            //Debug.Log(gameObject.name + " setting faction as " + _faction);
         }
     }
 
     private void SetListOfBuildableUnits()
     {
+        if (_faction == null) SetFaction();
+
         if (_faction != null && _buildableUnits == null)
         {
+            Debug.Log("Checking config of " + _faction.Config().ToString());
             _buildableUnits = _faction.Config().BuildableUnits(_building.BuildingType());
         }
+    }
+
+    public List<Unit.EUnitType> GetListOfBuildableUnits()
+    {
+        if (_buildableUnits == null) SetListOfBuildableUnits();
+
+        if (_buildableUnits != null)
+        {
+            print("Returning list of buildable units with " + _buildableUnits.Count);
+            return _buildableUnits;
+        }
+        else return null;
+    }
+
+    public void AddToQue(Unit.EUnitType _newUnit)
+    {
+        if (CanAfford(_newUnit))
+        {
+            _buildQue.Add(_newUnit);
+            _faction.SubtractFromStockpileCostOf(_newUnit);
+        }
+    }
+
+    private bool CanAfford(Unit.EUnitType _newUnit)
+    {
+        if (_faction == null) SetFaction();
+
+        return _faction.CanAfford(_newUnit);
     }
 
 }

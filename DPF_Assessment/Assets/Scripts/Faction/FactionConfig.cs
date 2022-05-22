@@ -15,6 +15,9 @@ public class FactionConfig : ScriptableObject
     {
         public Building.EBuildingType buildingType;
         public Unit.EUnitType builtBy = Unit.EUnitType.Worker;
+        public int foodCost = 0;
+        public int woodCost = 0;
+        public int goldCost = 0;
         public Building buildingPrefab;
     }
 
@@ -24,6 +27,9 @@ public class FactionConfig : ScriptableObject
         public Unit.EUnitType unitType;
         public Building.EBuildingType builtFrom;
         public float buildTime = 10;
+        public int foodCost = 0;
+        public int woodCost = 0;
+        public int goldCost = 0;
         public List<Unit> unitPrefabVariations;
     }
 
@@ -81,15 +87,47 @@ public class FactionConfig : ScriptableObject
         return 0;
     }
 
-    public List<Unit.EUnitType> BuildableUnits(Building.EBuildingType buildingType)
+    public List<Unit.EUnitType> BuildableUnits(Building.EBuildingType _buildingType)
     {
-        List<Unit.EUnitType> list = new List<Unit.EUnitType>();
+        List<Unit.EUnitType> _list = new List<Unit.EUnitType>();
+        Debug.Log("Making New List for " + _buildingType);
+
+        if (_units == null || _units.Length == 0)
+        {
+            Debug.LogError(name + " has no list of units.");
+            return null;
+        }
 
         foreach (FactionUnit _factionUnit in _units)
         {
-            if (_factionUnit.builtFrom == buildingType) list.Add(_factionUnit.unitType);
+            Debug.Log("Checking " + _factionUnit.builtFrom.ToString());
+            if (_factionUnit.builtFrom == _buildingType)
+            {
+                _list.Add(_factionUnit.unitType);
+                Debug.Log("Adding " + _factionUnit.unitType.ToString());
+            }
         }
 
-        return list;
+        return _list;
+    }
+
+    public FactionBuilding BuildingConfig(Building.EBuildingType _type)
+    {
+        foreach (FactionBuilding _building in _buildings)
+        {
+            if (_building.buildingType == _type) return _building;
+        }
+
+        return null;
+    }
+
+    public FactionUnit UnitConfig(Unit.EUnitType _type)
+    {
+        foreach (FactionUnit _unit in _units)
+        {
+            if (_unit.unitType == _type) return _unit;
+        }
+
+        return null;
     }
 }

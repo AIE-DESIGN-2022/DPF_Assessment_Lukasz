@@ -28,7 +28,6 @@ public class Faction : MonoBehaviour
     {
         NameFaction();
         SetupChildren();
-        _config = FindObjectOfType<GameController>().GetFactionConfig(_faction);
     }
 
     private void SetupChildren()
@@ -51,7 +50,11 @@ public class Faction : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+    }
+
+    public EFaction FactionType()
+    {
+        return _faction;
     }
 
     public void SetupFaction(EFaction _new, int _playerNo)
@@ -79,7 +82,15 @@ public class Faction : MonoBehaviour
 
     public FactionConfig Config()
     {
-        return _config;
+        if (_config != null)
+        {
+            return _config;
+        }
+        else
+        {
+            Debug.LogError(gameObject.name + " missing FactionConfig");
+            return null;
+        }
     }
 
     public Building ClosestResourceDropPoint(CollectableResource collectableResource)
@@ -183,5 +194,54 @@ public class Faction : MonoBehaviour
     public void SetGameController(GameController _controller)
     {
         _gameController =  _controller;
+    }
+
+    public void SetFactionConfig(FactionConfig _newConfig)
+    {
+        Debug.Log(name + " setting new config as " + _newConfig.ToString());
+        _config = _newConfig;
+    }    
+
+    public void Death(Selectable _deadSelectable)
+    {
+        Unit _unit = _deadSelectable.GetComponent<Unit>();
+        if (_unit != null) _units.Remove(_unit);
+        else
+        {
+            Building _building = _deadSelectable.GetComponent<Building>();
+            if (_building != null) _buildings.Remove(_building);
+        }
+    }
+
+    public bool CanAfford(Unit.EUnitType _newUnit)
+    {
+        FactionConfig.FactionUnit _unitConfig = _config.UnitConfig(_newUnit);
+
+        return _food >= _unitConfig.foodCost && _wood >= _unitConfig.woodCost && _gold >= _unitConfig.goldCost;
+    }
+
+    public bool CanAfford(Building.EBuildingType _newBuilding)
+    {
+        FactionConfig.FactionBuilding _buildingConfig = _config.BuildingConfig(_newBuilding);
+
+        return _food >= _buildingConfig.foodCost && _wood >= _buildingConfig.woodCost && _gold >= _buildingConfig.goldCost;
+    }
+    
+    public void SubtractFromStockpileCostOf(Unit.EUnitType _newUnit)
+    {
+        FactionConfig.FactionUnit _unitConfig = _config.UnitConfig(_newUnit);
+
+        _food -= _unitConfig.foodCost;
+        _wood -= _unitConfig.woodCost;
+        _gold -= _unitConfig.goldCost;
+    }
+
+    public void SubtractFromStockpileCostOf(Building.EBuildingType _newBuilding)
+    {
+        FactionConfig.FactionBuilding _buildingConfig = _config.BuildingConfig(_newBuilding);
+
+        _food -= _buildingConfig.foodCost;
+        _wood -= _buildingConfig.woodCost;
+        _gold -= _buildingConfig.goldCost;
     }
 }

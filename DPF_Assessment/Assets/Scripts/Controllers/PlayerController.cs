@@ -7,6 +7,7 @@ public class PlayerController : MonoBehaviour
 {
     private List<Selectable> _currentSelection;
     private int _playerNumber = 1;
+    private HUD_Manager _hudManager;
 
     // Start is called before the first frame update
     private void Start()
@@ -34,6 +35,7 @@ public class PlayerController : MonoBehaviour
             //Debug.Log("Selectable");
             _selectable.Selected(true);
             _currentSelection.Add(_selectable);
+            _hudManager.NewSelection(_currentSelection);
         }
         //Debug.Log("Not Selectable " + _hit.transform.gameObject.name);
     }
@@ -149,5 +151,10 @@ public class PlayerController : MonoBehaviour
                 _unit.SetTarget(_newResource);
             }
         }
+    }
+
+    public void SetHUD_Manager(HUD_Manager _newManager)
+    {
+        _hudManager = _newManager;
     }
 }

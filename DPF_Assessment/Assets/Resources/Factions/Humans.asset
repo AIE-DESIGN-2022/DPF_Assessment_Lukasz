@@ -16,31 +16,49 @@ MonoBehaviour:
   _buildings:
   - buildingType: 0
     builtBy: 0
+    foodCost: 0
+    woodCost: 0
+    goldCost: 0
     buildingPrefab: {fileID: 1180573847072710891, guid: f14b0a0ee80f92e4a8e448841a21ce0a, type: 3}
   _units:
   - unitType: 0
     builtFrom: 0
     buildTime: 10
+    foodCost: 50
+    woodCost: 0
+    goldCost: 0
     unitPrefabVariations:
     - {fileID: 8418730917576266227, guid: 512c384db0095b4418e060762a33f289, type: 3}
     - {fileID: 8418730917576266227, guid: 91dbe919e3dcd904ab6e064a7478edda, type: 3}
   - unitType: 1
-    builtFrom: 0
+    builtFrom: 1
     buildTime: 10
+    foodCost: 0
+    woodCost: 0
+    goldCost: 0
     unitPrefabVariations:
     - {fileID: 8418730917576266227, guid: d9cfb853a33a7f2488eb25dc2dd59c0d, type: 3}
   - unitType: 2
-    builtFrom: 0
+    builtFrom: 1
     buildTime: 10
+    foodCost: 0
+    woodCost: 0
+    goldCost: 0
     unitPrefabVariations:
     - {fileID: 8418730917576266227, guid: 5420c44299a835e4a9f6f0dd2a927164, type: 3}
   - unitType: 3
-    builtFrom: 0
+    builtFrom: 2
     buildTime: 10
+    foodCost: 0
+    woodCost: 0
+    goldCost: 0
     unitPrefabVariations:
     - {fileID: 8418730917576266227, guid: 1f66a6b75d26c2145883edecb3cd1c6f, type: 3}
   - unitType: 4
-    builtFrom: 0
+    builtFrom: 2
     buildTime: 10
+    foodCost: 0
+    woodCost: 0
+    goldCost: 0
     unitPrefabVariations:
     - {fileID: 8418730917576266227, guid: f1f9b38630a6aa348868c59a6cf46d1b, type: 3}

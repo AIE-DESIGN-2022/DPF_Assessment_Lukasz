@@ -66,6 +66,7 @@ public class Selectable : MonoBehaviour
 
     private void DeathEnd()
     {
+        FindObjectOfType<GameController>().GetFaction(_owningPlayerNumber).Death(this);
         Destroy(gameObject);
     }    
 }

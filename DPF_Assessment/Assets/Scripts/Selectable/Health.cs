@@ -47,9 +47,9 @@ public class Health : MonoBehaviour
     private void Die()
     {
         _isAlive = false;
-
         Animator _animator = GetComponent<Animator>();
         if (_animator != null) _animator.SetTrigger("death");
+        //GetComponent<Selectable>().Death();
     }
 
     public float HealthPercentage()

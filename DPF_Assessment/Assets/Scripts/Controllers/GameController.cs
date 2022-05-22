@@ -6,21 +6,36 @@ using UnityEngine;
 public class GameController : MonoBehaviour
 {
     [SerializeField] private int _playerNumber = 1;
-    private FactionConfig[] _playableFactions;
+    private List<FactionConfig> _playableFactions = new List<FactionConfig>();
     private List<Faction> _factions = new List<Faction>();
     private HUD_Manager _hudManager;
+    private PlayerController _playerController;
 
     private void Awake()
     {
         _hudManager = GetComponentInChildren<HUD_Manager>();
+        _playerController = GetComponentInChildren<PlayerController>();
+        
     }
 
     // Start is called before the first frame update
     void Start()
     {
+        LoadFactoryConfigs();
         BuildListOfFactions();
-        _playableFactions = Resources.LoadAll<FactionConfig>("Factions/");
         _hudManager.SetPlayerFaction(GetPlayerFaction());
+        _playerController.SetHUD_Manager(_hudManager);
+    }
+
+    private void LoadFactoryConfigs()
+    {
+        FactionConfig[] _loadedConfigs = Resources.LoadAll<FactionConfig>("Factions/");
+        //Debug.Log(_loadedConfigs.Length + " FactoryConfigs loaded");
+        foreach (var _loadedConfig in _loadedConfigs)
+        {
+            //Debug.Log("Adding " + _loadedConfig.ToString());
+            _playableFactions.Add(_loadedConfig);
+        }
     }
 
     private void SetupNewGame()
@@ -33,8 +48,10 @@ public class GameController : MonoBehaviour
         Faction[] _newFactions = FindObjectsOfType<Faction>();
         foreach (Faction _faction in _newFactions)
         {
+            //Debug.Log(name + " found " + _faction.ToString() + " with FactionType " + _faction.FactionType().ToString());
             _factions.Add(_faction);
             _faction.SetGameController(this);
+            _faction.SetFactionConfig(GetFactionConfig(_faction.FactionType()));
         }
     }
 
@@ -78,15 +95,30 @@ public class GameController : MonoBehaviour
 
     public FactionConfig GetFactionConfig(Faction.EFaction _faction)
     {
+        Debug.Log("Getting FactionConfig for " + _faction.ToString());
         if (_playableFactions != null)
         {
-            foreach (FactionConfig factionConfig in _playableFactions)
+            foreach (FactionConfig _factionConfig in _playableFactions)
             {
-                if (factionConfig.Faction() == _faction) return factionConfig;
+                Debug.Log("Checking " + _factionConfig.ToString());
+                if (_factionConfig.Faction() == _faction)
+                {
+                    Debug.Log("Returning " + _factionConfig.ToString());
+                    return _factionConfig;
+                }
+                    
             }
+
+            Debug.Log(name + " doesnt have a FactoryConfig for " + _faction.ToString());
+            return null;
+        }
+        else
+        {
+            Debug.Log(name + " has no list of FactionConfigs");
+            return null;
         }
         
-        return null;
+        
     }
 
     public Faction GetPlayerFaction()
