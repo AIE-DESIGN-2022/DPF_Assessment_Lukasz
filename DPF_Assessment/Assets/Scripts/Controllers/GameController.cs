@@ -43,4 +43,17 @@ public class GameController : MonoBehaviour
         Faction _faction = _new.GetComponent<Faction>();
         //_faction.SetFaction();
     }
+
+    public Faction GetFaction(int _playerNumber)
+    {
+        foreach (Faction _faction in _factions)
+        {
+            if (_faction.PlayerNumber() == _playerNumber)
+            {
+                return _faction;
+            }
+        }
+
+        return null;
+    }
 }

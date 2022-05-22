@@ -54,5 +54,7 @@ public class Faction : MonoBehaviour
     private void NameFaction()
     {
         gameObject.name = "Faction(" + _playerNumber + ")_" + _faction.ToString();
-    }    
+    }
+
+    public int PlayerNumber() { return _playerNumber; }
 }
