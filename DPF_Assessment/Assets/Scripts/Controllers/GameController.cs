@@ -5,18 +5,21 @@ using UnityEngine;
 
 public class GameController : MonoBehaviour
 {
-    [SerializeField] private bool _newGame;
+    //[SerializeField] private bool _newGame;
     private FactionConfig[] _playableFactions;
 
-    private List<Faction> _factions;
+    private List<Faction> _factions = new List<Faction>();
+
+    private void Awake()
+    {
+        
+    }
 
     // Start is called before the first frame update
     void Start()
     {
-        _playableFactions = Resources.FindObjectsOfTypeAll<FactionConfig>();
-
-        if (_newGame) SetupNewGame();
-        else SetupNewGame();
+        BuildListOfFactions();
+        _playableFactions = Resources.LoadAll<FactionConfig>("Factions/");
     }
 
     private void SetupNewGame()
@@ -24,7 +27,7 @@ public class GameController : MonoBehaviour
 
     }
 
-    private void SetupGame()
+    private void BuildListOfFactions()
     {
         Faction[] _newFactions = FindObjectsOfType<Faction>();
         foreach (Faction _faction in _newFactions)
@@ -36,7 +39,7 @@ public class GameController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
     private void AddFaction()
@@ -49,23 +52,38 @@ public class GameController : MonoBehaviour
 
     public Faction GetFaction(int _playerNumber)
     {
-        foreach (Faction _faction in _factions)
+        if (_factions.Count > 0)
         {
-            if (_faction.PlayerNumber() == _playerNumber)
+            foreach (Faction _faction in _factions)
             {
-                return _faction;
+                if (_faction.PlayerNumber() == _playerNumber)
+                {
+                    return _faction;
+                }
             }
+
+            Debug.LogError("GameController canot not find faction with PlayerNumber =" + _playerNumber);
+            return null;
+        }
+        else
+        {
+            Debug.LogError("GameController has no list of factions.");
+            return null;
         }
 
-        return null;
+        
     }
 
     public FactionConfig GetFactionConfig(Faction.EFaction _faction)
     {
-        foreach (FactionConfig factionConfig in _playableFactions)
+        if (_playableFactions != null)
         {
-            if (factionConfig.Faction() == _faction) return factionConfig;
+            foreach (FactionConfig factionConfig in _playableFactions)
+            {
+                if (factionConfig.Faction() == _faction) return factionConfig;
+            }
         }
+        
         return null;
     }
 }

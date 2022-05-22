@@ -17,4 +17,6 @@ public class Building : Selectable
     }
 
     public EBuildingType BuildingType() { return _buildingType; }
+
+    public bool IsResourceDropPoint() { return _resourceDropPoint; }
 }

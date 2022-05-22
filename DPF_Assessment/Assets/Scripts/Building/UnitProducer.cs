@@ -24,14 +24,24 @@ public class UnitProducer : MonoBehaviour
 
     private void Start()
     {
-        SetFaction();
-        SetListOfBuildableUnits();
+        
     }
 
     private void Update()
     {
         ProcessBuildQue();
         ProcessCurrentBuild();
+
+        WhenSelected();
+    }
+
+    private void WhenSelected()
+    {
+        if (_building.IsSelected())
+        {
+            SetFaction();
+            SetListOfBuildableUnits();
+        }
     }
 
     private void ProcessCurrentBuild()
@@ -63,7 +73,7 @@ public class UnitProducer : MonoBehaviour
 
     private void SetFaction()
     {
-        if (_building.PlayerNumber() != 0)
+        if (_building.PlayerNumber() != 0 && _faction == null)
         {
             _faction = FindObjectOfType<GameController>().GetFaction(_building.PlayerNumber());
         }
@@ -71,7 +81,10 @@ public class UnitProducer : MonoBehaviour
 
     private void SetListOfBuildableUnits()
     {
-        _buildableUnits = _faction.Config().BuildableUnits(_building.BuildingType());
+        if (_faction != null && _buildableUnits == null)
+        {
+            _buildableUnits = _faction.Config().BuildableUnits(_building.BuildingType());
+        }
     }
 
 }

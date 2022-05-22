@@ -73,5 +73,28 @@ public class Faction : MonoBehaviour
         return _config;
     }
 
-    
+    public Building ClosestResourceDropPoint(CollectableResource collectableResource)
+    {
+        List<Building> _dropPoints = new List<Building>();
+
+        foreach (Building building in _buildings)
+        {
+            if (building.IsResourceDropPoint()) _dropPoints.Add(building);
+        }
+
+        Building _closest = null;
+        float _smallestDistance = Mathf.Infinity;
+
+        foreach (Building _dropPoint in _dropPoints)
+        {
+            float _distance = Vector3.Distance(_dropPoint.transform.position, collectableResource.transform.position);
+            if (_distance < _smallestDistance)
+            {
+                _smallestDistance = _distance;
+                _closest = _dropPoint;
+            }
+        }
+
+        return _closest;
+    }
 }
