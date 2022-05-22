@@ -7,14 +7,15 @@ public class Faction : MonoBehaviour
 {
     [SerializeField] private EFaction _faction;
     [SerializeField] private int _playerNumber;
-    [SerializeField] private FactionConfig _config;
+    [Header("Resource Stockpile")]
+    [SerializeField] private int _wood;
+    [SerializeField] private int _food;
+    [SerializeField] private int _gold;
 
-    private int _wood;
-    private int _food;
-    private int _gold;
-
+    private FactionConfig _config;
     private List<Unit> _units = new List<Unit>();
     private List<Building> _buildings = new List<Building>();
+    private GameController _gameController;
 
     public enum EFaction
     {
@@ -110,5 +111,77 @@ public class Faction : MonoBehaviour
         }
 
         return _closest;
+    }
+
+    public int StockpileAmount(CollectableResource.EResourceType _type)
+    {
+        switch(_type)
+        {
+            case CollectableResource.EResourceType.Food:
+                return _food;
+
+            case CollectableResource.EResourceType.Wood:
+                return _wood;
+
+            case CollectableResource.EResourceType.Gold:
+                return _gold;
+
+            default:
+                return 0;
+        }    
+    }
+
+    public void AddToStockpile(CollectableResource.EResourceType _type, int _amount)
+    {
+        switch (_type)
+        {
+            case CollectableResource.EResourceType.Food:
+                _food += _amount;
+                break;
+
+            case CollectableResource.EResourceType.Wood:
+                _wood += _amount;
+                break;
+
+            case CollectableResource.EResourceType.Gold:
+                _gold += _amount;
+                break;
+
+            default:
+                Debug.Log("Unable to add to Faction Stockpile, unknown resource type.");
+                break;
+        }
+
+        if (_gameController.IsPlayerFaction(_playerNumber)) _gameController.HUD_Manager().Resource_HUD().UpdateResources();
+    }
+
+    public void RemoveFromStockpile(CollectableResource.EResourceType _type, int _amount)
+    {
+        switch (_type)
+        {
+            case CollectableResource.EResourceType.Food:
+                _food -= _amount;
+                break;
+
+            case CollectableResource.EResourceType.Wood:
+                _wood -= _amount;
+                break;
+
+            case CollectableResource.EResourceType.Gold:
+                _gold -= _amount;
+                break;
+
+            default:
+                Debug.Log("Unable to add to Faction Stockpile, unknown resource type.");
+                break;
+        }
+
+        if (_gameController.IsPlayerFaction(_playerNumber)) _gameController.HUD_Manager().Resource_HUD().UpdateResources();
+    }
+
+
+    public void SetGameController(GameController _controller)
+    {
+        _gameController =  _controller;
     }
 }

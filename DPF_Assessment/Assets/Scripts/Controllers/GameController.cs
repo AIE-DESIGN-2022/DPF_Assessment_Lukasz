@@ -5,14 +5,14 @@ using UnityEngine;
 
 public class GameController : MonoBehaviour
 {
-    //[SerializeField] private bool _newGame;
+    [SerializeField] private int _playerNumber = 1;
     private FactionConfig[] _playableFactions;
-
     private List<Faction> _factions = new List<Faction>();
+    private HUD_Manager _hudManager;
 
     private void Awake()
     {
-        
+        _hudManager = GetComponentInChildren<HUD_Manager>();
     }
 
     // Start is called before the first frame update
@@ -20,6 +20,7 @@ public class GameController : MonoBehaviour
     {
         BuildListOfFactions();
         _playableFactions = Resources.LoadAll<FactionConfig>("Factions/");
+        _hudManager.SetPlayerFaction(GetPlayerFaction());
     }
 
     private void SetupNewGame()
@@ -33,6 +34,7 @@ public class GameController : MonoBehaviour
         foreach (Faction _faction in _newFactions)
         {
             _factions.Add(_faction);
+            _faction.SetGameController(this);
         }
     }
 
@@ -85,5 +87,21 @@ public class GameController : MonoBehaviour
         }
         
         return null;
+    }
+
+    public Faction GetPlayerFaction()
+    {
+        return GetFaction(_playerNumber);
+    }
+
+    public HUD_Manager HUD_Manager()
+    {
+        if (_hudManager != null) return _hudManager;
+        else return null;
+    }
+
+    public bool IsPlayerFaction(int _factionNumber)
+    {
+        return _playerNumber == _factionNumber;
     }
 }

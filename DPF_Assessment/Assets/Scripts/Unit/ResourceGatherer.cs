@@ -12,6 +12,7 @@ public class ResourceGatherer : MonoBehaviour
     private CollectableResource.EResourceType _gatheringType;
     private int _gatherRate;
     private Building _dropOff;
+    private Faction _faction;
 
 
     [SerializeField] private float _gatherRange = 2.0f;
@@ -76,12 +77,14 @@ public class ResourceGatherer : MonoBehaviour
         _unit.StopMoveTo();
         if (_gatheringTool == null) EquipTool();
         _unit.Animator().SetBool("working", true);
+        transform.LookAt(_targetResource.transform);
     }
 
     public void SetTargetResource(CollectableResource _newResource)
     {
         _targetResource = _newResource;
-        SetTargetDropOffPoint(FindObjectOfType<GameController>().GetFaction(_unit.PlayerNumber()).ClosestResourceDropPoint(_targetResource));
+        if (_faction == null) SetFaction();
+        SetTargetDropOffPoint(_faction.ClosestResourceDropPoint(_targetResource));
     }
 
     public void SetTargetDropOffPoint(Building building)
@@ -173,6 +176,8 @@ public class ResourceGatherer : MonoBehaviour
     {
         if (collision.collider.GetComponent<Building>() == _dropOff)
         {
+            if (_faction == null) SetFaction();
+            _faction.AddToStockpile(_gatheringType, _gatheredAmount);
             _gatheredAmount = 0;
             _unit.StopMoveTo();
 
@@ -193,4 +198,10 @@ public class ResourceGatherer : MonoBehaviour
     {
         return _gatheringType;
     }
+
+    private void SetFaction()
+    {
+        _faction = FindObjectOfType<GameController>().GetFaction(_unit.PlayerNumber());
+    }
+
 }

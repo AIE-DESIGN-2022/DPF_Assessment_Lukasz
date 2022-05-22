@@ -184,6 +184,23 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f14b0a0ee80f92e4a8e448841a21ce0a, type: 3}
+--- !u!1 &286427951 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 9025836470427567462, guid: 1ea37eef814277f4f8d96f5c83a930c4, type: 3}
+  m_PrefabInstance: {fileID: 9025836470164024975}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &286427952
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 286427951}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 993946b11b703e7479a2037d8536636b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &313982125
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -679,8 +696,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _spawnTransform: {fileID: 0}
   _rallyPoint: {fileID: 0}
-  _buildableUnits:
-  - {fileID: 0}
 --- !u!1001 &942198235
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1444,6 +1459,18 @@ PrefabInstance:
       value: Faction(1)_Human
       objectReference: {fileID: 0}
     - target: {fileID: 7160699469891053079, guid: 3dc66ffdd5bb67746858e53492fc766c, type: 3}
+      propertyPath: _food
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 7160699469891053079, guid: 3dc66ffdd5bb67746858e53492fc766c, type: 3}
+      propertyPath: _gold
+      value: 50
+      objectReference: {fileID: 0}
+    - target: {fileID: 7160699469891053079, guid: 3dc66ffdd5bb67746858e53492fc766c, type: 3}
+      propertyPath: _wood
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 7160699469891053079, guid: 3dc66ffdd5bb67746858e53492fc766c, type: 3}
       propertyPath: _playerNumber
       value: 1
       objectReference: {fileID: 0}
@@ -1499,10 +1526,6 @@ PrefabInstance:
     - target: {fileID: 4531869063087608862, guid: 1ea37eef814277f4f8d96f5c83a930c4, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6842617767896643849, guid: 1ea37eef814277f4f8d96f5c83a930c4, type: 3}
-      propertyPath: _playableFactions.Array.size
-      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6867176360101429541, guid: 1ea37eef814277f4f8d96f5c83a930c4, type: 3}
       propertyPath: m_Name
