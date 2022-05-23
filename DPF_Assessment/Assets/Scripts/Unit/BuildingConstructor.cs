@@ -5,12 +5,13 @@ using UnityEngine;
 
 public class BuildingConstructor : MonoBehaviour
 {
-    [SerializeField] private GameObject _buildTool;
-    [SerializeField] private float _buildRate;
-    [SerializeField] private float _buildDistance = 1.0f;
+    [SerializeField] private EquipmentConfig _constructionTool;
+    [SerializeField] private float _buildRate = 100;
 
     private Unit _unit;
     private Building _currentBuildTarget;
+    private bool _buildingIsInRange = false;
+    private GameObject _tool;
 
     private void Awake()
     {
@@ -44,7 +45,7 @@ public class BuildingConstructor : MonoBehaviour
     {
         if (_currentBuildTarget == null) return;
 
-        if (BuildingIsWithinRange())
+        if (_buildingIsInRange)
         {
             ConstructBuilding();
         }
@@ -61,32 +62,19 @@ public class BuildingConstructor : MonoBehaviour
 
     private void ConstructBuilding()
     {
-        if (_unit != null && _unit.Animator() != null)
+        if (_unit != null && _unit.Animator() != null & !_unit.Animator().GetBool("building"))
         {
             _unit.Animator().SetBool("building", true);
             transform.forward = _currentBuildTarget.transform.position;
         }
+        EquipTool();
     }
-
-    private bool BuildingIsWithinRange()
-    {
-        float distance = Vector3.Distance(transform.position, _currentBuildTarget.transform.position);
-        return distance <= _buildDistance /*+ _currentBuildTarget.NavMeshObstacleRadius()*/;
-    }
-
-    /*public void Build(BuildingConfig buildingConfig, List<Builder> builders)
-    {
-        Transform playerTransform = FindObjectOfType<GameController>().PlayerTransform(_unit.owningPlayerNumber);
-        GameObject newObject = Instantiate(buildingConfig.buildingPrefab, playerTransform);
-        Building newBuilding = newObject.GetComponent<Building>();
-        newBuilding.SetBuildState(Building.EBuildState.Placing);
-        FindObjectOfType<GameController>().Player(_unit.owningPlayerNumber).canSelect = false;
-        newBuilding.SetBuilders(builders);
-    }*/
 
     public void ClearBuildTarget()
     {
         _currentBuildTarget = null;
+        _buildingIsInRange = false;
+        UnequipTool();
     }
 
     public void SetBuildTarget(Building newTarget)
@@ -99,6 +87,37 @@ public class BuildingConstructor : MonoBehaviour
         if (_currentBuildTarget != null)
         {
             _currentBuildTarget.ConstructBuilding(_buildRate);
+        }
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        Building _building = other.gameObject.GetComponent<Building>();
+        if (_building != null && _building == _currentBuildTarget)
+        {
+            _buildingIsInRange = true;
+            _unit.StopMoveTo();
+        }
+    }
+
+    public bool HasBuildTarget() { return _currentBuildTarget != null; }
+
+    public bool IsConstructingBuilding() { return _unit.Animator().GetBool("building"); }
+
+    private void EquipTool()
+    {
+        if (_currentBuildTarget != null && _constructionTool != null && _tool == null)
+        {
+            _tool = _constructionTool.Spawn(_unit);
+        }
+    }
+
+    private void UnequipTool()
+    {
+        if (_tool != null)
+        {
+            Destroy(_tool.gameObject);
+            _tool = null;
         }
     }
 }

@@ -1,0 +1,95 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &6612514847588938172
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1413888903825353005}
+  m_Layer: 0
+  m_Name: Hammer
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1413888903825353005
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6612514847588938172}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 7732743433388944084}
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1001 &2229470677001851319
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 1413888903825353005}
+    m_Modifications:
+    - target: {fileID: 8475936034406382435, guid: 72e2af9c085498e4c8a60b22407b389b, type: 3}
+      propertyPath: m_RootOrder
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8475936034406382435, guid: 72e2af9c085498e4c8a60b22407b389b, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0.120530926
+      objectReference: {fileID: 0}
+    - target: {fileID: 8475936034406382435, guid: 72e2af9c085498e4c8a60b22407b389b, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.042736277
+      objectReference: {fileID: 0}
+    - target: {fileID: 8475936034406382435, guid: 72e2af9c085498e4c8a60b22407b389b, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0.016624467
+      objectReference: {fileID: 0}
+    - target: {fileID: 8475936034406382435, guid: 72e2af9c085498e4c8a60b22407b389b, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.5145052
+      objectReference: {fileID: 0}
+    - target: {fileID: 8475936034406382435, guid: 72e2af9c085498e4c8a60b22407b389b, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0.09033459
+      objectReference: {fileID: 0}
+    - target: {fileID: 8475936034406382435, guid: 72e2af9c085498e4c8a60b22407b389b, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0.4184426
+      objectReference: {fileID: 0}
+    - target: {fileID: 8475936034406382435, guid: 72e2af9c085498e4c8a60b22407b389b, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0.74298716
+      objectReference: {fileID: 0}
+    - target: {fileID: 8475936034406382435, guid: 72e2af9c085498e4c8a60b22407b389b, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 45.623
+      objectReference: {fileID: 0}
+    - target: {fileID: 8475936034406382435, guid: 72e2af9c085498e4c8a60b22407b389b, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 25.07
+      objectReference: {fileID: 0}
+    - target: {fileID: 8475936034406382435, guid: 72e2af9c085498e4c8a60b22407b389b, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: -99.911
+      objectReference: {fileID: 0}
+    - target: {fileID: 8475936034406672195, guid: 72e2af9c085498e4c8a60b22407b389b, type: 3}
+      propertyPath: m_Name
+      value: VillagerHammer
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 72e2af9c085498e4c8a60b22407b389b, type: 3}
+--- !u!4 &7732743433388944084 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8475936034406382435, guid: 72e2af9c085498e4c8a60b22407b389b, type: 3}
+  m_PrefabInstance: {fileID: 2229470677001851319}
+  m_PrefabAsset: {fileID: 0}

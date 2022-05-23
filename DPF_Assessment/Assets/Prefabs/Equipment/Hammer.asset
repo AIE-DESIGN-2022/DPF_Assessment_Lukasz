@@ -12,5 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f2023c0d49fae8d40acbceed05adab1e, type: 3}
   m_Name: Hammer
   m_EditorClassIdentifier: 
-  _equipmentPrefab: {fileID: 0}
+  _equipmentPrefab: {fileID: 6612514847588938172, guid: d368d0d83046946409f8db2bdce0e4cc, type: 3}
   _heldInLeftHand: 0
+  _animatorOverrideController: {fileID: 0}
+  _projectilePrefab: {fileID: 0}
