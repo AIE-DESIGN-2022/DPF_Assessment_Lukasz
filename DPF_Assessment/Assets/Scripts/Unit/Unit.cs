@@ -11,6 +11,7 @@ public class Unit : Selectable
     private NavMeshAgent _navMeshAgent;
     private ResourceGatherer _resourceGatherer;
     private Attacker _attacker;
+    private bool _hasStopped = true;
 
     [Header("Unit Config")]
     [SerializeField] private Transform _leftHand;
@@ -71,10 +72,11 @@ public class Unit : Selectable
             Vector3 velocity = transform.InverseTransformDirection(_navMeshAgent.velocity);
             _animator.SetFloat("speed", velocity.z);
 
-            /*if (IsSelected() &&  velocity.z < 0.5f)
+            if (!_hasStopped && DistanceToNavMeshTarget() < 1 && velocity.z < 0.5f)
             {
-                HUD_StatusUpdate();
-            }*/
+                _hasStopped = true;
+                if (IsSelected()) HUD_StatusUpdate();
+            }
         }
     }
 
@@ -115,6 +117,8 @@ public class Unit : Selectable
 
             if (_navMeshAgent.isStopped) _navMeshAgent.isStopped = false;
         }
+
+        _hasStopped = false;
     }
 
     public void SetTarget(CollectableResource _newCollectableResource)
@@ -215,8 +219,22 @@ public class Unit : Selectable
                 _status2 = _resourceGatherer.GatheredResourcesAmount().ToString() + " " + _resourceGatherer.GatheredResourceType().ToString();
             }
         }
+        else if(_attacker != null)
+        {
+            if (_attacker.HasTarget())
+            {
+                if (_attacker.TargetIsInRange())
+                {
+                    _status1 = "Attacking";
+                }
+                else
+                {
+                    _status1 = "Moving to target";
+                }
+            }
+        }
         
-        if (_status1 == "" && _navMeshAgent.destination != null && Vector3.Distance(_navMeshAgent.destination, transform.position) > 1)
+        if (_status1 == "" && DistanceToNavMeshTarget() > 1)
         {
             _status1 = "Moving";
         }
@@ -224,5 +242,14 @@ public class Unit : Selectable
         {
             _status1 = "Idle";
         }
+    }
+
+    private float DistanceToNavMeshTarget()
+    {
+        if (_navMeshAgent.destination != null)
+        {
+            return Vector3.Distance(_navMeshAgent.destination, transform.position);
+        }
+        else return Mathf.Infinity;
     }
 }

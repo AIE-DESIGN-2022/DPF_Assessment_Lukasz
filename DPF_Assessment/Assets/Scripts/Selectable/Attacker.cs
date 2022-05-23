@@ -68,10 +68,11 @@ public class Attacker : MonoBehaviour
             transform.LookAt(_target.transform);
             _unit.Animator().SetTrigger("attack");
             _timeSinceLastAttack = 0;
+            _unit.HUD_StatusUpdate();
         }
     }
 
-    private bool TargetIsInRange()
+    public bool TargetIsInRange()
     {
         if (_target != null)
         {
@@ -81,9 +82,12 @@ public class Attacker : MonoBehaviour
         else return false;
     }
 
+    public bool HasTarget() { return _target != null; }
+
     public void SetTarget(Selectable _newTarget)
     {
         _target = _newTarget;
+        _unit.HUD_StatusUpdate();
     }
 
     public void ClearTarget()

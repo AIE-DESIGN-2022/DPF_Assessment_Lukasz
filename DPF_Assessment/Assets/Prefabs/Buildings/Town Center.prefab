@@ -154,8 +154,9 @@ GameObject:
   - component: {fileID: 7741044262661008546}
   - component: {fileID: 1180573847072710891}
   - component: {fileID: 7737253614315927734}
+  - component: {fileID: 1927470432418122472}
   m_Layer: 0
-  m_Name: TownCenter
+  m_Name: Town Center
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -222,9 +223,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f00d94e5d2d99b248b3047beef30e948, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _spawnTransform: {fileID: 4754952237950676899}
-  _rallyPoint: {fileID: 3967201559876873373}
-  _buildableUnits: []
+--- !u!114 &1927470432418122472
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6325790681338197043}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f66f63c1725b5c5478a7d5741f6645ee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _health: 1000
 --- !u!1001 &1608701503010155283
 PrefabInstance:
   m_ObjectHideFlags: 0

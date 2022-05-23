@@ -118,6 +118,13 @@ public class UnitProducer : MonoBehaviour
         _building.HUD_BuildingQueUpdate();
     }
 
+    public void CancelBuildItem()
+    {
+        _isCurrentlyBuilding = false;
+        _faction.AddToStockpileCostOf(_currentlyBuilding);
+        _building.HUD_BuildingStatusUpdate();
+    }
+
     public List<Unit.EUnitType> BuildQue()
     {
         return _buildQue;

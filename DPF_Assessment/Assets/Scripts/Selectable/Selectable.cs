@@ -48,6 +48,7 @@ public class Selectable : MonoBehaviour
         {
             _health.TakeDamage(_damageAmound);
         }
+        HUD_HealthBarUpdate();
     }
 
     public void Heal(float _healAmount)
@@ -56,6 +57,7 @@ public class Selectable : MonoBehaviour
         {
             _health.Heal(_healAmount);
         }
+        HUD_HealthBarUpdate();
     }
 
     public bool IsAlive() 
@@ -94,4 +96,14 @@ public class Selectable : MonoBehaviour
             FindObjectOfType<GameController>().HUD_Manager().Info_HUD().UpdateBuildQue();
         }
     }
+
+    public void HUD_HealthBarUpdate()
+    {
+        if (IsSelected())
+        {
+            FindObjectOfType<GameController>().HUD_Manager().Info_HUD().UpdateHealthBar();
+        }
+    }
+
+
 }

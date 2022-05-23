@@ -17,6 +17,7 @@ public class UI_Info : MonoBehaviour
     private UI_Bar _healthBar;
     private UI_Bar _buildingBar;
     private RawImage _buildingIcon;
+    private Button _buildingIconButton;
     private UnitProducer _unitProducer;
     private UI_BuildQue _buildQueUI;
 
@@ -27,6 +28,7 @@ public class UI_Info : MonoBehaviour
         FindTextFields();
         FindStatusBars();
         _buildQueUI = GetComponentInChildren<UI_BuildQue>();
+        _buildingIconButton = GetComponentInChildren<Button>();
     }
 
     private void FindImageFields()
@@ -63,7 +65,13 @@ public class UI_Info : MonoBehaviour
 
     private void Start()
     {
+        _buildingIconButton.onClick.AddListener(CancelBuildItem);
         ClearSelection();
+    }
+
+    private void CancelBuildItem()
+    {
+        if (_unitProducer != null) { _unitProducer.CancelBuildItem(); }
     }
 
     public void SetFactionConfig(FactionConfig _newConfig)
@@ -90,6 +98,8 @@ public class UI_Info : MonoBehaviour
         }
         else Debug.LogError(name + " is missing FactionConfig.");
         UpdateStatus();
+
+        _healthBar.Set(_selectedUnit.GetComponent<Health>());
     }
 
     public void NewSelection(Building _newSelectedBuilding)
@@ -107,6 +117,8 @@ public class UI_Info : MonoBehaviour
         _unitProducer = _selectedBuilding.GetComponent<UnitProducer>();
         UpdateBuildingStatus();
         UpdateBuildQue();
+
+        _healthBar.Set(_selectedBuilding.GetComponent<Health>());
 
     }
 
@@ -151,6 +163,11 @@ public class UI_Info : MonoBehaviour
         }
     }
 
+    public void UpdateHealthBar()
+    {
+        _healthBar.UpdateHealthBar();
+    }
+
     public void ClearSelection()
     {
         Show(false);
@@ -163,6 +180,7 @@ public class UI_Info : MonoBehaviour
         _buildingIcon.enabled = false;
         _buildingBar.Clear();
         _buildQueUI.Clear();
+        _healthBar.Clear();
     }
 
     public void UpdateStatus()

@@ -28,7 +28,18 @@ public class UI_Action_Button : MonoBehaviour
 
     private void OnClick()
     {
-        if (_unitProducer != null) _unitProducer.AddToQue(_buildableUnit);
+        if (_unitProducer != null)
+        {
+            _unitProducer.AddToQue(_buildableUnit);
+
+            if (Input.GetKey(KeyCode.LeftShift))
+            {
+                for(int i = 0; i < 4; i++)
+                {
+                    _unitProducer.AddToQue(_buildableUnit);
+                }
+            }
+        }
     }
     
 }
