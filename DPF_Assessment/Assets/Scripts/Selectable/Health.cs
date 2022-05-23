@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -58,4 +59,8 @@ public class Health : MonoBehaviour
     }
 
     public bool IsAlive() { return _isAlive; }
+
+    public bool IsFull() { return _health == _currentHealth; }
+
+    public void NewBuilding() { _currentHealth = 1; }
 }

@@ -9,6 +9,7 @@ public class PlayerController : MonoBehaviour
     private int _playerNumber = 1;
     private HUD_Manager _hudManager;
     private GameCameraController _cameraController;
+    private bool _playerControlOnline = true;
 
     private void Awake()
     {
@@ -25,6 +26,7 @@ public class PlayerController : MonoBehaviour
     private void Update()
     {
         if (_cameraController.IsInUIOffset()) return;
+        if (!_playerControlOnline) return;
 
         if (Input.GetMouseButtonDown(0)) HandleLeftClick();
 
@@ -106,6 +108,11 @@ public class PlayerController : MonoBehaviour
         return _hit;
     }
 
+    public Vector3 LocationUnderMouse()
+    {
+        return UnderMouse().point;
+    }
+
     private void ClearSelection()
     {
         if (_currentSelection.Count <= 0) return;
@@ -165,5 +172,10 @@ public class PlayerController : MonoBehaviour
     public void SetHUD_Manager(HUD_Manager _newManager)
     {
         _hudManager = _newManager;
+    }
+
+    public void PlayerControl(bool _online)
+    {
+        _playerControlOnline = _online;
     }
 }
