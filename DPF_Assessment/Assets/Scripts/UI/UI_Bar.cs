@@ -13,6 +13,7 @@ public class UI_Bar : MonoBehaviour
     private float _updateFreqency = 0.5f;
     private float _updateTime = 0;
     private Health _health;
+    private Building _construction;
 
     private void Awake()
     {
@@ -39,6 +40,20 @@ public class UI_Bar : MonoBehaviour
     void Update()
     {
         ProducingUnit();
+        ConstructingBuilding();
+    }
+
+    private void ConstructingBuilding()
+    {
+        if (_construction != null)
+        {
+            _updateTime += Time.deltaTime;
+            if (_updateTime > _updateFreqency && _construction.BuildState() == Building.EBuildState.Building)
+            {
+                UpdatePercentage(_construction.PercentageComplete());
+                _updateTime = 0;
+            }
+        }    
     }
 
     private void ProducingUnit()
@@ -52,7 +67,6 @@ public class UI_Bar : MonoBehaviour
                 _updateTime = 0;
             }
         }
-
     }
 
     public void Set(UnitProducer _producer)
@@ -66,6 +80,12 @@ public class UI_Bar : MonoBehaviour
         _health = _newHealth;
         ShowBackground();
         UpdateHealthBar();
+    }
+
+    public void Set(Building _newConstruction)
+    {
+        _construction = _newConstruction;
+        _updateTime = Mathf.Infinity;
     }
 
     public void UpdateHealthBar()

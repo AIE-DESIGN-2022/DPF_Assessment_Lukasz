@@ -217,7 +217,20 @@ public class Unit : Selectable
                 _status2 = _resourceGatherer.GatheredResourcesAmount().ToString() + " " + _resourceGatherer.GatheredResourceType().ToString();
             }
         }
-        else if(_attacker != null)
+        
+        if(_buildingConstructor != null)
+        {
+            if (_buildingConstructor.IsConstructingBuilding())
+            {
+                _status1 = "Constructing...";
+            }
+            else if (_buildingConstructor.HasBuildTarget())
+            {
+                _status1 = "Moving to construction.";
+            }
+        }
+        
+        if(_attacker != null)
         {
             if (_attacker.HasTarget())
             {
@@ -249,6 +262,12 @@ public class Unit : Selectable
             return Vector3.Distance(_navMeshAgent.destination, transform.position);
         }
         else return Mathf.Infinity;
+    }
+
+    public void TakeAStepBack()
+    {
+        Vector3 _newPosition = transform.position + (transform.forward * -1);
+        MoveTo(_newPosition);
     }
 }
 // Writen by Lukasz Dziedziczak

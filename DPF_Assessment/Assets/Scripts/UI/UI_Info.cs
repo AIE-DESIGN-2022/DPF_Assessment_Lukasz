@@ -21,6 +21,8 @@ public class UI_Info : MonoBehaviour
     private Button _buildingIconButton;
     private UnitProducer _unitProducer;
     private UI_BuildQue _buildQueUI;
+    private Building _buildingGettingConstructed;
+    private BuildingConstructor _buildingConstructor;
 
     private void Awake()
     {
@@ -111,6 +113,9 @@ public class UI_Info : MonoBehaviour
         else Debug.LogError(name + " is missing FactionConfig.");
         UpdateStatus();
 
+        _buildingConstructor = _selectedUnit.GetComponent<BuildingConstructor>();
+        UpdateBuildingStatus();
+
         _healthBar.Set(_selectedUnit.GetComponent<Health>());
     }
 
@@ -158,6 +163,22 @@ public class UI_Info : MonoBehaviour
                 }
             }
         }
+
+        if (_buildingConstructor != null)
+        {
+            if (_buildingConstructor.HasBuildTarget())
+            {
+                _buildingIcon.enabled = true;
+                _buildingIcon.texture = _config.Icon(_buildingConstructor.BuildTarget().BuildingType());
+                _buildingBar.Set(_buildingConstructor.BuildTarget());
+            }
+            else
+            {
+                _buildingIcon.enabled = false;
+                _buildingIcon.texture = null;
+                _buildingBar.Clear();
+            }
+        }
     }
 
     public void UpdateBuildQue()
@@ -193,6 +214,8 @@ public class UI_Info : MonoBehaviour
         _buildingBar.Clear();
         _buildQueUI.Clear();
         _healthBar.Clear();
+        _buildingGettingConstructed = null;
+        _buildingConstructor = null;
     }
 
     public void UpdateStatus()

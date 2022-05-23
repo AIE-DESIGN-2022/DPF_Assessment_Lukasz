@@ -31,6 +31,7 @@ public class BuildingConstructor : MonoBehaviour
             if (_unit != null && _unit.Animator() != null && _unit.Animator().GetBool("building"))
             {
                 _unit.Animator().SetBool("building", false);
+                _unit.HUD_StatusUpdate();
             }
             return;
         }
@@ -38,6 +39,7 @@ public class BuildingConstructor : MonoBehaviour
         if (_currentBuildTarget.BuildState() != Building.EBuildState.Building)
         {
             ClearBuildTarget();
+            _unit.TakeAStepBack();
         }
     }
 
@@ -66,6 +68,7 @@ public class BuildingConstructor : MonoBehaviour
         {
             _unit.Animator().SetBool("building", true);
             transform.forward = _currentBuildTarget.transform.position;
+            _unit.HUD_BuildingStatusUpdate();
         }
         EquipTool();
     }
@@ -75,11 +78,13 @@ public class BuildingConstructor : MonoBehaviour
         _currentBuildTarget = null;
         _buildingIsInRange = false;
         UnequipTool();
+        _unit.HUD_BuildingStatusUpdate();
     }
 
     public void SetBuildTarget(Building newTarget)
     {
         _currentBuildTarget = newTarget;
+        _unit.HUD_BuildingStatusUpdate();
     }
 
     public void BuildEffect()
@@ -101,6 +106,8 @@ public class BuildingConstructor : MonoBehaviour
     }
 
     public bool HasBuildTarget() { return _currentBuildTarget != null; }
+
+    public Building BuildTarget() { return _currentBuildTarget; }
 
     public bool IsConstructingBuilding() { return _unit.Animator().GetBool("building"); }
 

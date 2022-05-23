@@ -214,5 +214,10 @@ public class Building : Selectable
     public EBuildState ConstructionState() { return _buildState; }
 
     public bool ConstructionComplete() { return _buildState == EBuildState.Complete; }
+
+    public float PercentageComplete()
+    {
+        return _health.HealthPercentage();
+    }
 }
 // Writen by Lukasz Dziedziczak

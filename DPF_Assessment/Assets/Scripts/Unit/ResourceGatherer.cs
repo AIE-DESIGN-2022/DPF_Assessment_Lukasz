@@ -194,6 +194,10 @@ public class ResourceGatherer : MonoBehaviour
                 SetTargetResource(_lastTargetResource);
                 _lastTargetResource = null;
             }
+            else
+            {
+                _unit.TakeAStepBack();
+            }
         }
     }
 
