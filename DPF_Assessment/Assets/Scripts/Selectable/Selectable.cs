@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(Rigidbody)),RequireComponent(typeof(Collider))]
 public class Selectable : MonoBehaviour
 {
     private SpriteRenderer _selectionIndicator;
@@ -20,8 +21,23 @@ public class Selectable : MonoBehaviour
     protected void Start()
     {
         Selected(false);
-
+        RigidbodySetup();
+        ColliderSetup();
         if (_selectionIndicator == null) Debug.Log("Selection Indicator Missing");
+    }
+
+    private void RigidbodySetup()
+    {
+        Rigidbody rb = GetComponent<Rigidbody>();
+        rb.interpolation = RigidbodyInterpolation.Extrapolate;
+        rb.collisionDetectionMode = CollisionDetectionMode.ContinuousSpeculative;
+        rb.constraints = RigidbodyConstraints.FreezeAll;
+    }
+
+    private void ColliderSetup()
+    {
+        Collider collider = GetComponent<Collider>();
+        collider.isTrigger = true;
     }
 
     public void Selected(bool isSelected)

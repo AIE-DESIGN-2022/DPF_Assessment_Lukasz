@@ -13,10 +13,12 @@ public class Building : Selectable
     private UnitProducer _unitProducer;
     private EBuildState _buildState = EBuildState.Complete;
     //private Health _health;
-    private MeshRenderer _meshRenderer;
+    private MeshRenderer[] _meshRenderers;
     private GameController _gameController;
     private int _numberOfCollisions = 0;
     private List<BuildingConstructor> _constructionTeam;
+
+    public List<Collider> collisions = new List<Collider>();
 
     public enum EBuildingType
     {
@@ -41,6 +43,7 @@ public class Building : Selectable
         _unitProducer = GetComponent<UnitProducer>();
         _health = GetComponent<Health>();
         _gameController = FindObjectOfType<GameController>();
+        _meshRenderers = GetComponentsInChildren<MeshRenderer>();
     }
 
     private new void Start()
@@ -74,43 +77,42 @@ public class Building : Selectable
 
     private void ProcessPlacement()
     {
-        if (_gameController.CameraController().IsInUIOffset())
-        {
-            transform.position = new Vector3(0.0f, 100.0f, 0.0f);
-        }
-        else
+        if (_gameController.CameraController().MouseIsInPlayArea())
         {
             Vector3 mouseWorldLocation = _gameController.PlayerController().LocationUnderMouse();
             transform.position = new Vector3(mouseWorldLocation.x, 0.0f, mouseWorldLocation.z);
-        }
 
-        if (_numberOfCollisions > 0)
-        {
-            SetBuildState(EBuildState.PlacingBad);
+
+            if (_numberOfCollisions > 0)
+            {
+                SetBuildState(EBuildState.PlacingBad);
+            }
+            else
+            {
+                SetBuildState(EBuildState.Placing);
+
+                if (Input.GetMouseButtonDown(0)) // Left click to select new building location.
+                {
+                    SetBuildState(EBuildState.Building);
+                    _health.NewBuilding();
+                    _gameController.PlayerController().PlayerControl(true);
+
+                    // based on selected units who can construct buildings, give begin actul construction order
+                    foreach (BuildingConstructor _constructor in _constructionTeam)
+                    {
+                        _constructor.SetBuildTarget(this);
+                    }
+                }
+            }
+
+            if (Input.GetMouseButtonDown(1)) // Right click to cancel new building placement.
+            {
+                _gameController.GetPlayerFaction().CancelBuildingPlacement(this);
+            }
         }
         else
         {
-            SetBuildState(EBuildState.Placing);
-
-            if (Input.GetMouseButtonDown(0)) // Left click to select new building location.
-            {
-                SetBuildState(EBuildState.Building);
-                _health.NewBuilding();
-                _gameController.PlayerController().PlayerControl(true);
-
-                // based on selected units who can construct buildings, give begin actul construction order
-                foreach (BuildingConstructor _constructor in _constructionTeam)
-                {
-                    _constructor.SetBuildTarget(this);
-                }
-            }
-        }
-
-        if (Input.GetMouseButtonDown(1)) // Right click to cancel new building placement.
-        {
-            _gameController.PlayerController().PlayerControl(true);
-            _gameController.GetPlayerFaction().AddToStockpileCostOf(_buildingType);
-            Destroy(gameObject);
+            transform.position = new Vector3(0.0f, 100.0f, 0.0f);
         }
     }
 
@@ -177,26 +179,38 @@ public class Building : Selectable
 
     private void SetMaterialsColour(Color _newColor)
     {
-        if (_meshRenderer != null)
+        if (_meshRenderers != null)
         {
-            foreach (Material _material in _meshRenderer.materials)
+            foreach (MeshRenderer _meshRenderer in _meshRenderers)
             {
-                _material.color = _newColor;
+                foreach (Material _material in _meshRenderer.materials)
+                {
+                    _material.color = _newColor;
+                }
             }
         }
+        else Debug.LogError(name + " missing MeshRenderers.");
     }
 
-    private void OnCollisionEnter(Collision collision)
+    private void OnTriggerEnter(Collider other)
     {
+        if (other.name == "Terrain") return;
+
         _numberOfCollisions++;
     }
 
-    private void OnCollisionExit(Collision collision)
+    private void OnTriggerExit(Collider other)
     {
+        if (other.name == "Terrain") return;
+
         _numberOfCollisions--;
     }
 
     public EBuildState BuildState() { return _buildState; }
 
     public void SetConstructionTeam(List<BuildingConstructor> _newTeam) { _constructionTeam = _newTeam; }
+
+    public EBuildState ConstructionState() { return _buildState; }
+
+    public bool ConstructionComplete() { return _buildState == EBuildState.Complete; }
 }

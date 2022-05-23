@@ -203,4 +203,17 @@ public class GameCameraController : MonoBehaviour
         float mouseY = Input.mousePosition.y / Screen.height;
         return mouseY < bottomScreenOffSet;
     }
+
+    public bool MouseIsInPlayArea()
+    {
+        float mouseX = Input.mousePosition.x / Screen.width;
+        float mouseY = Input.mousePosition.y / Screen.height;
+
+        if (mouseX < 0 || mouseY < 0 || mouseX > 1 || mouseY > 1) return false;
+
+        if (IsInUIOffset()) return false;
+
+
+        return true;
+    }
 }

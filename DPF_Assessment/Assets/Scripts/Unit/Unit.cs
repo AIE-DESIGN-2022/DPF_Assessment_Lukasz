@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-[RequireComponent(typeof(NavMeshAgent)), RequireComponent(typeof(Animator)), RequireComponent(typeof(Health)), RequireComponent(typeof(Rigidbody))]
+[RequireComponent(typeof(NavMeshAgent)), RequireComponent(typeof(Animator)), RequireComponent(typeof(Health))]
 public class Unit : Selectable
 {
     private Animator _animator;
@@ -42,14 +42,7 @@ public class Unit : Selectable
     {
         base.Start();
         if (_navMeshAgent != null) _navMeshAgent.updateRotation = false;
-        SetupRigidbody();
-    }
-
-    private void SetupRigidbody()
-    {
-        Rigidbody rb = GetComponent<Rigidbody>();
-        rb.interpolation = RigidbodyInterpolation.Extrapolate;
-        rb.constraints = RigidbodyConstraints.FreezeAll;
+        
     }
 
     private void Update()

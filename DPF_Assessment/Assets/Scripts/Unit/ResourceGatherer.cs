@@ -177,10 +177,29 @@ public class ResourceGatherer : MonoBehaviour
 
         _unit.HUD_StatusUpdate();
     }
-
+/*
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.collider.GetComponent<Building>() == _dropOff)
+        {
+            if (_faction == null) SetFaction();
+            _faction.AddToStockpile(_gatheringType, _gatheredAmount);
+            _gatheredAmount = 0;
+            _unit.StopMoveTo();
+            _unit.HUD_StatusUpdate();
+
+            if (_lastTargetResource != null && _lastTargetResource.HasResource())
+            {
+                SetTargetResource(_lastTargetResource);
+                _lastTargetResource = null;
+            }
+
+        }
+    }
+*/
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.GetComponent<Building>() == _dropOff)
         {
             if (_faction == null) SetFaction();
             _faction.AddToStockpile(_gatheringType, _gatheredAmount);

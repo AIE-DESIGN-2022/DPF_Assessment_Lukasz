@@ -94,6 +94,7 @@ public class Faction : MonoBehaviour
         _buildings.Add(_newBuilding);
         _newBuilding.SetBuildState(Building.EBuildState.Placing);
         _newBuilding.SetConstructionTeam(_builders);
+        _gameController.PlayerController().PlayerControl(false);
         return _newBuilding;
     }
 
@@ -122,7 +123,7 @@ public class Faction : MonoBehaviour
 
         foreach (Building building in _buildings)
         {
-            if (building.IsResourceDropPoint()) _dropPoints.Add(building);
+            if (building.IsResourceDropPoint() && building.ConstructionComplete()) _dropPoints.Add(building);
         }
 
         Building _closest = null;
@@ -139,6 +140,14 @@ public class Faction : MonoBehaviour
         }
 
         return _closest;
+    }
+
+    public void CancelBuildingPlacement(Building _building)
+    {
+        _buildings.Remove(_building);
+        AddToStockpileCostOf(_building.BuildingType());
+        _gameController.PlayerController().PlayerControl(true);
+        Destroy(_building.gameObject);
     }
 
     public int StockpileAmount(CollectableResource.EResourceType _type)
