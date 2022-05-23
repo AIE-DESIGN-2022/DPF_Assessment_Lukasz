@@ -5,8 +5,8 @@ using UnityEngine;
 
 public class UnitProducer : MonoBehaviour
 {
-    [SerializeField] private Transform _spawnTransform;
-    [SerializeField] private Transform _rallyPoint;
+    private Transform _spawnTransform;
+    private Transform _rallyPoint;
     
     private List<Unit.EUnitType> _buildableUnits;
     private bool _isCurrentlyBuilding;
@@ -20,6 +20,17 @@ public class UnitProducer : MonoBehaviour
     {
         _buildQue = new List<Unit.EUnitType>();
         _building = GetComponent<Building>();
+        SetTransforms();
+    }
+
+    private void SetTransforms()
+    {
+        Transform[] _transforms = GetComponentsInChildren<Transform>();
+        foreach (Transform _transform in _transforms)
+        {
+            if (_transform.name == "SpawnPoint") _spawnTransform = _transform;
+            if ( _transform.name == "RallyPoint") _rallyPoint = _transform;
+        }
     }
 
     private void Start()
@@ -43,7 +54,7 @@ public class UnitProducer : MonoBehaviour
             _isCurrentlyBuilding = false;
             Unit _newUnit = _faction.SpawnUnit(_currentlyBuilding, _spawnTransform);
             _newUnit.MoveTo(_rallyPoint.position);
-            // update HUD build que;
+            _building.HUD_StatusUpdate();
         }
 
     }
@@ -56,7 +67,7 @@ public class UnitProducer : MonoBehaviour
             _buildQue.RemoveAt(0);
             _timeLeft = _faction.Config().BuildTime(_currentlyBuilding);
             _isCurrentlyBuilding = true;
-            // update HUD build que;
+            _building.HUD_StatusUpdate();
         }
     }
 
@@ -95,6 +106,7 @@ public class UnitProducer : MonoBehaviour
         {
             _buildQue.Add(_newUnit);
             _faction.SubtractFromStockpileCostOf(_newUnit);
+            _building.HUD_StatusUpdate();
         }
     }
 
@@ -105,4 +117,13 @@ public class UnitProducer : MonoBehaviour
         return _faction.CanAfford(_newUnit);
     }
 
+    public bool IsCurrentlyProducing()
+    {
+        return _isCurrentlyBuilding;
+    }
+
+    public Unit.EUnitType CurrentlyProducing()
+    {
+        return _currentlyBuilding;
+    }
 }

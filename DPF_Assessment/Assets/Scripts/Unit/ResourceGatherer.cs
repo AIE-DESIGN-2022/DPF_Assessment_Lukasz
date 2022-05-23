@@ -85,11 +85,13 @@ public class ResourceGatherer : MonoBehaviour
         _targetResource = _newResource;
         if (_faction == null) SetFaction();
         SetTargetDropOffPoint(_faction.ClosestResourceDropPoint(_targetResource));
+        _unit.HUD_StatusUpdate();
     }
 
     public void SetTargetDropOffPoint(Building building)
     {
         _dropOff = building;
+        _unit.HUD_StatusUpdate();
     }    
 
     public void ClearTargetResource(bool _rememberForLater = false)
@@ -102,11 +104,13 @@ public class ResourceGatherer : MonoBehaviour
         if (_unit != null) _unit.Animator().SetBool("working", false);
         else Debug.LogError(gameObject.name + " Gatherer's unit referance missing.");
         UnequipTool();
+        _unit.HUD_StatusUpdate();
     }
 
     public void ClearDropOffPoint()
     {
         if (_dropOff != null) _dropOff = null;
+        _unit.HUD_StatusUpdate();
     }
 
     private bool IsInRange()
@@ -170,6 +174,8 @@ public class ResourceGatherer : MonoBehaviour
         {
             _gatheredAmount += _targetResource.Gather(_gatherRate);
         }
+
+        _unit.HUD_StatusUpdate();
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -180,12 +186,14 @@ public class ResourceGatherer : MonoBehaviour
             _faction.AddToStockpile(_gatheringType, _gatheredAmount);
             _gatheredAmount = 0;
             _unit.StopMoveTo();
+            _unit.HUD_StatusUpdate();
 
             if (_lastTargetResource != null && _lastTargetResource.HasResource())
             {
                 SetTargetResource(_lastTargetResource);
                 _lastTargetResource = null;
             }
+
         }
     }
 
@@ -203,5 +211,9 @@ public class ResourceGatherer : MonoBehaviour
     {
         _faction = FindObjectOfType<GameController>().GetFaction(_unit.PlayerNumber());
     }
+
+    public bool HasResourceTarget() { return _targetResource != null; }
+
+    public bool HasDropOffTarget() { return _dropOff != null; }
 
 }

@@ -68,5 +68,13 @@ public class Selectable : MonoBehaviour
     {
         FindObjectOfType<GameController>().GetFaction(_owningPlayerNumber).Death(this);
         Destroy(gameObject);
-    }    
+    } 
+    
+    public void HUD_StatusUpdate()
+    {
+        if (IsSelected())
+        {
+            FindObjectOfType<GameController>().HUD_Manager().Info_HUD().UpdateStatus();
+        }
+    }
 }

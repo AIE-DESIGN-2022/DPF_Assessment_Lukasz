@@ -70,6 +70,11 @@ public class Unit : Selectable
         {
             Vector3 velocity = transform.InverseTransformDirection(_navMeshAgent.velocity);
             _animator.SetFloat("speed", velocity.z);
+
+            /*if (IsSelected() &&  velocity.z < 0.5f)
+            {
+                HUD_StatusUpdate();
+            }*/
         }
     }
 
@@ -83,11 +88,13 @@ public class Unit : Selectable
         if (_attacker != null) _attacker.ClearTarget();
         if (_animator != null) _animator.SetTrigger("stop");
         Move(_newLocation);
+        HUD_StatusUpdate();
     }
 
     public void MoveTo(CollectableResource _collectableResource)
     {
         Move(_collectableResource.transform.position);
+
     }
 
     public void MoveTo(Selectable _selectable)
@@ -108,7 +115,6 @@ public class Unit : Selectable
 
             if (_navMeshAgent.isStopped) _navMeshAgent.isStopped = false;
         }
-
     }
 
     public void SetTarget(CollectableResource _newCollectableResource)
@@ -181,6 +187,42 @@ public class Unit : Selectable
         if (_resourceGatherer != null)
         {
             _resourceGatherer.SetTargetDropOffPoint(_newDropPoint);
+        }
+    }
+
+    public void Status(out string _status1, out string _status2)
+    {
+        _status1 = "";
+        _status2 = "";
+
+        if (_resourceGatherer != null)
+        {
+            if (_resourceGatherer.HasResourceTarget())
+            {
+                _status1 = "Gathering resources";
+            }
+            else if (_resourceGatherer.HasDropOffTarget())
+            {
+                _status1 = "Dropping off resources";
+            }
+            else if (_resourceGatherer.GatheredResourcesAmount() > 0)
+            {
+                _status1 = "Carrying resources";
+            }
+
+            if (_resourceGatherer.GatheredResourcesAmount() > 0)
+            {
+                _status2 = _resourceGatherer.GatheredResourcesAmount().ToString() + " " + _resourceGatherer.GatheredResourceType().ToString();
+            }
+        }
+        
+        if (_status1 == "" && _navMeshAgent.destination != null && Vector3.Distance(_navMeshAgent.destination, transform.position) > 1)
+        {
+            _status1 = "Moving";
+        }
+        else if (_status1 == "")
+        {
+            _status1 = "Idle";
         }
     }
 }

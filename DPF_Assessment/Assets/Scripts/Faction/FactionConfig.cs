@@ -55,8 +55,7 @@ public class FactionConfig : ScriptableObject
 
         if (_possiblePrefabs.Count > 1)
         {
-            int _prefabIndex = Random.Range(0, _possiblePrefabs.Count - 1);
-
+            int _prefabIndex = Random.Range(0, _possiblePrefabs.Count);
             return _possiblePrefabs[_prefabIndex];
         }
         else
