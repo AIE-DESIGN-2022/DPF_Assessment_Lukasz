@@ -13,7 +13,7 @@ public class UI_Resources : MonoBehaviour
     private Text _wood;
     private Text _gold;
 
-    private void Start()
+    private void Awake()
     {
         SetupTextBoxes();
     }
