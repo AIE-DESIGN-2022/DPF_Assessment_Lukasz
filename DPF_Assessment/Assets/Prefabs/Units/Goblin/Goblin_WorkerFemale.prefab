@@ -98,6 +98,7 @@ GameObject:
   - component: {fileID: 329282101429042307}
   - component: {fileID: 4113137002026170681}
   - component: {fileID: 7875978317332595393}
+  - component: {fileID: 851189579843255928}
   m_Layer: 0
   m_Name: Goblin_WorkerFemale
   m_TagString: Untagged
@@ -238,6 +239,21 @@ MonoBehaviour:
   _maxCarry: 10
   _woodCuttingTool: {fileID: 11400000, guid: 5c81ba8a793b19a41b9e59c2d5a3dcc0, type: 2}
   _woodGatherRate: 1
+--- !u!114 &851189579843255928
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8418730917576266226}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 518c6f5b6d724ec43a8691a166bb7722, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _buildTool: {fileID: 0}
+  _buildRate: 0
+  _buildDistance: 1
 --- !u!1001 &3354205898899960780
 PrefabInstance:
   m_ObjectHideFlags: 0

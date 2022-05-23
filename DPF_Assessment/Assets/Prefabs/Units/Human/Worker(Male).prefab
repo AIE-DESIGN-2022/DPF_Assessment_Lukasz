@@ -98,8 +98,9 @@ GameObject:
   - component: {fileID: 2010097402}
   - component: {fileID: 3211305525638561480}
   - component: {fileID: 1688730487323696090}
+  - component: {fileID: -7126685512130000650}
   m_Layer: 0
-  m_Name: VilligerMale
+  m_Name: Worker(Male)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -238,6 +239,21 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &-7126685512130000650
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8418730917576266226}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 518c6f5b6d724ec43a8691a166bb7722, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _buildTool: {fileID: 0}
+  _buildRate: 0
+  _buildDistance: 1
 --- !u!1001 &1279590327590248293
 PrefabInstance:
   m_ObjectHideFlags: 0

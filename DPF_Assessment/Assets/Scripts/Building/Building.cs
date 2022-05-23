@@ -11,19 +11,11 @@ public class Building : Selectable
     [SerializeField] private bool _resourceDropPoint = false;
 
     private UnitProducer _unitProducer;
-    private EBuildState _buildState;
+    private EBuildState _buildState = EBuildState.Complete;
     //private Health _health;
     private MeshRenderer _meshRenderer;
     private GameController _gameController;
     private int _numberOfCollisions = 0;
-
-    private new void Awake()
-    {
-        base.Awake();
-        _unitProducer = GetComponent<UnitProducer>();
-        _health = GetComponent<Health>();
-        _gameController = FindObjectOfType<GameController>();
-    }
 
     public enum EBuildingType
     {
@@ -40,6 +32,20 @@ public class Building : Selectable
         PlacingBad,
         Building,
         Complete
+    }
+
+    private new void Awake()
+    {
+        base.Awake();
+        _unitProducer = GetComponent<UnitProducer>();
+        _health = GetComponent<Health>();
+        _gameController = FindObjectOfType<GameController>();
+    }
+
+    private new void Start()
+    {
+        base.Start();
+
     }
 
     private void Update()
@@ -167,9 +173,12 @@ public class Building : Selectable
 
     private void SetMaterialsColour(Color _newColor)
     {
-        foreach (Material material in _meshRenderer.materials)
+        if (_meshRenderer != null)
         {
-            material.color = _newColor;
+            foreach (Material _material in _meshRenderer.materials)
+            {
+                _material.color = _newColor;
+            }
         }
     }
 
@@ -182,4 +191,6 @@ public class Building : Selectable
     {
         _numberOfCollisions--;
     }
+
+    public EBuildState BuildState() { return _buildState; }
 }
