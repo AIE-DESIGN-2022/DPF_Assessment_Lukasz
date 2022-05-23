@@ -109,6 +109,27 @@ public class FactionConfig : ScriptableObject
         return _list;
     }
 
+    public List<Building.EBuildingType> ConstructableBuildings(Unit.EUnitType _constructor)
+    {
+        List<Building.EBuildingType> _list = new List<Building.EBuildingType>();
+
+        if (_buildings == null || _buildings.Length == 0)
+        {
+            Debug.LogError(name + " has no listt of buildings.");
+            return null;
+        }
+
+        foreach (FactionBuilding _factionBuilding in _buildings)
+        {
+            if (_factionBuilding.builtBy == _constructor)
+            {
+                _list.Add(_factionBuilding.buildingType);
+            }
+        }
+
+        return _list;
+    }
+
     public FactionBuilding BuildingConfig(Building.EBuildingType _type)
     {
         foreach (FactionBuilding _building in _buildings)

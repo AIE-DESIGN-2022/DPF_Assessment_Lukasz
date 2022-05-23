@@ -21,8 +21,8 @@ public class HUD_Manager : MonoBehaviour
     public void SetPlayerFaction(Faction _playerFaction)
     {
         if (_resourcesUI != null) _resourcesUI.SetPlayerFaction(_playerFaction);
+        if (_actionsUI != null) _actionsUI.SetFaction(_playerFaction);
         _config = _playerFaction.Config();
-        if (_actionsUI != null) _actionsUI.SetFactionConfig(_config);
         if (_infoUI != null) _infoUI.SetFactionConfig(_config);
     }
     
@@ -35,6 +35,11 @@ public class HUD_Manager : MonoBehaviour
     public UI_Info Info_HUD()
     {
         return _infoUI;
+    }
+
+    public UI_Action Actions_HUD()
+    {
+        return _actionsUI;
     }
 
     public void NewSelection(List<Selectable> _newSelection)
@@ -59,6 +64,7 @@ public class HUD_Manager : MonoBehaviour
             if (_selectedUnit != null)
             {
                 _infoUI.NewSelection(_selectedUnit);
+                _actionsUI.UnitSelected(_selectedUnit);
             }
         }
 

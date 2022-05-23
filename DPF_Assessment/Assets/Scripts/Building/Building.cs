@@ -16,6 +16,7 @@ public class Building : Selectable
     private MeshRenderer _meshRenderer;
     private GameController _gameController;
     private int _numberOfCollisions = 0;
+    private List<BuildingConstructor> _constructionTeam;
 
     public enum EBuildingType
     {
@@ -79,7 +80,8 @@ public class Building : Selectable
         }
         else
         {
-            transform.position = _gameController.PlayerController().LocationUnderMouse();
+            Vector3 mouseWorldLocation = _gameController.PlayerController().LocationUnderMouse();
+            transform.position = new Vector3(mouseWorldLocation.x, 0.0f, mouseWorldLocation.z);
         }
 
         if (_numberOfCollisions > 0)
@@ -90,22 +92,24 @@ public class Building : Selectable
         {
             SetBuildState(EBuildState.Placing);
 
-            if (Input.GetMouseButtonDown(0))
+            if (Input.GetMouseButtonDown(0)) // Left click to select new building location.
             {
                 SetBuildState(EBuildState.Building);
                 _health.NewBuilding();
                 _gameController.PlayerController().PlayerControl(true);
+
                 // based on selected units who can construct buildings, give begin actul construction order
-                /*foreach (Builder builder in builders)
+                foreach (BuildingConstructor _constructor in _constructionTeam)
                 {
-                    builder.SetBuildTarget(this);
-                }*/
+                    _constructor.SetBuildTarget(this);
+                }
             }
         }
 
-        if (Input.GetMouseButtonDown(1))
+        if (Input.GetMouseButtonDown(1)) // Right click to cancel new building placement.
         {
             _gameController.PlayerController().PlayerControl(true);
+            _gameController.GetPlayerFaction().AddToStockpileCostOf(_buildingType);
             Destroy(gameObject);
         }
     }
@@ -193,4 +197,6 @@ public class Building : Selectable
     }
 
     public EBuildState BuildState() { return _buildState; }
+
+    public void SetConstructionTeam(List<BuildingConstructor> _newTeam) { _constructionTeam = _newTeam; }
 }

@@ -86,6 +86,17 @@ public class Faction : MonoBehaviour
         return _newUnit;
     }
 
+    public Building SpawnBuilding(Building.EBuildingType _newType, List<BuildingConstructor> _builders)
+    {
+        Building _newBuilding = Instantiate(_config.GetBuildingPrefab(_newType));
+        _newBuilding.SetPlayerNumber(_playerNumber);
+        _newBuilding.transform.parent = transform;
+        _buildings.Add(_newBuilding);
+        _newBuilding.SetBuildState(Building.EBuildState.Placing);
+        _newBuilding.SetConstructionTeam(_builders);
+        return _newBuilding;
+    }
+
     public FactionConfig Config()
     {
         if (_config != null)
@@ -262,6 +273,17 @@ public class Faction : MonoBehaviour
         _food -= _buildingConfig.foodCost;
         _wood -= _buildingConfig.woodCost;
         _gold -= _buildingConfig.goldCost;
+
+        if (_gameController.IsPlayerFaction(_playerNumber)) _gameController.HUD_Manager().Resource_HUD().UpdateResources();
+    }
+
+    public void AddToStockpileCostOf(Building.EBuildingType _newBuilding)
+    {
+        FactionConfig.FactionBuilding _buildingConfig = _config.BuildingConfig(_newBuilding);
+
+        _food += _buildingConfig.foodCost;
+        _wood += _buildingConfig.woodCost;
+        _gold += _buildingConfig.goldCost;
 
         if (_gameController.IsPlayerFaction(_playerNumber)) _gameController.HUD_Manager().Resource_HUD().UpdateResources();
     }
