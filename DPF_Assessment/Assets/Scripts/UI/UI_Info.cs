@@ -161,6 +161,7 @@ public class UI_Info : MonoBehaviour
         _status2.text = string.Empty;
         _unitProducer = null;
         _buildingIcon.enabled = false;
+        _buildingBar.Clear();
         _buildQueUI.Clear();
     }
 

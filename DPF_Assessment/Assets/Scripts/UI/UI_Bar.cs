@@ -54,7 +54,7 @@ public class UI_Bar : MonoBehaviour
     public void Set(UnitProducer _producer)
     {
         _unitProducer = _producer;
-        _updateTime = 0;
+        _updateTime = Mathf.Infinity;
     }
 
     public void Clear()
