@@ -82,6 +82,7 @@ public class Unit : Selectable
 
     public void MoveTo(Vector3 _newLocation)
     {
+        //Debug.Log(name + "Recieved MoveTo order");
         if (_resourceGatherer != null)
         {
             _resourceGatherer.ClearTargetResource();
