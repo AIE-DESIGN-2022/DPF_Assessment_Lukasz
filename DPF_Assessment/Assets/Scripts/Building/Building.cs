@@ -50,6 +50,7 @@ public class Building : Selectable
     private new void Start()
     {
         base.Start();
+        GetComponent<NavMeshObstacle>().carving = true;
 
     }
 
