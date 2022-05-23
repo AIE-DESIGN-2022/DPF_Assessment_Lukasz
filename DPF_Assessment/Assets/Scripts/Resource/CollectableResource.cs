@@ -1,3 +1,4 @@
+// Writen by Lukasz Dziedziczak
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -50,3 +51,4 @@ public class CollectableResource : Selectable
 
     public bool HasResource() { return _currentAmount > 0; }
 }
+// Writen by Lukasz Dziedziczak

@@ -1,3 +1,4 @@
+// Writen by Lukasz Dziedziczak
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -41,3 +42,4 @@ public class EquipmentConfig : ScriptableObject
         else return null;
     }
 }
+// Writen by Lukasz Dziedziczak

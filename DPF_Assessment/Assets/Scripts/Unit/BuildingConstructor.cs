@@ -1,3 +1,4 @@
+// Writen by Lukasz Dziedziczak
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,7 +9,6 @@ public class BuildingConstructor : MonoBehaviour
     [SerializeField] private float _buildRate;
     [SerializeField] private float _buildDistance = 1.0f;
 
-    private List<BuildingConfig> buildableBuildings;
     private Unit _unit;
     private Building _currentBuildTarget;
 
@@ -102,3 +102,4 @@ public class BuildingConstructor : MonoBehaviour
         }
     }
 }
+// Writen by Lukasz Dziedziczak

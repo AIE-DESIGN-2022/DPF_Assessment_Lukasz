@@ -1,3 +1,4 @@
+// Writen by Lukasz Dziedziczak
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -179,3 +180,4 @@ public class PlayerController : MonoBehaviour
         _playerControlOnline = _online;
     }
 }
+// Writen by Lukasz Dziedziczak

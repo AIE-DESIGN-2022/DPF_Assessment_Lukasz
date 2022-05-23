@@ -1,3 +1,4 @@
+// Writen by Lukasz Dziedziczak
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -247,3 +248,4 @@ public class Unit : Selectable
         else return Mathf.Infinity;
     }
 }
+// Writen by Lukasz Dziedziczak

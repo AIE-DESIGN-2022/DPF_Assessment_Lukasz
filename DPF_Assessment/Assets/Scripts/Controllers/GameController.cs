@@ -1,3 +1,4 @@
+// Writen by Lukasz Dziedziczak
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -101,3 +102,4 @@ public class GameController : MonoBehaviour
 
     public GameCameraController CameraController() { return _cameraController; }
 }
+// Writen by Lukasz Dziedziczak

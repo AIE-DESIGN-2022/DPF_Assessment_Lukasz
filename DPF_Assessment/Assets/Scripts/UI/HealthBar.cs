@@ -1,3 +1,4 @@
+// Writen by Lukasz Dziedziczak
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -37,3 +38,4 @@ public class HealthBar : MonoBehaviour
         transform.forward = Camera.main.transform.forward;
     }
 }
+// Writen by Lukasz Dziedziczak

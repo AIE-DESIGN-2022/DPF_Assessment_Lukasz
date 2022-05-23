@@ -1,3 +1,4 @@
+// Writen by Lukasz Dziedziczak
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -114,3 +115,4 @@ public class Attacker : MonoBehaviour
         }
     }
 }
+// Writen by Lukasz Dziedziczak

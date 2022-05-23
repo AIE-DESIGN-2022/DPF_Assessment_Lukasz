@@ -1,3 +1,4 @@
+// Writen by Lukasz Dziedziczak
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -155,3 +156,4 @@ public class UnitProducer : MonoBehaviour
         return 1 - (_timeLeft / _faction.Config().BuildTime(_currentlyBuilding));
     }
 }
+// Writen by Lukasz Dziedziczak

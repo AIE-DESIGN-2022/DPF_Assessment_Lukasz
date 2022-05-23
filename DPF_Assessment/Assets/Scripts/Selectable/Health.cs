@@ -1,3 +1,4 @@
+// Writen by Lukasz Dziedziczak
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -64,3 +65,4 @@ public class Health : MonoBehaviour
 
     public void NewBuilding() { _currentHealth = 1; }
 }
+// Writen by Lukasz Dziedziczak

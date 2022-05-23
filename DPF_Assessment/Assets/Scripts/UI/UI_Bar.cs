@@ -1,3 +1,4 @@
+// Writen by Lukasz Dziedziczak
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -109,3 +110,4 @@ public class UI_Bar : MonoBehaviour
     }
 
 }
+// Writen by Lukasz Dziedziczak

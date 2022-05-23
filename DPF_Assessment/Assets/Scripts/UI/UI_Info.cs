@@ -1,3 +1,4 @@
+// Writen by Lukasz Dziedziczak
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -213,3 +214,4 @@ public class UI_Info : MonoBehaviour
         _status2.text = _newStatus2;
     }
 }
+// Writen by Lukasz Dziedziczak

@@ -1,3 +1,4 @@
+// Writen by Lukasz Dziedziczak
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -68,3 +69,4 @@ public class Projectile : MonoBehaviour
         _damage = _newDamage;
     }
 }
+// Writen by Lukasz Dziedziczak
