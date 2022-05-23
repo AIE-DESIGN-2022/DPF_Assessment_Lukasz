@@ -244,6 +244,17 @@ public class Faction : MonoBehaviour
         if (_gameController.IsPlayerFaction(_playerNumber)) _gameController.HUD_Manager().Resource_HUD().UpdateResources();
     }
 
+    public void AddToStockpileCostOf(Unit.EUnitType _newUnit)
+    {
+        FactionConfig.FactionUnit _unitConfig = _config.UnitConfig(_newUnit);
+
+        _food += _unitConfig.foodCost;
+        _wood += _unitConfig.woodCost;
+        _gold += _unitConfig.goldCost;
+
+        if (_gameController.IsPlayerFaction(_playerNumber)) _gameController.HUD_Manager().Resource_HUD().UpdateResources();
+    }
+
     public void SubtractFromStockpileCostOf(Building.EBuildingType _newBuilding)
     {
         FactionConfig.FactionBuilding _buildingConfig = _config.BuildingConfig(_newBuilding);

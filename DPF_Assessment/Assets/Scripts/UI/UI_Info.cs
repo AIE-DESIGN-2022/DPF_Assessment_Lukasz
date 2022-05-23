@@ -14,12 +14,40 @@ public class UI_Info : MonoBehaviour
     private Text _status2;
     private Unit _selectedUnit;
     private Building _selectedBuilding;
+    private UI_Bar _healthBar;
+    private UI_Bar _buildingBar;
+    private RawImage _buildingIcon;
+    private UnitProducer _unitProducer;
+    private UI_BuildQue _buildQueUI;
 
     private void Awake()
     {
         _canvas = GetComponentInChildren<Canvas>();
-        _icon = GetComponentInChildren<RawImage>();
+        FindImageFields();
         FindTextFields();
+        FindStatusBars();
+        _buildQueUI = GetComponentInChildren<UI_BuildQue>();
+    }
+
+    private void FindImageFields()
+    {
+        RawImage[] _imageFields = GetComponentsInChildren<RawImage>();
+        foreach (RawImage _imageField in _imageFields)
+        {
+            if (_imageField.name == "Icon") _icon = _imageField;
+            if (_imageField.name == "BuildingIcon") _buildingIcon = _imageField;
+        }
+        
+    }
+
+    private void FindStatusBars()
+    {
+        UI_Bar[] _bars = GetComponentsInChildren<UI_Bar>();
+        foreach (UI_Bar _bar in _bars)
+        {
+            if (_bar.name == "HealthBar") _healthBar = _bar;
+            if (_bar.name == "BuildingBar") _buildingBar = _bar;
+        }
     }
 
     private void FindTextFields()
@@ -75,6 +103,52 @@ public class UI_Info : MonoBehaviour
         }
         else Debug.LogError(name + " is missing FactionConfig.");
         UpdateStatus();
+
+        _unitProducer = _selectedBuilding.GetComponent<UnitProducer>();
+        UpdateBuildingStatus();
+        UpdateBuildQue();
+
+    }
+
+    public void UpdateBuildingStatus()
+    {
+        if (_unitProducer != null)
+        {
+            if (_unitProducer.IsCurrentlyProducing())
+            {
+                if (!_buildingIcon.enabled)
+                {
+                    _buildingIcon.enabled = true;
+                    _buildingIcon.texture = _config.Icon(_unitProducer.CurrentlyProducing());
+                    _buildingBar.Set(_unitProducer);
+                }
+
+            }
+            else
+            {
+                if (_buildingIcon.enabled)
+                {
+                    _buildingIcon.enabled = false;
+                    _buildingIcon.texture = null;
+                    _buildingBar.Clear();
+                }
+            }
+        }
+    }
+
+    public void UpdateBuildQue()
+    {
+        if (_unitProducer != null)
+        {
+            if (_unitProducer.BuildQue().Count > 0)
+            {
+                _buildQueUI.UpdateUIQue(_unitProducer, _config);
+            }
+            else
+            {
+                _buildQueUI.Clear();
+            }
+        }
     }
 
     public void ClearSelection()
@@ -85,6 +159,9 @@ public class UI_Info : MonoBehaviour
         _name.text = string.Empty;
         _status1.text = string.Empty;
         _status2.text = string.Empty;
+        _unitProducer = null;
+        _buildingIcon.enabled = false;
+        _buildQueUI.Clear();
     }
 
     public void UpdateStatus()

@@ -39,6 +39,7 @@ public class HUD_Manager : MonoBehaviour
 
     public void NewSelection(List<Selectable> _newSelection)
     {
+        ClearSelection();
         _selection = _newSelection;
         //print("HUD manager sees new selection");
 

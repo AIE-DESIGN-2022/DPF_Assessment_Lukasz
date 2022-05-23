@@ -77,4 +77,21 @@ public class Selectable : MonoBehaviour
             FindObjectOfType<GameController>().HUD_Manager().Info_HUD().UpdateStatus();
         }
     }
+
+    public void HUD_BuildingStatusUpdate()
+    {
+        if (IsSelected())
+        {
+            FindObjectOfType<GameController>().HUD_Manager().Info_HUD().UpdateBuildingStatus();
+        }
+        HUD_StatusUpdate();
+    }
+
+    public void HUD_BuildingQueUpdate()
+    {
+        if (IsSelected())
+        {
+            FindObjectOfType<GameController>().HUD_Manager().Info_HUD().UpdateBuildQue();
+        }
+    }
 }

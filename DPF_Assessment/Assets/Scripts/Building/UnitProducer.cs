@@ -54,7 +54,7 @@ public class UnitProducer : MonoBehaviour
             _isCurrentlyBuilding = false;
             Unit _newUnit = _faction.SpawnUnit(_currentlyBuilding, _spawnTransform);
             _newUnit.MoveTo(_rallyPoint.position);
-            _building.HUD_StatusUpdate();
+            _building.HUD_BuildingStatusUpdate();
         }
 
     }
@@ -67,7 +67,8 @@ public class UnitProducer : MonoBehaviour
             _buildQue.RemoveAt(0);
             _timeLeft = _faction.Config().BuildTime(_currentlyBuilding);
             _isCurrentlyBuilding = true;
-            _building.HUD_StatusUpdate();
+            _building.HUD_BuildingStatusUpdate();
+            _building.HUD_BuildingQueUpdate();
         }
     }
 
@@ -102,12 +103,24 @@ public class UnitProducer : MonoBehaviour
 
     public void AddToQue(Unit.EUnitType _newUnit)
     {
-        if (CanAfford(_newUnit))
+        if (_buildQue.Count < 20 && CanAfford(_newUnit))
         {
             _buildQue.Add(_newUnit);
             _faction.SubtractFromStockpileCostOf(_newUnit);
-            _building.HUD_StatusUpdate();
+            _building.HUD_BuildingQueUpdate();
         }
+    }
+
+    public void RemoveFromQue(Unit.EUnitType _newUnit)
+    {
+        _buildQue.Remove(_newUnit);
+        _faction.AddToStockpileCostOf(_newUnit);
+        _building.HUD_BuildingQueUpdate();
+    }
+
+    public List<Unit.EUnitType> BuildQue()
+    {
+        return _buildQue;
     }
 
     private bool CanAfford(Unit.EUnitType _newUnit)
@@ -125,5 +138,10 @@ public class UnitProducer : MonoBehaviour
     public Unit.EUnitType CurrentlyProducing()
     {
         return _currentlyBuilding;
+    }
+
+    public float PercentageComplete()
+    {
+        return 1 - (_timeLeft / _faction.Config().BuildTime(_currentlyBuilding));
     }
 }
