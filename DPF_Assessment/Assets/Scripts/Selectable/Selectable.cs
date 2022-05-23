@@ -8,7 +8,7 @@ public class Selectable : MonoBehaviour
 
     [Tooltip("The player number whom owns this unit. 0 = none")]
     [SerializeField, Range(0,4)] private int _owningPlayerNumber = 0;
-    Health _health;
+    protected Health _health;
 
     protected void Awake()
     {

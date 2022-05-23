@@ -9,12 +9,13 @@ public class GameController : MonoBehaviour
     private List<Faction> _factions = new List<Faction>();
     private HUD_Manager _hudManager;
     private PlayerController _playerController;
+    private GameCameraController _cameraController;
 
     private void Awake()
     {
         _hudManager = GetComponentInChildren<HUD_Manager>();
         _playerController = GetComponentInChildren<PlayerController>();
-        
+        _cameraController = GetComponentInChildren<GameCameraController>();
     }
 
     // Start is called before the first frame update
@@ -95,4 +96,8 @@ public class GameController : MonoBehaviour
     {
         return _playerNumber == _factionNumber;
     }
+
+    public PlayerController PlayerController() { return _playerController; }
+
+    public GameCameraController CameraController() { return _cameraController; }
 }
