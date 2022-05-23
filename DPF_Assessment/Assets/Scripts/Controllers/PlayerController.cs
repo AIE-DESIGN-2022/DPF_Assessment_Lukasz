@@ -91,10 +91,22 @@ public class PlayerController : MonoBehaviour
         {
             foreach (Selectable _selectable in _currentSelection)
             {
-                Unit unit = _selectable.GetComponent<Unit>();
-                if (unit != null && unit.IsCarryingResource())
+                Unit _unit = _selectable.GetComponent<Unit>();
+                if (_unit != null && _unit.IsCarryingResource())
                 {
-                    unit.SetResourceDropOffPoint(_building);
+                    _unit.SetResourceDropOffPoint(_building);
+                }
+            }
+        }
+
+        if (_building.BuildState() == Building.EBuildState.Building)
+        {
+            foreach (Selectable _selectable in _currentSelection)
+            {
+                BuildingConstructor _constructor = _selectable.GetComponent<BuildingConstructor>();
+                if (_constructor != null)
+                {
+                    _constructor.SetBuildTarget(_building);
                 }
             }
         }

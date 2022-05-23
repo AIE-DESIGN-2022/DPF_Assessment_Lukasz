@@ -11,6 +11,7 @@ public class Unit : Selectable
     private Animator _animator;
     private NavMeshAgent _navMeshAgent;
     private ResourceGatherer _resourceGatherer;
+    private BuildingConstructor _buildingConstructor;
     private Attacker _attacker;
     private bool _hasStopped = true;
 
@@ -35,6 +36,7 @@ public class Unit : Selectable
         _animator = GetComponent<Animator>();
         _resourceGatherer = GetComponent<ResourceGatherer>();
         _attacker = GetComponent<Attacker>();
+        _buildingConstructor = GetComponent<BuildingConstructor>();
         if (_leftHand == null) _leftHand = FindByName("hand_l");
         if (_rightHand == null) _rightHand = FindByName("hand_r");
     }
@@ -82,6 +84,7 @@ public class Unit : Selectable
             _resourceGatherer.ClearTargetResource();
             _resourceGatherer.ClearDropOffPoint();
         }
+        if (_buildingConstructor != null) _buildingConstructor.ClearBuildTarget();
         if (_attacker != null) _attacker.ClearTarget();
         if (_animator != null) _animator.SetTrigger("stop");
         Move(_newLocation);
