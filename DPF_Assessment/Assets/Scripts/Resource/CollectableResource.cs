@@ -3,7 +3,9 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
+[RequireComponent(typeof(NavMeshObstacle))]
 public class CollectableResource : Selectable
 {
     [SerializeField] private EResourceType _resourceType;
@@ -15,6 +17,7 @@ public class CollectableResource : Selectable
     {
         base.Start();
         _currentAmount = _amount;
+        GetComponent<NavMeshObstacle>().carving = true;
     }
 
     public enum EResourceType
