@@ -1,3 +1,4 @@
+// Writen by Lukasz Dziedziczak
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -214,3 +215,4 @@ public class Building : Selectable
 
     public bool ConstructionComplete() { return _buildState == EBuildState.Complete; }
 }
+// Writen by Lukasz Dziedziczak

@@ -1,3 +1,4 @@
+// Writen by Lukasz Dziedziczak
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -317,3 +318,4 @@ public class Faction : MonoBehaviour
         
     }
 }
+// Writen by Lukasz Dziedziczak

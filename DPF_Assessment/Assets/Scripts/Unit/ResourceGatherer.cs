@@ -1,3 +1,4 @@
+// Writen by Lukasz Dziedziczak
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -236,3 +237,4 @@ public class ResourceGatherer : MonoBehaviour
     public bool HasDropOffTarget() { return _dropOff != null; }
 
 }
+// Writen by Lukasz Dziedziczak

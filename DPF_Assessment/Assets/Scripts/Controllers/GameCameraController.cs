@@ -1,3 +1,4 @@
+// Writen by Lukasz Dziedziczak
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -103,8 +104,6 @@ public class GameCameraController : MonoBehaviour
         bool notInLeftOrRight = false;
 
         if (mouseX >= 1 || mouseX <= 0 || mouseY >= 1 || mouseY <= 0) return;
-
-        //print("MouseX " + Mathf.Round(mouseX * 100) + ", MouseY " + Mathf.Round(mouseY * 100));
 
         if (mouseX < screenBoarder)
         {
@@ -217,3 +216,4 @@ public class GameCameraController : MonoBehaviour
         return true;
     }
 }
+// Writen by Lukasz Dziedziczak
