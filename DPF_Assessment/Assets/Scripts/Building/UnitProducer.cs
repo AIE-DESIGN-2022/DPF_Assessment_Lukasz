@@ -113,9 +113,12 @@ public class UnitProducer : MonoBehaviour
 
     public void RemoveFromQue(Unit.EUnitType _newUnit)
     {
-        _buildQue.Remove(_newUnit);
-        _faction.AddToStockpileCostOf(_newUnit);
-        _building.HUD_BuildingQueUpdate();
+        if (_buildQue.Contains(_newUnit))
+        {
+            _buildQue.Remove(_newUnit);
+            _faction.AddToStockpileCostOf(_newUnit);
+            _building.HUD_BuildingQueUpdate();
+        }
     }
 
     public void CancelBuildItem()

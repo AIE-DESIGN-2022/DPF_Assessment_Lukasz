@@ -25,6 +25,14 @@ public class UI_BuildQueItem : MonoBehaviour
     private void OnClick()
     {
         _unitProducer.RemoveFromQue(_unit);
+
+        if (Input.GetKey(KeyCode.LeftShift))
+        {
+            for (int i = 0; i < 4; i++)
+            {
+                _unitProducer.RemoveFromQue(_unit);
+            }
+        }
     }
 
     public void Set(Unit.EUnitType _newUnit, UnitProducer _newUnitProducer, Texture _icon)
