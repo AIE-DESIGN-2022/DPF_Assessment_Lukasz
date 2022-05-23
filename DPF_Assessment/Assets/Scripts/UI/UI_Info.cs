@@ -71,7 +71,18 @@ public class UI_Info : MonoBehaviour
 
     private void CancelBuildItem()
     {
-        if (_unitProducer != null) { _unitProducer.CancelBuildItem(); }
+        if (_unitProducer != null)
+        {
+            _unitProducer.CancelBuildItem();
+
+            if (Input.GetKey(KeyCode.LeftShift))
+            {
+                for (int i = 0; i < 4; i++)
+                {
+                    _unitProducer.RemoveFromQue(_unitProducer.CurrentlyProducing());
+                }
+            }
+        }
     }
 
     public void SetFactionConfig(FactionConfig _newConfig)
