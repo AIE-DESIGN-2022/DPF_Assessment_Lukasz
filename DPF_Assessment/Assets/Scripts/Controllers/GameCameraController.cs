@@ -215,5 +215,7 @@ public class GameCameraController : MonoBehaviour
 
         return true;
     }
+
+    public Camera Camera() { return _camera; }
 }
 // Writen by Lukasz Dziedziczak
