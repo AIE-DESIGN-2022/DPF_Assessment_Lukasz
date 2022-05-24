@@ -41,7 +41,7 @@ public class Faction : MonoBehaviour
         Selectable[] children = GetComponentsInChildren<Selectable>();
         foreach (Selectable child in children)
         {
-            child.SetPlayerNumber(_playerNumber);
+            child.Setup(_playerNumber, this);
             
             Unit unit = child.GetComponent<Unit>();
             if (unit != null) _units.Add(unit);
@@ -81,7 +81,7 @@ public class Faction : MonoBehaviour
     public Unit SpawnUnit(Unit.EUnitType _newUnitType, Transform _spawnLocation)
     {
         Unit _newUnit = Instantiate(_config.GetUnitPrefab(_newUnitType), _spawnLocation.position, _spawnLocation.rotation);
-        _newUnit.SetPlayerNumber(_playerNumber);
+        _newUnit.Setup(_playerNumber, this);
         _newUnit.transform.parent = transform;
         _units.Add(_newUnit);
         return _newUnit;
@@ -90,7 +90,7 @@ public class Faction : MonoBehaviour
     public Building SpawnBuilding(Building.EBuildingType _newType, List<BuildingConstructor> _builders)
     {
         Building _newBuilding = Instantiate(_config.GetBuildingPrefab(_newType));
-        _newBuilding.SetPlayerNumber(_playerNumber);
+        _newBuilding.Setup(_playerNumber, this);
         _newBuilding.transform.parent = transform;
         _buildings.Add(_newBuilding);
         _newBuilding.SetBuildState(Building.EBuildState.Placing);

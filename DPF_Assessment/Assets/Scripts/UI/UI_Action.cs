@@ -38,6 +38,8 @@ public class UI_Action : MonoBehaviour
 
     public void BuildingSelected(Building _selectedBuilding)
     {
+        if (_faction.PlayerNumber() != _selectedBuilding.PlayerNumber()) return;
+
         UnitProducer _unitProducer = _selectedBuilding.GetComponent<UnitProducer>();
         if (_unitProducer != null)
         {
@@ -55,6 +57,8 @@ public class UI_Action : MonoBehaviour
 
     public void UnitSelected(Unit _selectedUnit)
     {
+        if (_faction.PlayerNumber() != _selectedUnit.PlayerNumber()) return;
+
         List<Unit> _newTeam = new List<Unit>();
         _newTeam.Add(_selectedUnit);
         UnitsSelected(_newTeam);

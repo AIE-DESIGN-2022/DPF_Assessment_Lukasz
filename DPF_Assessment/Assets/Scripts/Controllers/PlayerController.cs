@@ -58,21 +58,41 @@ public class PlayerController : MonoBehaviour
 
     private void HandleLeftClick()
     {
-        ClearSelection();
+        if (!Input.GetKey(KeyCode.LeftShift)) ClearSelection();
 
         RaycastHit _hit = UnderMouse();
         Selectable _selectable = _hit.transform.GetComponent<Selectable>();
-        if (_selectable != null && (_selectable.PlayerNumber() == _playerNumber || _selectable.PlayerNumber() == 0))
+        if (_selectable != null && _selectable.PlayerNumber() == _playerNumber)
         {
-            _selectable.Selected(true);
-            _currentSelection.Add(_selectable);
-            _hudManager.NewSelection(_currentSelection);
+            AddToSelection(_selectable);
+        }
+
+        if (_selectable != null && _currentSelection.Count == 0)
+        {
+            AddToSelection(_selectable);
         }
 
         if (_selectable == null) // if no selectable object was hit with mouse click
         {
             _selectionPoint1 = Input.mousePosition;
         }
+    }
+
+    private void AddToSelection(Selectable _selectable)
+    {
+        _selectable.Selected(true);
+        _currentSelection.Add(_selectable);
+        _hudManager.NewSelection(_currentSelection);
+    }
+
+    private void AddToSelection(List<Selectable> _selectables)
+    {
+        foreach (Selectable _selectable in _selectables)
+        {
+            _selectable.Selected(true);
+            _currentSelection.Add(_selectable);
+        }
+        _hudManager.NewSelection(_currentSelection);
     }
 
     private void HandleLeftMouseDown()
@@ -97,12 +117,7 @@ public class PlayerController : MonoBehaviour
     {
         if (_selectionBox.gameObject.activeInHierarchy)
         {
-            _currentSelection = PlayersUnits(InSelectionBox());
-
-            foreach (Selectable _selectable in _currentSelection)
-            {
-                _selectable.Selected(true);
-            }
+            AddToSelection(PlayersUnits(InSelectionBox()));
 
             _selectionBox.gameObject.SetActive(false);
             _cameraController.allowMovement = true;

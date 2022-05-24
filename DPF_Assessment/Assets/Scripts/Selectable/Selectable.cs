@@ -10,6 +10,7 @@ public class Selectable : MonoBehaviour
 
     [Tooltip("The player number whom owns this unit. 0 = none")]
     [SerializeField, Range(0,4)] private int _owningPlayerNumber = 0;
+    protected Faction _owningFaction;
     protected Health _health;
 
     protected void Awake()
@@ -52,12 +53,15 @@ public class Selectable : MonoBehaviour
 
     public bool IsSelected() { return _selectionIndicator.enabled; }
 
-    public void SetPlayerNumber(int _playerNumber)
+    public void Setup(int _newPlayerNumber, Faction _newFaction)
     {
-        _owningPlayerNumber = _playerNumber;
+        _owningPlayerNumber = _newPlayerNumber;
+        _owningFaction = _newFaction;
     }
 
     public int PlayerNumber() { return _owningPlayerNumber; }
+
+    public Faction Faction() { return _owningFaction; }
 
     public void TakeDamage(float _damageAmound)
     {

@@ -53,7 +53,7 @@ public class HUD_Manager : MonoBehaviour
         {
             Unit _selectedUnit = _selection[0].GetComponent<Unit>();
             Building _selectedBuilding = _selection[0].GetComponent<Building>();
-
+            CollectableResource _selectedCollectableResource = _selection[0].GetComponent<CollectableResource>();
 
 
             if (_selectedBuilding != null)
@@ -66,6 +66,11 @@ public class HUD_Manager : MonoBehaviour
             {
                 _infoUI.NewSelection(_selectedUnit);
                 _actionsUI.UnitSelected(_selectedUnit);
+            }
+
+            if (_selectedCollectableResource != null)
+            {
+                _infoUI.NewSelection(_selectedCollectableResource);
             }
         }
 

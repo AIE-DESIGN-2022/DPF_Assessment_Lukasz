@@ -23,6 +23,7 @@ public class UI_Info : MonoBehaviour
     private UI_BuildQue _buildQueUI;
     private Building _buildingGettingConstructed;
     private BuildingConstructor _buildingConstructor;
+    private CollectableResource _selectedResource;
 
     private void Awake()
     {
@@ -106,11 +107,12 @@ public class UI_Info : MonoBehaviour
         Show(true);
         _selectedUnit = _newSelectedUnit;
         _name.text = _selectedUnit.name.Replace("(Clone)", "");
-        if (_config != null)
-        {
-            _icon.texture = _config.Icon(_selectedUnit.UnitType());
-        }
-        else Debug.LogError(name + " is missing FactionConfig.");
+        /*        if (_config != null)
+                {
+                    _icon.texture = _config.Icon(_selectedUnit.UnitType());
+                }
+                else Debug.LogError(name + " is missing FactionConfig.");*/
+        _icon.texture = _selectedUnit.Faction().Config().Icon(_selectedUnit.UnitType());
         UpdateStatus();
 
         _buildingConstructor = _selectedUnit.GetComponent<BuildingConstructor>();
@@ -124,11 +126,12 @@ public class UI_Info : MonoBehaviour
         Show(true);
         _selectedBuilding = _newSelectedBuilding;
         _name.text = _selectedBuilding.name.Replace("(Clone)", "");
-        if (_config != null)
+        /*if (_config != null)
         {
             _icon.texture = _config.Icon(_selectedBuilding.BuildingType());
         }
-        else Debug.LogError(name + " is missing FactionConfig.");
+        else Debug.LogError(name + " is missing FactionConfig.");*/
+        _icon.texture = _selectedBuilding.Faction().Config().Icon(_selectedBuilding.BuildingType());
         UpdateStatus();
 
         _unitProducer = _selectedBuilding.GetComponent<UnitProducer>();
@@ -137,6 +140,15 @@ public class UI_Info : MonoBehaviour
 
         _healthBar.Set(_selectedBuilding.GetComponent<Health>());
 
+    }
+
+    public void NewSelection(CollectableResource _newSelectedResource)
+    {
+        Show(true);
+        _selectedResource = _newSelectedResource;
+        _name.text = _selectedResource.name;
+
+        UpdateStatus();
     }
 
     public void UpdateBuildingStatus()
@@ -216,6 +228,8 @@ public class UI_Info : MonoBehaviour
         _healthBar.Clear();
         _buildingGettingConstructed = null;
         _buildingConstructor = null;
+        _selectedResource = null;
+        _icon.texture = null;
     }
 
     public void UpdateStatus()
@@ -231,6 +245,11 @@ public class UI_Info : MonoBehaviour
         if (_selectedBuilding != null)
         {
             _selectedBuilding.Status(out _newStatus1, out _newStatus2);
+        }
+
+        if (_selectedResource != null)
+        {
+            _selectedResource.Status(out _newStatus1, out _newStatus2);
         }
 
         _status1.text = _newStatus1;

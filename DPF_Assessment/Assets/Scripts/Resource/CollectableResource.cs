@@ -43,6 +43,7 @@ public class CollectableResource : Selectable
             _currentAmount = 0;
             ResourceDepleted();
         }
+        HUD_StatusUpdate();
         return _returnAmount;
     }
 
@@ -53,5 +54,22 @@ public class CollectableResource : Selectable
     }
 
     public bool HasResource() { return _currentAmount > 0; }
+
+    public int Amount() { return _amount; }
+
+    public void Status(out string newStatus1, out string newStatus2)
+    {
+        newStatus1 = "";
+        newStatus2 = "";
+
+        if (HasResource())
+        {
+            newStatus1 =  _currentAmount.ToString() + " " + _resourceType.ToString();
+        }
+        else
+        {
+            newStatus1 = "Depleted.";
+        }
+    }
 }
 // Writen by Lukasz Dziedziczak
