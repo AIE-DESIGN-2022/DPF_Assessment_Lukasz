@@ -217,14 +217,9 @@ public class Building : Selectable
 
     public void SetConstructionTeam(List<BuildingConstructor> _newTeam) { _constructionTeam = _newTeam; }
 
-    public EBuildState ConstructionState() { return _buildState; }
-
     public bool ConstructionComplete() { return _buildState == EBuildState.Complete; }
 
-    public float PercentageComplete()
-    {
-        return _health.HealthPercentage();
-    }
+    public float PercentageComplete() { return _health.HealthPercentage(); }
 
     private void EnableRenderersAndColliders(bool _enabled = true)
     {
