@@ -18,6 +18,7 @@ public class Building : Selectable
     private GameController _gameController;
     private int _numberOfCollisions = 0;
     private List<BuildingConstructor> _constructionTeam;
+    private GameObject _construction;
 
     public List<Collider> collisions = new List<Collider>();
 
@@ -169,11 +170,15 @@ public class Building : Selectable
 
             case EBuildState.Building:
                 GetComponent<NavMeshObstacle>().enabled = true;
-                SetMaterialsColour(new Color(0, 0, 1, 0.5f));
+                //SetMaterialsColour(new Color(0, 0, 1, 0.5f));
+                EnableRenderersAndColliders(false);
+                ConstructionSite();
                 break;
 
             case EBuildState.Complete:
                 GetComponent<NavMeshObstacle>().enabled = true;
+                ConstructionSite(false);
+                EnableRenderersAndColliders();
                 SetMaterialsColour(Color.white);
                 break;
         }
@@ -219,6 +224,43 @@ public class Building : Selectable
     public float PercentageComplete()
     {
         return _health.HealthPercentage();
+    }
+
+    private void EnableRenderersAndColliders(bool _enabled = true)
+    {
+        if (_meshRenderers != null)
+        {
+            foreach (MeshRenderer _meshRenderer in _meshRenderers)
+            {
+                _meshRenderer.enabled = _enabled;
+            }
+        }
+
+        MeshCollider[] _colliders = GetComponentsInChildren<MeshCollider>();
+        if (_colliders != null)
+        {
+            foreach (MeshCollider _collider in _colliders)
+            {
+                _collider.enabled = _enabled;
+            }
+        }
+    }
+
+    private void ConstructionSite(bool _enabled = true)
+    {
+        if (_enabled)
+        {
+            GameObject _constructionPrefab = (GameObject)Resources.Load<GameObject>("Prefabs/ConstructionSite");
+            if (_constructionPrefab == null) Debug.LogError(name + " unable to load ConstructionSite prefab.");
+            _construction = Instantiate(_constructionPrefab, transform.position, transform.rotation);
+            _construction.transform.parent = transform;
+            _construction.transform.localScale = Vector3.one * 1.5f;
+        }
+        else
+        {
+            Destroy(_construction.gameObject);
+            _construction = null;
+        }
     }
 }
 // Writen by Lukasz Dziedziczak
