@@ -145,11 +145,6 @@ public class Building : Selectable
         if (_health.IsFull())
         {
             SetBuildState(EBuildState.Complete);
-
-            if (_buildingType == EBuildingType.Farm)
-            {
-                _constructionTeam[0].GetComponent<ResourceGatherer>().SetTargetResource(this.GetComponent<CollectableResource>());
-            }
         }
 
     }

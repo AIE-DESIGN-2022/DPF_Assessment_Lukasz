@@ -38,8 +38,15 @@ public class BuildingConstructor : MonoBehaviour
 
         if (_currentBuildTarget.BuildState() != Building.EBuildState.Building)
         {
+            CollectableResource possibleFarm = _currentBuildTarget.GetComponent<CollectableResource>();
             ClearBuildTarget();
+
             _unit.TakeAStepBack();
+            if (possibleFarm != null)
+            {
+                print("setting farm");
+                _unit.GetComponent<ResourceGatherer>().SetTargetResource(possibleFarm, true);
+            }
         }
     }
 

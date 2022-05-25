@@ -16,7 +16,7 @@ public class ResourceGatherer : MonoBehaviour
     private Faction _faction;
     private bool _isInRange = false;
 
-    [SerializeField] private float _gatherRange = 2.0f;
+    /*[SerializeField] private float _gatherRange = 2.0f;*/
     [SerializeField] private int _maxCarry = 10;
     [SerializeField] private EquipmentConfig _woodCuttingTool;
     [SerializeField] private int _woodGatherRate = 1;
@@ -55,7 +55,7 @@ public class ResourceGatherer : MonoBehaviour
         if (_targetResource == null)
         {
             return;
-        }    
+        }
 
         if (_isInRange)
         {
@@ -109,13 +109,13 @@ public class ResourceGatherer : MonoBehaviour
         transform.LookAt(_targetResource.transform);
     }
 
-    public void SetTargetResource(CollectableResource _newResource)
+    public void SetTargetResource(CollectableResource _newResource, bool isAlreadyAtResource = false)
     {
         _targetResource = _newResource;
         if (_faction == null) SetFaction();
         SetTargetDropOffPoint(_faction.ClosestResourceDropPoint(_targetResource));
         _unit.HUD_StatusUpdate();
-        _isInRange = false;
+        _isInRange = isAlreadyAtResource;
         //print(name + " set target= " + _targetResource);
     }
 
@@ -155,12 +155,14 @@ public class ResourceGatherer : MonoBehaviour
 
     private bool IsInRange()
     {
-        if (_targetResource != null)
+        /*if (_targetResource != null)
         {
             float _distance = Vector3.Distance(transform.position, _targetResource.transform.position);
             return _distance < _gatherRange;
         }
-        else return false;
+        else return false;*/
+
+        return _isInRange;
     }
 
     private void EquipTool()
