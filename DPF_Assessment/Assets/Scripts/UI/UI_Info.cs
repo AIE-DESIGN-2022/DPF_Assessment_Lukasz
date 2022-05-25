@@ -147,8 +147,30 @@ public class UI_Info : MonoBehaviour
         Show(true);
         _selectedResource = _newSelectedResource;
         _name.text = _selectedResource.name;
-
+        _icon.texture = LoadResourceTexture(_selectedResource);
         UpdateStatus();
+    }
+
+    private Texture LoadResourceTexture(CollectableResource newSelectedResource)
+    {
+        switch(newSelectedResource.ResourceType())
+        {
+            case CollectableResource.EResourceType.Wood:
+                return (Texture)Resources.Load<Texture>("HUD_Icons/resource_tree");
+
+            case CollectableResource.EResourceType.Food:
+                if (newSelectedResource.GetComponent<Building>() == null)
+                {
+                    return (Texture)Resources.Load<Texture>("HUD_Icons/resource_fruitTree");
+                }
+                else return newSelectedResource.GetComponent<Building>().Faction().Config().Icon(_selectedBuilding.BuildingType());
+
+            case CollectableResource.EResourceType.Gold:
+                return (Texture)Resources.Load<Texture>("HUD_Icons/resource_gold");
+
+            default:
+                return null;
+        }
     }
 
     public void UpdateBuildingStatus()

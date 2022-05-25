@@ -111,7 +111,8 @@ public class Unit : Selectable
     {
         if (_navMeshAgent != null)
         {
-            _navMeshAgent.destination = _newLocation;
+            
+            _navMeshAgent.destination = GetClosestAvailablePosition(_newLocation);
 
             if (_navMeshAgent.isStopped) _navMeshAgent.isStopped = false;
         }
@@ -269,5 +270,17 @@ public class Unit : Selectable
         Vector3 _newPosition = transform.position + (transform.forward * -1);
         MoveTo(_newPosition);
     }
+
+    private Vector3 GetClosestAvailablePosition(Vector3 _newPosition)
+    {
+        Vector3 _position = _newPosition;
+        NavMeshHit navMeshHit;
+        if (NavMesh.SamplePosition(_newPosition, out navMeshHit, 5, 0))
+            _position = navMeshHit.position;
+
+
+        return _position;
+    }
+
 }
 // Writen by Lukasz Dziedziczak

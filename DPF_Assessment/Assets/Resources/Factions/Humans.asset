@@ -14,6 +14,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _faction: 0
   _buildings:
+  - buildingType: 3
+    builtBy: 0
+    foodCost: 0
+    woodCost: 50
+    goldCost: 0
+    buildingIcon: {fileID: 2800000, guid: 542e7be7e4d427740b5a3315e349e4c2, type: 3}
+    buildingPrefab: {fileID: 1180573847072710891, guid: 38c1c0777ae0bf144b40f20dd9ad3711, type: 3}
   - buildingType: 1
     builtBy: 0
     foodCost: 0

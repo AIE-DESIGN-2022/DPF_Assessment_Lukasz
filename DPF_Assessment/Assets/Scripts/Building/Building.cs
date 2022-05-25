@@ -20,8 +20,6 @@ public class Building : Selectable
     private List<BuildingConstructor> _constructionTeam;
     private GameObject _construction;
 
-    public List<Collider> collisions = new List<Collider>();
-
     public enum EBuildingType
     {
         TownCenter,
@@ -147,6 +145,11 @@ public class Building : Selectable
         if (_health.IsFull())
         {
             SetBuildState(EBuildState.Complete);
+
+            if (_buildingType == EBuildingType.Farm)
+            {
+                _constructionTeam[0].GetComponent<ResourceGatherer>().SetTargetResource(this.GetComponent<CollectableResource>());
+            }
         }
 
     }
@@ -249,7 +252,15 @@ public class Building : Selectable
             if (_constructionPrefab == null) Debug.LogError(name + " unable to load ConstructionSite prefab.");
             _construction = Instantiate(_constructionPrefab, transform.position, transform.rotation);
             _construction.transform.parent = transform;
-            _construction.transform.localScale = Vector3.one * 1.5f;
+            if (_buildingType != EBuildingType.Tower)
+            {
+                _construction.transform.localScale = Vector3.one * 1.5f;
+            }
+            else
+            {
+                _construction.transform.localScale = Vector3.one * 0.5f;
+            }
+            
         }
         else
         {

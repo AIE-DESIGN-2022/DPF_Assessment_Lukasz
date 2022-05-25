@@ -210,6 +210,10 @@ MonoBehaviour:
   _maxCarry: 10
   _woodCuttingTool: {fileID: 11400000, guid: 5c81ba8a793b19a41b9e59c2d5a3dcc0, type: 2}
   _woodGatherRate: 1
+  _farmingTool: {fileID: 11400000, guid: 1aa05341961b9ac4ca74ca27f2abaf46, type: 2}
+  _foodGatherRate: 1
+  _miningTool: {fileID: 11400000, guid: b35bdcd060d06f84982be1c9b47e25ef, type: 2}
+  _goldGatherRate: 1
 --- !u!114 &8899325240604807200
 MonoBehaviour:
   m_ObjectHideFlags: 0

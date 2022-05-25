@@ -225,8 +225,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _owningPlayerNumber: 0
   _buildingType: 4
-  _resourceDropPoint: 1
-  collisions: []
+  _resourceDropPoint: 0
 --- !u!114 &7737253614315927734
 MonoBehaviour:
   m_ObjectHideFlags: 0

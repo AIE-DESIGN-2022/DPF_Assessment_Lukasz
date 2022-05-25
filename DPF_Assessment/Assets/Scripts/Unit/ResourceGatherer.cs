@@ -14,12 +14,16 @@ public class ResourceGatherer : MonoBehaviour
     private int _gatherRate;
     private Building _dropOff;
     private Faction _faction;
-
+    private bool _isInRange = false;
 
     [SerializeField] private float _gatherRange = 2.0f;
     [SerializeField] private int _maxCarry = 10;
     [SerializeField] private EquipmentConfig _woodCuttingTool;
     [SerializeField] private int _woodGatherRate = 1;
+    [SerializeField] private EquipmentConfig _farmingTool;
+    [SerializeField] private int _foodGatherRate = 1;
+    [SerializeField] private EquipmentConfig _miningTool;
+    [SerializeField] private int _goldGatherRate = 1;
 
     private GameObject _gatheringTool;
 
@@ -53,7 +57,7 @@ public class ResourceGatherer : MonoBehaviour
             return;
         }    
 
-        if (IsInRange())
+        if (_isInRange)
         {
             GatherResource();
         }
@@ -77,7 +81,31 @@ public class ResourceGatherer : MonoBehaviour
         }
         _unit.StopMoveTo();
         if (_gatheringTool == null) EquipTool();
-        _unit.Animator().SetBool("working", true);
+
+
+        
+        switch(_targetResource.ResourceType())
+        {
+            case CollectableResource.EResourceType.Wood:
+                _unit.Animator().SetBool("working", true);
+                break;
+
+            case CollectableResource.EResourceType.Food:
+                if (_targetResource.GetComponent<Building>() == null)
+                {
+                    _unit.Animator().SetBool("gathering", true);
+                }
+                else
+                {
+                    _unit.Animator().SetBool("working", true);
+                }
+                break;
+
+            case CollectableResource.EResourceType.Gold:
+                _unit.Animator().SetBool("mining", true);
+                break;
+        }
+
         transform.LookAt(_targetResource.transform);
     }
 
@@ -87,6 +115,8 @@ public class ResourceGatherer : MonoBehaviour
         if (_faction == null) SetFaction();
         SetTargetDropOffPoint(_faction.ClosestResourceDropPoint(_targetResource));
         _unit.HUD_StatusUpdate();
+        _isInRange = false;
+        //print(name + " set target= " + _targetResource);
     }
 
     public void SetTargetDropOffPoint(Building building)
@@ -102,16 +132,25 @@ public class ResourceGatherer : MonoBehaviour
             if (_rememberForLater) _lastTargetResource = _targetResource;
             _targetResource = null;
         }
-        if (_unit != null) _unit.Animator().SetBool("working", false);
+        if (_unit != null)
+        {
+            _unit.Animator().SetBool("working", false);
+            _unit.Animator().SetBool("gathering", false);
+            _unit.Animator().SetBool("mining", false);
+            _unit.HUD_StatusUpdate();
+        }
         else Debug.LogError(gameObject.name + " Gatherer's unit referance missing.");
+
         UnequipTool();
-        _unit.HUD_StatusUpdate();
+        
+        _isInRange = false;
     }
 
     public void ClearDropOffPoint()
     {
         if (_dropOff != null) _dropOff = null;
         _unit.HUD_StatusUpdate();
+        _isInRange=false;
     }
 
     private bool IsInRange()
@@ -138,11 +177,13 @@ public class ResourceGatherer : MonoBehaviour
                     break;
 
                 case CollectableResource.EResourceType.Food:
-
+                    if (_farmingTool != null && _targetResource.GetComponent<Building>() != null) _gatheringTool = _farmingTool.Spawn(_unit);
+                    _gatherRate = _foodGatherRate;
                     break;
 
                 case CollectableResource.EResourceType.Gold:
-
+                    if (_miningTool != null) _gatheringTool = _miningTool.Spawn(_unit);
+                    _gatherRate = _goldGatherRate;
                     break;
             }
         }
@@ -182,8 +223,11 @@ public class ResourceGatherer : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         if (_dropOff == null) return;
+
         if (other.gameObject.GetComponent<Building>() == _dropOff)
         {
+            _dropOff = null;
+
             if (_faction == null) SetFaction();
             _faction.AddToStockpile(_gatheringType, _gatheredAmount);
             _gatheredAmount = 0;
@@ -193,14 +237,19 @@ public class ResourceGatherer : MonoBehaviour
             if (_lastTargetResource != null && _lastTargetResource.HasResource())
             {
                 SetTargetResource(_lastTargetResource);
+                _isInRange = false;
                 _lastTargetResource = null;
             }
             else
             {
                 _unit.TakeAStepBack();
-                print(gameObject.name + " taking a step back.");
             }
-            _dropOff = null;
+            
+        }
+
+        if (other.gameObject.GetComponent<CollectableResource>() == _targetResource)
+        {
+            _isInRange = true;
         }
     }
 

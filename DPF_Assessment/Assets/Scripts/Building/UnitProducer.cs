@@ -36,7 +36,6 @@ public class UnitProducer : MonoBehaviour
 
     private void Start()
     {
-        if (_rallyPoint == null) Debug.LogError(name + " has no RallyPoint.");
     }
 
     private void Update()

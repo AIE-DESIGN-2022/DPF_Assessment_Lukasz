@@ -1,19 +1,5 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!64 &3889708968223265609
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2010724738765895333}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 4
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 4300000, guid: a5daa259544b29945aa73fcd920677e3, type: 3}
 --- !u!1 &6199480746409255085
 GameObject:
   m_ObjectHideFlags: 0
@@ -106,6 +92,9 @@ GameObject:
   m_Component:
   - component: {fileID: 8802002943941821610}
   - component: {fileID: 1086134340}
+  - component: {fileID: 1086134341}
+  - component: {fileID: 7090608535078687149}
+  - component: {fileID: 1086134343}
   m_Layer: 0
   m_Name: Tree
   m_TagString: Untagged
@@ -141,6 +130,55 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2c8e181dcdcc7e44aa45f08b882dac8e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _owningPlayerNumber: 0
+  _resourceType: 0
+  _amount: 100
+--- !u!54 &1086134341
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9161837050248179041}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 0
+  m_IsKinematic: 0
+  m_Interpolate: 1
+  m_Constraints: 126
+  m_CollisionDetection: 3
+--- !u!136 &7090608535078687149
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9161837050248179041}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  m_Radius: 1.5
+  m_Height: 5.5
+  m_Direction: 1
+  m_Center: {x: 0, y: 2.5, z: 0}
+--- !u!208 &1086134343
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9161837050248179041}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 0
+  m_Extents: {x: 0.3, y: 1, z: 0.3}
+  m_MoveThreshold: 0.1
+  m_Carve: 1
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 0, z: 0}
+  m_TimeToStationary: 0.5
 --- !u!1001 &2009424373658298853
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -210,11 +248,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b3d5bf97186b3d949b317b06faa1e9b8, type: 3}
---- !u!1 &2010724738765895333 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1530165478891328, guid: b3d5bf97186b3d949b317b06faa1e9b8, type: 3}
-  m_PrefabInstance: {fileID: 2009424373658298853}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &2014032634716592895 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4961893655098138, guid: b3d5bf97186b3d949b317b06faa1e9b8, type: 3}
