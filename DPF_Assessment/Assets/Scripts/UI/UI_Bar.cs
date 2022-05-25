@@ -102,6 +102,7 @@ public class UI_Bar : MonoBehaviour
     {
         _unitProducer = null;
         _health = null;
+        _construction = null;
         UpdatePercentage(0);
         ShowBackground(false);
     }

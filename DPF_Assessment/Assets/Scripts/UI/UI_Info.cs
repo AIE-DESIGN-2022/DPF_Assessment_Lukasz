@@ -21,7 +21,7 @@ public class UI_Info : MonoBehaviour
     private Button _buildingIconButton;
     private UnitProducer _unitProducer;
     private UI_BuildQue _buildQueUI;
-    private Building _buildingGettingConstructed;
+    //private Building _buildingGettingConstructed; //NOT SURE IF BEING USED
     private BuildingConstructor _buildingConstructor;
     private CollectableResource _selectedResource;
 
@@ -226,7 +226,7 @@ public class UI_Info : MonoBehaviour
         _buildingBar.Clear();
         _buildQueUI.Clear();
         _healthBar.Clear();
-        _buildingGettingConstructed = null;
+        //_buildingGettingConstructed = null;
         _buildingConstructor = null;
         _selectedResource = null;
         _icon.texture = null;
