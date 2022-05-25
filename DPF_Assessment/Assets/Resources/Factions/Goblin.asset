@@ -13,5 +13,58 @@ MonoBehaviour:
   m_Name: Goblin
   m_EditorClassIdentifier: 
   _faction: 1
-  _buildings: []
-  _units: []
+  _buildings:
+  - buildingType: 4
+    builtBy: 0
+    foodCost: 0
+    woodCost: 0
+    goldCost: 0
+    buildingIcon: {fileID: 2800000, guid: 23ae60ce24563c446b56004158fef32f, type: 3}
+    buildingPrefab: {fileID: 1180573847072710891, guid: 62d4fc3f3b5e12445b72115ad12efa06, type: 3}
+  _units:
+  - unitType: 0
+    builtFrom: 0
+    buildTime: 0
+    foodCost: 0
+    woodCost: 0
+    goldCost: 0
+    unitIcon: {fileID: 2800000, guid: 430933c49a10e8e43bbcff51db2b2e57, type: 3}
+    unitPrefabVariations:
+    - {fileID: 8418730917576266227, guid: c7ce492c608e1354abcb3135b477e2d5, type: 3}
+    - {fileID: 8418730917576266227, guid: a9eb7766ed1916647a6e7820c3b2bb30, type: 3}
+  - unitType: 1
+    builtFrom: 1
+    buildTime: 0
+    foodCost: 0
+    woodCost: 0
+    goldCost: 0
+    unitIcon: {fileID: 2800000, guid: 3c4f89a95ab853f409a9284edb28b1f9, type: 3}
+    unitPrefabVariations:
+    - {fileID: 8418730917576266227, guid: 50ea675e450a47a4581431bfa39c3c89, type: 3}
+  - unitType: 2
+    builtFrom: 1
+    buildTime: 0
+    foodCost: 0
+    woodCost: 0
+    goldCost: 0
+    unitIcon: {fileID: 2800000, guid: b56a3f7cf717b8d4fa035c258517decc, type: 3}
+    unitPrefabVariations:
+    - {fileID: 8418730917576266227, guid: fc2e8fcf05d492046a3a0dc95855fc53, type: 3}
+  - unitType: 3
+    builtFrom: 2
+    buildTime: 0
+    foodCost: 0
+    woodCost: 0
+    goldCost: 0
+    unitIcon: {fileID: 2800000, guid: 3d19079cd8f91de43abc438c34274fb6, type: 3}
+    unitPrefabVariations:
+    - {fileID: 8418730917576266227, guid: bf41592ddc403bf46bcf92719abdc5e9, type: 3}
+  - unitType: 4
+    builtFrom: 2
+    buildTime: 0
+    foodCost: 0
+    woodCost: 0
+    goldCost: 0
+    unitIcon: {fileID: 2800000, guid: b5846d8d4a28d1c4da1b4c88bf034ac6, type: 3}
+    unitPrefabVariations:
+    - {fileID: 8418730917576266227, guid: 46ac071fcfde0d8488743dd01229e6b9, type: 3}

@@ -251,7 +251,7 @@ public class PlayerController : MonoBehaviour
         foreach (Selectable _selectable in _currentSelection)
         {
             Unit _unit = _selectable.GetComponent<Unit>();
-            if (_unit != null)
+            if (_unit != null && _unit.PlayerNumber() == _playerNumber)
             {
                 _unit.MoveTo(_newLocation);
             }
@@ -263,7 +263,7 @@ public class PlayerController : MonoBehaviour
         foreach (Selectable _selectable in _currentSelection)
         {
             Unit _unit = _selectable.GetComponent<Unit>();
-            if (_unit != null && _unit.UnitType() != Unit.EUnitType.Worker)
+            if (_unit != null && _unit.PlayerNumber() == _playerNumber && _unit.UnitType() != Unit.EUnitType.Worker)
             {
                 _unit.SetTarget(_newTarget);
             }

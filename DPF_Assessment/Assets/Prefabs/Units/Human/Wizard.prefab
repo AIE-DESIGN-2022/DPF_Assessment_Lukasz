@@ -205,10 +205,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 535332f0fbd536347a723ea59995d7c4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _unitWeapon: {fileID: 0}
-  _attackDamage: 10
-  _attackRate: 1
-  _attackRange: 1
+  _unitWeapon: {fileID: 11400000, guid: 9bac27fb10b304847b1b334742f28e69, type: 2}
+  _attackDamage: 30
+  _attackRate: 3
+  _attackRange: 12
 --- !u!114 &2662700910971115723
 MonoBehaviour:
   m_ObjectHideFlags: 0

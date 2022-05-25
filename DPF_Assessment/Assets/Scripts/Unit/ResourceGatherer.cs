@@ -181,6 +181,7 @@ public class ResourceGatherer : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        if (_dropOff == null) return;
         if (other.gameObject.GetComponent<Building>() == _dropOff)
         {
             if (_faction == null) SetFaction();
@@ -197,7 +198,9 @@ public class ResourceGatherer : MonoBehaviour
             else
             {
                 _unit.TakeAStepBack();
+                print(gameObject.name + " taking a step back.");
             }
+            _dropOff = null;
         }
     }
 

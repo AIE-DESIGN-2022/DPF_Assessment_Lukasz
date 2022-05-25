@@ -207,8 +207,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _unitWeapon: {fileID: 0}
   _attackDamage: 10
-  _attackRate: 1
-  _attackRange: 1
+  _attackRate: 2
+  _attackRange: 10
 --- !u!114 &8499366648956492067
 MonoBehaviour:
   m_ObjectHideFlags: 0
