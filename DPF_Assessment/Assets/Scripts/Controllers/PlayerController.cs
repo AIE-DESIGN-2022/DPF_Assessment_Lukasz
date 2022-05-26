@@ -44,7 +44,6 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     private void Update()
     {
-        if (_cameraController.IsInUIOffset()) return;
         if (!_playerControlOnline) return;
 
         if (Input.GetMouseButtonDown(0)) HandleLeftClick();
@@ -58,6 +57,7 @@ public class PlayerController : MonoBehaviour
 
     private void HandleLeftClick()
     {
+        if (!_cameraController.MouseIsInPlayArea()) return;
         if (!Input.GetKey(KeyCode.LeftShift)) ClearSelection();
 
         RaycastHit _hit = UnderMouse();
@@ -111,11 +111,16 @@ public class PlayerController : MonoBehaviour
             _selectionBox.sizeDelta = new Vector2(Mathf.Abs(_width), Mathf.Abs(_height));
             _selectionBox.anchoredPosition = _selectionPoint1 + new Vector2(_width/2 , _height/2);
         }
+        else
+        {
+            _selectionBox.gameObject.SetActive(false);
+            _cameraController.allowMovement = true;
+        }
     }
 
     private void HandleLeftMouseUp()
     {
-        if (_selectionBox.gameObject.activeInHierarchy)
+        if (_selectionBox.gameObject.activeInHierarchy && _cameraController.MouseIsInPlayArea())
         {
             AddToSelection(PlayersUnits(InSelectionBox()));
 
@@ -128,6 +133,7 @@ public class PlayerController : MonoBehaviour
 
     private void HandleRightClick()
     {
+        if (!_cameraController.MouseIsInPlayArea()) return;
         if (_currentSelection.Count > 0)
         {
             RaycastHit _hit = UnderMouse();
