@@ -31,7 +31,6 @@ public class Selectable : MonoBehaviour
     private void RigidbodySetup()
     {
         Rigidbody rb = GetComponent<Rigidbody>();
-        rb.isKinematic = true;
         rb.interpolation = RigidbodyInterpolation.Interpolate;
         rb.collisionDetectionMode = CollisionDetectionMode.ContinuousSpeculative;
         rb.constraints = RigidbodyConstraints.FreezeAll;

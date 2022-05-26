@@ -78,6 +78,7 @@ public class GameCameraController : MonoBehaviour
 
     private void CameraRotation()
     {
+        if (!MouseIsInPlayArea()) return;
         float horizontal = Input.GetAxis("Mouse X");
         if (horizontal == 0) return;
         transform.RotateAround(transform.position, transform.TransformDirection(Vector3.up), horizontal * cameraRotationSpeed);
@@ -85,6 +86,8 @@ public class GameCameraController : MonoBehaviour
 
     private void CameraHeigh()
     {
+        if (!MouseIsInPlayArea()) return;
+
         Vector2 mouseScrollDelta = Input.mouseScrollDelta;
 
         if (mouseScrollDelta.magnitude > 0)
