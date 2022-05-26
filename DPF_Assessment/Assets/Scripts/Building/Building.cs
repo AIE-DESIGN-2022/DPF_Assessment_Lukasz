@@ -10,6 +10,7 @@ public class Building : Selectable
 {
     [SerializeField] private EBuildingType _buildingType;
     [SerializeField] private bool _resourceDropPoint = false;
+    [SerializeField] private float rangeOffset = 3.0f;
 
     private UnitProducer _unitProducer;
     private EBuildState _buildState = EBuildState.Complete;
@@ -263,5 +264,7 @@ public class Building : Selectable
             _construction = null;
         }
     }
+
+    public float RangeOffset() { return rangeOffset; }
 }
 // Writen by Lukasz Dziedziczak

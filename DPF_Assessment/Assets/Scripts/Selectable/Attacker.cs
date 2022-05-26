@@ -77,8 +77,14 @@ public class Attacker : MonoBehaviour
     {
         if (_target != null)
         {
+            float offset = 0;
+            Building targetBuilding = _target.GetComponent<Building>();
+            if (targetBuilding)
+            {
+                offset = targetBuilding.RangeOffset();
+            }
             float _distance = Vector3.Distance(transform.position, _target.transform.position);
-            return _distance < _attackRange;
+            return _distance < _attackRange + offset;
         }
         else return false;
     }

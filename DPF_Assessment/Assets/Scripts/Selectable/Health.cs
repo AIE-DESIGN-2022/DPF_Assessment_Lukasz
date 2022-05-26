@@ -51,7 +51,7 @@ public class Health : MonoBehaviour
         _isAlive = false;
         Animator _animator = GetComponent<Animator>();
         if (_animator != null) _animator.SetTrigger("death");
-        //GetComponent<Selectable>().Death();
+        else Destroy(gameObject);
     }
 
     public float HealthPercentage()
