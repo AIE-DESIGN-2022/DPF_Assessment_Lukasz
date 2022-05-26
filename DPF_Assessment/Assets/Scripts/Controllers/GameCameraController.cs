@@ -11,12 +11,14 @@ public class GameCameraController : MonoBehaviour
     [SerializeField, Range(1f, 49f)] float boarderScreenPercentage = 5f;
     [SerializeField] float scrollSpeed = 1;
     [SerializeField, Range(0f, 1f)] float timeBeforeScrollStart;
+    [SerializeField, Range(1f, 10f)] float cameraRotationSpeed = 2;
 
     [Header("Camera Setup")]
     [SerializeField, Range(1f, 90f)] float cameraAngle = 75f;
     [SerializeField] float distanceToGround = 10;
     [SerializeField, Range(10f, 100f)] float maxDistanceToGround = 100f;
     [SerializeField, Range(1f, 20f)] float minDistanceToGround = 5f;
+    [SerializeField, Range(2f, 50f)] float angleChangeDistanceToGround = 10;
 
     [Header("UI")]
     [SerializeField] RectTransform topHUDSection;
@@ -33,6 +35,7 @@ public class GameCameraController : MonoBehaviour
     private float timeInScrollSpace = 0;
     private float topScreenOffSet = 0;
     private float bottomScreenOffSet = 0;
+    private float mousePosX;
 
     void Awake()
     {
@@ -67,11 +70,17 @@ public class GameCameraController : MonoBehaviour
     {
         CameraMovement();
         CameraHeigh();
+
+        if (Input.GetMouseButtonDown(2)) allowMovement = false;
+        if (Input.GetMouseButton(2)) CameraRotation();
+        if (Input.GetMouseButtonUp(2)) allowMovement = true;
     }
 
-    void FixedUpdate()
+    private void CameraRotation()
     {
-        
+        float horizontal = Input.GetAxis("Mouse X");
+        if (horizontal == 0) return;
+        transform.RotateAround(transform.position, transform.TransformDirection(Vector3.up), horizontal * cameraRotationSpeed);
     }
 
     private void CameraHeigh()
@@ -84,11 +93,10 @@ public class GameCameraController : MonoBehaviour
             if (newDistanceToGround > minDistanceToGround && newDistanceToGround < maxDistanceToGround)
             {
                 currentDistanceToGround = newDistanceToGround;
+                currentCameraAngle = NewCameraAngle(newDistanceToGround);
                 ResetCameraPosition();
             }
-            
-        }
-        
+        }  
     }
 
     private void CameraMovement()
@@ -174,8 +182,28 @@ public class GameCameraController : MonoBehaviour
         float height = currentDistanceToGround * Mathf.Sin(currentCameraAngle * Mathf.Deg2Rad);
         float distance = currentDistanceToGround * Mathf.Cos(currentCameraAngle * Mathf.Deg2Rad);
 
-        _camera.transform.localPosition = new Vector3(0.0f, height, distance * -1);
-        _camera.transform.localRotation = Quaternion.Euler(currentCameraAngle, 0, 0);
+        Vector3 targetPosition = new Vector3(0.0f, height, distance * -1);
+        float angleLerp = Mathf.Lerp(_camera.transform.localRotation.eulerAngles.x, currentCameraAngle, Time.deltaTime);
+
+        /*_camera.transform.localPosition = Vector3.Lerp(_camera.transform.localPosition, targetPosition, Time.deltaTime);
+        _camera.transform.localRotation = Quaternion.Euler(angleLerp, _camera.transform.localRotation.eulerAngles.y, _camera.transform.localRotation.eulerAngles.z);*/
+
+        _camera.transform.localPosition = targetPosition;
+        _camera.transform.localRotation = Quaternion.Euler(currentCameraAngle, _camera.transform.localRotation.eulerAngles.y, _camera.transform.localRotation.eulerAngles.z);
+    }
+
+    private float NewCameraAngle(float newDistanceToGround)
+    {
+        float newCameraAngle = cameraAngle;
+
+        if (newDistanceToGround > minDistanceToGround && newDistanceToGround < angleChangeDistanceToGround)
+        {
+            float range = angleChangeDistanceToGround - minDistanceToGround;
+            float distanceToGroundAsPercentage = (newDistanceToGround - minDistanceToGround) / range;
+            newCameraAngle = (cameraAngle/100) * (distanceToGroundAsPercentage * 100);
+        }
+
+        return newCameraAngle;
     }
 
     private bool IsInsideTerrain(Vector3 newPos)
