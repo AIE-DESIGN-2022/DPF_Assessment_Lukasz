@@ -14,13 +14,41 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _faction: 1
   _buildings:
+  - buildingType: 3
+    builtBy: 0
+    foodCost: 0
+    woodCost: 0
+    goldCost: 0
+    buildingIcon: {fileID: 2800000, guid: 542e7be7e4d427740b5a3315e349e4c2, type: 3}
+    buildingPrefab: {fileID: 1180573847072710891, guid: 7e91c9cee9beb1344acd652ec464f0f0, type: 3}
+  - buildingType: 1
+    builtBy: 0
+    foodCost: 0
+    woodCost: 0
+    goldCost: 0
+    buildingIcon: {fileID: 2800000, guid: c6b40826137463449937a648500fc423, type: 3}
+    buildingPrefab: {fileID: 1180573847072710891, guid: 9634f9bcc1dfa6140bc0a2625534a45c, type: 3}
+  - buildingType: 2
+    builtBy: 0
+    foodCost: 0
+    woodCost: 0
+    goldCost: 0
+    buildingIcon: {fileID: 2800000, guid: 43d142046a9a6b34cb56b8a54bbac84f, type: 3}
+    buildingPrefab: {fileID: 1180573847072710891, guid: 708e0333152041e45b4554fb2169d641, type: 3}
   - buildingType: 4
     builtBy: 0
     foodCost: 0
     woodCost: 0
     goldCost: 0
-    buildingIcon: {fileID: 2800000, guid: 23ae60ce24563c446b56004158fef32f, type: 3}
-    buildingPrefab: {fileID: 1180573847072710891, guid: 62d4fc3f3b5e12445b72115ad12efa06, type: 3}
+    buildingIcon: {fileID: 2800000, guid: a36abc4a02b12414a8179830db285405, type: 3}
+    buildingPrefab: {fileID: 1180573847072710891, guid: 646b5b8c5147f6b40a9689548fadd10c, type: 3}
+  - buildingType: 0
+    builtBy: 0
+    foodCost: 0
+    woodCost: 0
+    goldCost: 0
+    buildingIcon: {fileID: 2800000, guid: da2460889eb6b8947b265867ac0c668f, type: 3}
+    buildingPrefab: {fileID: 1180573847072710891, guid: f24fa5e5c018709449622daaf582225c, type: 3}
   _units:
   - unitType: 0
     builtFrom: 0
