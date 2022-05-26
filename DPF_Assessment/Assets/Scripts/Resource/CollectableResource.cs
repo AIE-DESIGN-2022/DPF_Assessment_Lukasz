@@ -49,8 +49,16 @@ public class CollectableResource : Selectable
 
     private void ResourceDepleted()
     {
-        Debug.LogWarning("Resource Depleted");
-        throw new NotImplementedException();
+        if (_resourceType == EResourceType.Wood)
+        {
+            MeshRenderer mr = GetComponentInChildren<MeshRenderer>();
+            Destroy(mr.gameObject);
+            GameObject treeStumpPrefab = (GameObject)Resources.Load<GameObject>("Prefabs/TreeStump");
+            GameObject treeStump = Instantiate(treeStumpPrefab, transform.position, transform.rotation);
+            treeStump.transform.parent = transform;
+        }
+        else Destroy(gameObject);
+
     }
 
     public bool HasResource() { return _currentAmount > 0; }
@@ -68,7 +76,7 @@ public class CollectableResource : Selectable
         }
         else
         {
-            newStatus1 = "Depleted.";
+            newStatus1 = "Depleted";
         }
     }
 }

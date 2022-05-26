@@ -213,6 +213,7 @@ public class ResourceGatherer : MonoBehaviour
         if (_gatheredAmount + _gatherRate > _maxCarry)
         {
             _gatheredAmount += _targetResource.Gather(_maxCarry - _gatheredAmount);
+            ClearTargetResource();
         }
         else
         {
