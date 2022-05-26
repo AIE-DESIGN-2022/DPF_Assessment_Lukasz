@@ -144,11 +144,9 @@ public class PlayerController : MonoBehaviour
 
                 if (_collectableResource != null) GiveCollectResourceOrder(_collectableResource);
 
-                if (_building != null && _building.PlayerNumber() != _playerNumber) GiveAttackOrder(_building);
+                if (_building != null) RightClickOnBuilding(_building);
 
-                if (_unit != null && _unit.PlayerNumber() != _playerNumber) GiveAttackOrder(_unit);
-
-                if (_building != null && _building.PlayerNumber() == _playerNumber) GiveUnitToBuildingOrder(_building);
+                if (_unit != null) RightClickOnUnit(_unit);
             }
             else
             {
@@ -156,6 +154,33 @@ public class PlayerController : MonoBehaviour
             }
         }
     }
+
+    private void RightClickOnBuilding(Building building)
+    {
+        // check if owned by player
+        if (building.PlayerNumber() == _playerNumber)
+        {
+            GiveUnitToBuildingOrder(building);
+        }
+        else
+        {
+            GiveAttackOrder(building);
+        }
+    }
+
+    private void RightClickOnUnit(Unit unit)
+    {
+        // check if owned by player
+        if (unit.PlayerNumber() == _playerNumber)
+        {
+            GiveUnitHealOrder(unit);
+        }
+        else
+        {
+            GiveAttackOrder(unit);
+        }    
+    }
+
 
     private List<Selectable> InSelectionBox()
     {
@@ -276,6 +301,18 @@ public class PlayerController : MonoBehaviour
                 }
             }
         }
+    }
+
+    private void GiveUnitHealOrder(Unit unit)
+    {
+        foreach (Selectable _selectable in _currentSelection)
+        {
+            Healer selectedHealer = _selectable.GetComponent<Healer>();
+            if (selectedHealer != null)
+            {
+                selectedHealer.SetTargetHealUnit(unit);
+            }
+        }    
     }
 
     private void GiveCollectResourceOrder(CollectableResource _newResource)

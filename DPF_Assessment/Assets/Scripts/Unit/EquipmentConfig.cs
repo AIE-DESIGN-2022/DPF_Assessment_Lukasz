@@ -13,10 +13,18 @@ public class EquipmentConfig : ScriptableObject
 
     public GameObject Spawn(Unit _unit)
     {
-        Transform _handTransform = _unit.HandTransform(_heldInLeftHand);
-        GameObject _newObject = Instantiate(_equipmentPrefab, _handTransform.position, _handTransform.rotation);
-        _newObject.transform.parent = _handTransform;
-        return _newObject;
+        if (_equipmentPrefab != null)
+        {
+            Transform _handTransform = _unit.HandTransform(_heldInLeftHand);
+            GameObject _newObject = Instantiate(_equipmentPrefab, _handTransform.position, _handTransform.rotation);
+            _newObject.transform.parent = _handTransform;
+            return _newObject;
+        }
+        else
+        {
+            return null;
+        }
+        
     }
 
     public bool HeldInLeftHand()

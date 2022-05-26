@@ -8,7 +8,7 @@ public class Health : MonoBehaviour
 {
     [Tooltip("The maximum and starting health of this object.")]
     [SerializeField] private float _health = 100;
-    private float _currentHealth;
+    [SerializeField] private float _currentHealth;
     private bool _isAlive = true;
 
     // Start is called before the first frame update

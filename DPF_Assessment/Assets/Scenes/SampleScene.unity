@@ -677,6 +677,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _health: 1000
+  _currentHealth: 0
 --- !u!54 &869662931
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -730,6 +731,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _health: 100
+  _currentHealth: 0
 --- !u!4 &1086134342 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8802002943941821610, guid: 26591ff36cb5ef440843000e2bb69096, type: 3}
@@ -1327,6 +1329,14 @@ PrefabInstance:
     - target: {fileID: 2210010318463215739, guid: f1f9b38630a6aa348868c59a6cf46d1b, type: 3}
       propertyPath: m_WarningMessage
       value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 5981330187123386376, guid: f1f9b38630a6aa348868c59a6cf46d1b, type: 3}
+      propertyPath: healRate
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5981330187123386376, guid: f1f9b38630a6aa348868c59a6cf46d1b, type: 3}
+      propertyPath: healRange
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 8418730917576266224, guid: f1f9b38630a6aa348868c59a6cf46d1b, type: 3}
       propertyPath: m_RootOrder

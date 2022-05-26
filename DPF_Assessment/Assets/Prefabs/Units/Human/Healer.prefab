@@ -97,6 +97,7 @@ GameObject:
   - component: {fileID: 2210010318463215739}
   - component: {fileID: 9044434835208375973}
   - component: {fileID: 2838729425064204258}
+  - component: {fileID: 5981330187123386376}
   m_Layer: 0
   m_Name: Healer
   m_TagString: Untagged
@@ -221,6 +222,21 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &5981330187123386376
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8418730917576266226}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ea582d9a4c90b9f4e9016cb966f6cc3e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  healRate: 10
+  healRange: 10
+  healingHands: {fileID: 11400000, guid: 4668e63ef7355cd42b3f689f92d5b689, type: 2}
 --- !u!1001 &2117264890437930101
 PrefabInstance:
   m_ObjectHideFlags: 0

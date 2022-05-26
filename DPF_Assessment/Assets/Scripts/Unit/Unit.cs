@@ -14,6 +14,7 @@ public class Unit : Selectable
     private BuildingConstructor _buildingConstructor;
     private Attacker _attacker;
     private bool _hasStopped = true;
+    private Healer _healer;
 
     [Header("Unit Config")]
     [SerializeField] private Transform _leftHand;
@@ -37,6 +38,7 @@ public class Unit : Selectable
         _resourceGatherer = GetComponent<ResourceGatherer>();
         _attacker = GetComponent<Attacker>();
         _buildingConstructor = GetComponent<BuildingConstructor>();
+        _healer = GetComponent<Healer>();
         if (_leftHand == null) _leftHand = FindByName("hand_l");
         if (_rightHand == null) _rightHand = FindByName("hand_r");
     }
@@ -86,16 +88,17 @@ public class Unit : Selectable
         }
         if (_buildingConstructor != null) _buildingConstructor.ClearBuildTarget();
         if (_attacker != null) _attacker.ClearTarget();
+        if (_healer != null) _healer.ClearTargetUnit();
         if (_animator != null) _animator.SetTrigger("stop");
         Move(_newLocation);
         HUD_StatusUpdate();
     }
 
-    public void MoveTo(CollectableResource _collectableResource)
+    /*public void MoveTo(CollectableResource _collectableResource)
     {
         Move(_collectableResource.transform.position);
 
-    }
+    }*/
 
     public void MoveTo(Selectable _selectable)
     {
@@ -133,6 +136,16 @@ public class Unit : Selectable
         if (_attacker != null)
         {
             _attacker.SetTarget(_newTarget);
+        }
+
+        
+    }
+
+    public void SetHealTarget(Unit _newTarget)
+    {
+        if (_healer != null && PlayerNumber() == _newTarget.PlayerNumber())
+        {
+            _healer.SetTargetHealUnit(_newTarget);
         }
     }
 
