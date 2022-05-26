@@ -11,12 +11,33 @@ public class GameController : MonoBehaviour
     private HUD_Manager _hudManager;
     private PlayerController _playerController;
     private GameCameraController _cameraController;
+    private UI_Menu pauseMenu;
 
     private void Awake()
     {
         _hudManager = GetComponentInChildren<HUD_Manager>();
         _playerController = GetComponentInChildren<PlayerController>();
         _cameraController = GetComponentInChildren<GameCameraController>();
+        FindMenus();
+    }
+
+    private void FindMenus()
+    {
+        UI_Menu[] menus = GetComponentsInChildren<UI_Menu>();
+        foreach (UI_Menu menu in menus)
+        {
+            if (menu.name == "PauseMenu") pauseMenu = menu;
+        }
+    }
+
+    public UI_Menu PauseMenu()
+    {
+        if (pauseMenu != null) return pauseMenu;
+        else
+        {
+            Debug.LogError(name + " cannot find pause menu.");
+            return null;
+        }
     }
 
     // Start is called before the first frame update

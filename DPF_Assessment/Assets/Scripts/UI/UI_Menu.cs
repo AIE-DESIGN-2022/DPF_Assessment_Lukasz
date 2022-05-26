@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class UI_Menu : MonoBehaviour
@@ -13,6 +14,13 @@ public class UI_Menu : MonoBehaviour
     private Button settingsButton;
     private Button exitToMenuButton;
     private Button exitButton;
+    private Button singlePlayerButton;
+    private Button backButton;
+    private Button newCampaignButton;
+    private Button newSkirmishButton;
+
+    private UI_Menu singePlayerMenu;
+    private UI_Menu mainMenu;
 
 
     private void Awake()
@@ -20,6 +28,17 @@ public class UI_Menu : MonoBehaviour
         gameController = FindObjectOfType<GameController>();
 
         FindButtons();
+        LoadOtherMenus();
+    }
+
+    private void LoadOtherMenus()
+    {
+        UI_Menu[] menus = FindObjectsOfType<UI_Menu>();
+        foreach (UI_Menu menu in menus)
+        {
+            if (menu.name == "SinglePlayerMenu") singePlayerMenu = menu;
+            if (menu.name == "MainMenu") mainMenu = menu;
+        }
     }
 
     private void FindButtons()
@@ -32,18 +51,28 @@ public class UI_Menu : MonoBehaviour
             if (button.name == "SettingsButton") settingsButton = button;
             if (button.name == "ExitToMenuButton") exitToMenuButton = button;
             if (button.name == "ExitButton") exitButton = button;
+            if (button.name == "SinglePlayerButton") singlePlayerButton = button;
+            if (button.name == "BackButton") backButton = button;
+            if (button.name == "NewCampaignButton") newCampaignButton = button;
+            if (button.name == "NewSkirmishButton") newSkirmishButton = button;
         }
     }
 
     // Start is called before the first frame update
     void Start()
     {
-        gameObject.SetActive(false);
+        if (gameObject.name != "MainMenu") gameObject.SetActive(false);
+
         if (saveButton != null) saveButton.onClick.AddListener(SaveClicked);
         if (loadButton != null) loadButton.onClick.AddListener(LoadClicked);
         if (settingsButton != null) settingsButton.onClick.AddListener(SettingsClicked);
         if (exitToMenuButton != null) exitToMenuButton.onClick.AddListener(ExitToMenuClicked);
         if (exitButton != null) exitButton.onClick.AddListener(ExitClicked);
+        if (singlePlayerButton != null) singlePlayerButton.onClick.AddListener(SingePlayerClicked);
+        if (backButton != null) backButton.onClick.AddListener(BackClicked);
+        if (newCampaignButton != null) newCampaignButton.onClick.AddListener(NewCampaignClicked);
+        if (newSkirmishButton != null) newSkirmishButton.onClick.AddListener(NewSkirmishClicked);
+
     }
 
     private void SaveClicked()
@@ -63,7 +92,7 @@ public class UI_Menu : MonoBehaviour
 
     private void ExitToMenuClicked()
     {
-
+        SceneManager.LoadScene("MainMenu");
     }
 
     private void ExitClicked()
@@ -71,12 +100,34 @@ public class UI_Menu : MonoBehaviour
         Application.Quit();
     }
 
+    private void SingePlayerClicked()
+    {
+        ToggleShowing();
+        singePlayerMenu.ToggleShowing();
+    }
+
+    private void BackClicked()
+    {
+        ToggleShowing();
+        mainMenu.ToggleShowing();
+    }
+
+    private void NewCampaignClicked()
+    {
+        SceneManager.LoadScene("SampleScene");
+    }
+
+    private void NewSkirmishClicked()
+    {
+
+    }
+
     // Update is called once per frame
     void Update()
     {
         if (IsShowing())
         {
-            if (Input.GetKeyUp(KeyCode.Escape)) ToggleShowing();
+            if (Input.GetKeyDown(KeyCode.Escape)) ToggleShowing();
         }
     }
 
@@ -90,14 +141,21 @@ public class UI_Menu : MonoBehaviour
         if (gameObject.activeSelf)
         {
             gameObject.SetActive(false);
-            gameController.PlayerController().PlayerControl(true);
-            gameController.CameraController().allowMovement = true;
+            if (gameController != null)
+            {
+                gameController.PlayerController().PlayerControl(true);
+                gameController.CameraController().allowMovement = true;
+            }
+            
         }
         else
         {
             gameObject.SetActive(true);
-            gameController.PlayerController().PlayerControl(false);
-            gameController.CameraController().allowMovement = false;
+            if (gameController != null)
+            {
+                gameController.PlayerController().PlayerControl(false);
+                gameController.CameraController().allowMovement = false;
+            }
         }
     }
 

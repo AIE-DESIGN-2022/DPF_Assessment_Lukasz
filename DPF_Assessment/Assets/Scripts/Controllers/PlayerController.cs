@@ -53,6 +53,13 @@ public class PlayerController : MonoBehaviour
         if (Input.GetMouseButtonUp(0)) HandleLeftMouseUp();
 
         if (Input.GetMouseButtonDown(1)) HandleRightClick();
+
+        if (Input.GetKeyDown(KeyCode.Escape)) HandleEscapePushed();
+    }
+
+    private void HandleEscapePushed()
+    {
+        FindObjectOfType<GameController>().PauseMenu().ToggleShowing();
     }
 
     private void HandleLeftClick()
