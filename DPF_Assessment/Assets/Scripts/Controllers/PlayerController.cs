@@ -279,14 +279,28 @@ public class PlayerController : MonoBehaviour
 
     private void GiveMoveOrder(Vector3 _newLocation)
     {
-        foreach (Selectable _selectable in _currentSelection)
+        if (_currentSelection.Count == 1)
+        {
+            Unit _unit = _currentSelection[0].GetComponent<Unit>();
+            if (_unit != null && _unit.PlayerNumber() == _playerNumber)
+            {
+                _unit.MoveTo(_newLocation);
+            }
+        }
+        else
+        {
+            MoveInFormation(_newLocation);
+        }
+
+
+        /*foreach (Selectable _selectable in _currentSelection)
         {
             Unit _unit = _selectable.GetComponent<Unit>();
             if (_unit != null && _unit.PlayerNumber() == _playerNumber)
             {
                 _unit.MoveTo(_newLocation);
             }
-        }
+        }*/
     }
 
     private void GiveAttackOrder(Selectable _newTarget)
@@ -341,6 +355,32 @@ public class PlayerController : MonoBehaviour
     public void PlayerControl(bool _online)
     {
         _playerControlOnline = _online;
+    }
+
+    public void MoveInFormation(Vector3 _newLocation)
+    {
+        int numberOfRows = (_currentSelection.Count / 5) + 1;
+        float offSet = 1.0f;
+
+        print(numberOfRows);
+
+        for (int i = 0; i < numberOfRows; i++)
+        {
+            for (int j = 0; j < 5; j++)
+            {
+                int currentIndex = j + (i * 5);
+
+                if (currentIndex < _currentSelection.Count)
+                {
+                    Vector3 newDestination = new Vector3(_newLocation.x + (offSet * j),
+                                               _newLocation.y,
+                                               _newLocation.z + (offSet * i));
+
+                    print(currentIndex);
+                    _currentSelection[currentIndex].GetComponent<Unit>().MoveTo(newDestination);
+                }
+            }
+        }
     }
 }
 // Writen by Lukasz Dziedziczak

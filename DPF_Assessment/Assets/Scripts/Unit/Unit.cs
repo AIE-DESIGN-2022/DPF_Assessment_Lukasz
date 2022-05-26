@@ -80,7 +80,7 @@ public class Unit : Selectable
 
     public void MoveTo(Vector3 _newLocation)
     {
-        //Debug.Log(name + "Recieved MoveTo order");
+        Debug.Log(name + "Recieved MoveTo order");
         if (_resourceGatherer != null)
         {
             _resourceGatherer.ClearTargetResource();
@@ -90,15 +90,9 @@ public class Unit : Selectable
         if (_attacker != null) _attacker.ClearTarget();
         if (_healer != null) _healer.ClearTargetUnit();
         if (_animator != null) _animator.SetTrigger("stop");
-        Move(_newLocation);
+        Move(NearestEmptyPosition(_newLocation));
         HUD_StatusUpdate();
     }
-
-    /*public void MoveTo(CollectableResource _collectableResource)
-    {
-        Move(_collectableResource.transform.position);
-
-    }*/
 
     public void MoveTo(Selectable _selectable)
     {
@@ -288,11 +282,41 @@ public class Unit : Selectable
     {
         Vector3 _position = _newPosition;
         NavMeshHit navMeshHit;
-        if (NavMesh.SamplePosition(_newPosition, out navMeshHit, 5, 0))
+        if (NavMesh.SamplePosition(_newPosition, out navMeshHit, 5, NavMesh.AllAreas))
+        {
             _position = navMeshHit.position;
-
+        }
 
         return _position;
+    }
+
+    private bool CheckIfNewPositionEmpty(Vector3 _newPosition)
+    {
+        RaycastHit[] hits = Physics.SphereCastAll(_newPosition, 0.5f, Vector3.up, 0.5f, NavMesh.AllAreas);
+
+        foreach (RaycastHit hit in hits)
+        {
+            if (hit.collider.gameObject.GetComponent<Unit>() != null) return false;
+        }
+
+        return true;
+    }
+
+    private Vector3 NearestEmptyPosition(Vector3 _newPosition)
+    {
+        Vector3 position = _newPosition;
+        int itereation = 1;
+
+        while (!CheckIfNewPositionEmpty(position))
+        {
+            float randX = UnityEngine.Random.Range(-1.0f * itereation, 1.0f * itereation);
+            float randZ = UnityEngine.Random.Range(-1.0f * itereation, 1.0f * itereation);
+
+            position = new Vector3(_newPosition.x + randX, _newPosition.y, _newPosition.z + randZ);
+            itereation++;
+        }
+
+        return position;
     }
 
 }
