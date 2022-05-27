@@ -88,7 +88,8 @@ public class Unit : Selectable
 
                 _gameController.PlayerController().PlayerControl(true);
                 _gameController.CameraController().allowMovement = true;
-
+                
+                HUD_StatusUpdate();
                 Move(patrolEndPoint);
             }
         }
@@ -318,8 +319,12 @@ public class Unit : Selectable
                 }
             }
         }
-        
-        if (_status1 == "" && DistanceToNavMeshTarget() > 1)
+
+        if (_status1 == "" && unitStance == EUnitStance.Patrol)
+        {
+            _status1 = "Patroling";
+        }
+        else if (_status1 == "" && DistanceToNavMeshTarget() > 1)
         {
             _status1 = "Moving";
         }
@@ -418,7 +423,7 @@ public class Unit : Selectable
     {
         _gameController.PlayerController().PlayerControl(false);
         _gameController.CameraController().allowMovement = false;
-
+        
         selectingPatrolPoint = true;
     }
 
