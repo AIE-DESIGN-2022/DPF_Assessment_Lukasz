@@ -87,6 +87,8 @@ public class PlayerController : MonoBehaviour
 
     private void AddToSelection(Selectable _selectable)
     {
+        if (_selectable.GetComponent<Building>() != null && _selectable.GetComponent<Building>().BuildState() == Building.EBuildState.Destroyed) return;
+
         _selectable.Selected(true);
         _currentSelection.Add(_selectable);
         _hudManager.NewSelection(_currentSelection);
@@ -382,8 +384,6 @@ public class PlayerController : MonoBehaviour
                     Vector3 newDestination = new Vector3(_newLocation.x + (offSet * j),
                                                _newLocation.y,
                                                _newLocation.z + (offSet * i));
-
-                    print(currentIndex);
                     _currentSelection[currentIndex].GetComponent<Unit>().MoveTo(newDestination);
                 }
             }

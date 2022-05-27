@@ -20,6 +20,7 @@ public class Building : Selectable
     private int _numberOfCollisions = 0;
     private List<BuildingConstructor> _constructionTeam;
     private GameObject _construction;
+    private GameObject rubble;
 
     public enum EBuildingType
     {
@@ -35,7 +36,8 @@ public class Building : Selectable
         Placing,
         PlacingBad,
         Building,
-        Complete
+        Complete,
+        Destroyed
     }
 
     private new void Awake()
@@ -180,6 +182,12 @@ public class Building : Selectable
                 EnableRenderersAndColliders();
                 SetMaterialsColour(Color.white);
                 break;
+
+            case EBuildState.Destroyed:
+                GetComponent<NavMeshObstacle>().enabled = false;
+                EnableRenderersAndColliders(false);
+                Rubble();
+                break;
         }
     }
 
@@ -266,5 +274,32 @@ public class Building : Selectable
     }
 
     public float RangeOffset() { return rangeOffset; }
+
+    private void Rubble(bool _enabled = true)
+    {
+        if (_enabled)
+        {
+            GameObject rubblePrefab = (GameObject)Resources.Load<GameObject>("Prefabs/Rubble");
+            if (rubblePrefab == null) Debug.LogError(name + " unable to load Rubble prefab.");
+            rubble = Instantiate(rubblePrefab, transform.position, transform.rotation);
+            rubble.transform.parent = transform;
+            if (_buildingType != EBuildingType.Tower)
+            {
+                /*rubble.transform.localScale = Vector3.one * 1.5f;*/
+            }
+            else
+            {
+                rubble.transform.localScale = Vector3.one * 0.5f;
+            }
+
+        }
+        else
+        {
+            Destroy(rubble.gameObject);
+            rubble = null;
+        }
+    }
+
+
 }
 // Writen by Lukasz Dziedziczak
