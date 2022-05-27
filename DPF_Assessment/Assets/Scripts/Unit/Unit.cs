@@ -23,7 +23,7 @@ public class Unit : Selectable
 
     [Header("Behaviour")]
     [SerializeField] private EUnitStance unitStance = EUnitStance.Passive;
-    [SerializeField] private float sightDistance;
+    [SerializeField] private float sightDistance = 15;
 
     private Vector3 patrolStartPoint;
     private Vector3 patrolEndPoint;
@@ -334,5 +334,11 @@ public class Unit : Selectable
         return position;
     }
 
+    public void ChangeUnitStance(EUnitStance newStance)
+    {
+        unitStance = newStance;
+    }
+
+    public EUnitStance UnitStance() {  return unitStance; }
 }
 // Writen by Lukasz Dziedziczak

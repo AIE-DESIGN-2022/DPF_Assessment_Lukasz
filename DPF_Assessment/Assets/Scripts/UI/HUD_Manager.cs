@@ -74,6 +74,28 @@ public class HUD_Manager : MonoBehaviour
             }
         }
 
+        if (_selection.Count > 1)
+        {
+            List<Unit> selectedUnits = new List<Unit>();
+            List<Building> selectedBuildings = new List<Building>();
+            List<CollectableResource> selectedResources = new List<CollectableResource> ();
+
+            foreach (Selectable item in _selection)
+            {
+                Unit _selectedUnit = item.GetComponent<Unit>();
+                Building _selectedBuilding = item.GetComponent<Building>();
+                CollectableResource _selectedCollectableResource = item.GetComponent<CollectableResource>();
+
+                if (_selectedUnit != null) selectedUnits.Add(_selectedUnit);
+                if (_selectedBuilding != null) selectedBuildings.Add(_selectedBuilding);
+                if (_selectedCollectableResource != null) selectedResources.Add(_selectedCollectableResource);
+            }
+
+            if (selectedUnits.Count > 0)
+            {
+                _actionsUI.UnitsSelected(selectedUnits);
+            }
+        }
         
     }
 

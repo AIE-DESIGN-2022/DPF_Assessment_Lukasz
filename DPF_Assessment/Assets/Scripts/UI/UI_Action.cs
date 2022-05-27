@@ -14,7 +14,11 @@ public class UI_Action : MonoBehaviour
     {
         Build,
         Back,
-        Blank
+        Blank,
+        StancePassive,
+        StanceDefensive,
+        StanceOffensive,
+        Patrol
     }
 
     private void Awake()
@@ -48,9 +52,7 @@ public class UI_Action : MonoBehaviour
 
             foreach (Unit.EUnitType _buildableUnit in _buildableUnits)
             {
-                UI_Action_Button _newButton = Instantiate(_actionButtonPrefab, transform);
-                _newButton.SetupButton(_unitProducer, _buildableUnit, _faction.Config().Icon(_buildableUnit));
-                _actionButtons.Add(_newButton);
+                BuildButton(_buildableUnit, _unitProducer);
             }
         }
     }
@@ -69,14 +71,24 @@ public class UI_Action : MonoBehaviour
         Clear();
         if (AnyAreBuildingConstructors(_selectedUnits))
         {
-            UI_Action_Button _buildButton = Instantiate(_actionButtonPrefab, transform);
-            _buildButton.SetupButton(EButtonType.Build, _selectedUnits);
-            _actionButtons.Add(_buildButton);
+            BuildButton(EButtonType.Build, _selectedUnits);
         }
         else
         {
-            // build a blank button in it's place
+            BuildButton(EButtonType.Blank, _selectedUnits);
         }
+
+        BuildButton(EButtonType.Blank, _selectedUnits);
+
+        if (AnyAreAttackers(_selectedUnits))
+        {
+            BuildButton(EButtonType.Patrol, _selectedUnits); //this will be patrol button
+
+            BuildButton(EButtonType.StancePassive, _selectedUnits);
+            BuildButton(EButtonType.StanceDefensive, _selectedUnits);
+            BuildButton(EButtonType.StanceOffensive, _selectedUnits);
+        }
+        
     }
 
     public void BuildButtonPushed(List<Unit> _selectedUnits)
@@ -91,16 +103,12 @@ public class UI_Action : MonoBehaviour
 
         List<Building.EBuildingType> _constructableBuildings = _faction.Config().ConstructableBuildings(_selectedUnits[0].UnitType());
 
-        UI_Action_Button _backButton = Instantiate(_actionButtonPrefab, transform);
-        _backButton.SetupButton(EButtonType.Back, _selectedUnits);
-        _actionButtons.Add(_backButton);
+        BuildButton(EButtonType.Back, _selectedUnits);
 
         //make buttons for each building.
         foreach (Building.EBuildingType _buildingType in _constructableBuildings)
         {
-            UI_Action_Button _newButton = Instantiate(_actionButtonPrefab, transform);
-            _newButton.SetupButton(_faction, _buildingType, _faction.Config().Icon(_buildingType), _constructionTeam);
-            _actionButtons.Add(_newButton);
+            BuildButton(_buildingType, _constructionTeam);
         }
     }
 
@@ -127,6 +135,18 @@ public class UI_Action : MonoBehaviour
             case EButtonType.Back:
                 UnitsSelected(_units);
                 break;
+
+            case EButtonType.StancePassive:
+                ChangeStanceOnUnits(_units, Unit.EUnitStance.Passive);
+                break;
+
+            case EButtonType.StanceDefensive:
+                ChangeStanceOnUnits(_units, Unit.EUnitStance.Defensive);
+                break;
+
+            case EButtonType.StanceOffensive:
+                ChangeStanceOnUnits(_units, Unit.EUnitStance.Offensive);
+                break;
         }
     }
 
@@ -137,6 +157,57 @@ public class UI_Action : MonoBehaviour
             if (_unit.GetComponent<BuildingConstructor>() != null) return true;
         }
         return false;
+    }
+
+    private bool AnyAreAttackers(List<Unit> units)
+    {
+        foreach (Unit _unit in units)
+        {
+            if (_unit.GetComponent<Attacker>() != null) return true;
+        }
+        return false;
+    }
+
+    private void ChangeStanceOnUnits(List<Unit> units, Unit.EUnitStance newStance)
+    {
+        foreach (Unit _unit in units)
+        {
+            _unit.ChangeUnitStance(newStance);
+        }
+
+        UpdateUnitStances();
+    }
+
+    private void BuildButton(EButtonType type, List<Unit> _selectedUnits)
+    {
+        UI_Action_Button _buildButton = Instantiate(_actionButtonPrefab, transform);
+        _buildButton.SetupButton(type, _selectedUnits);
+        _actionButtons.Add(_buildButton);
+    }
+
+    private void BuildButton(Unit.EUnitType unitType, UnitProducer unitProducer)
+    {
+        UI_Action_Button _newButton = Instantiate(_actionButtonPrefab, transform);
+        _newButton.SetupButton(unitProducer, unitType, _faction.Config().Icon(unitType));
+        _actionButtons.Add(_newButton);
+    }
+
+    private void BuildButton(Building.EBuildingType buildingType, List<BuildingConstructor> _constructionTeam)
+    {
+        UI_Action_Button _newButton = Instantiate(_actionButtonPrefab, transform);
+        _newButton.SetupButton(_faction, buildingType, _faction.Config().Icon(buildingType), _constructionTeam);
+        _actionButtons.Add(_newButton);
+    }
+
+    public void UpdateUnitStances()
+    {
+        if (_actionButtons.Count > 0)
+        {
+            foreach (UI_Action_Button action_Button in _actionButtons)
+            {
+                action_Button.UpdateUnitStance();
+            }
+        }
     }
 }
 // Writen by Lukasz Dziedziczak

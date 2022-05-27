@@ -371,7 +371,7 @@ public class PlayerController : MonoBehaviour
         int numberOfRows = (_currentSelection.Count / 5) + 1;
         float offSet = 1.0f;
 
-        print(numberOfRows);
+        /*print(numberOfRows);*/
 
         for (int i = 0; i < numberOfRows; i++)
         {

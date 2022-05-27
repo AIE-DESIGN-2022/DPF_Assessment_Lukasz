@@ -15,10 +15,12 @@ public class UI_Action_Button : MonoBehaviour
     private List<BuildingConstructor> _constructionTeam;
     private List<Unit> _selectedUnits = new List<Unit>();
     private UI_Action.EButtonType _buttonType;
+    private Image background;
 
     private void Awake()
     {
         _button = GetComponentInChildren<Button>();
+        background = GetComponentInChildren<Image>();
     }
 
     private void Start()
@@ -31,6 +33,90 @@ public class UI_Action_Button : MonoBehaviour
         _unitProducer = _newUnitProducer;
         _buildableUnit = _newBuildableUnit;
         _button.GetComponent<RawImage>().texture = _newIcon;
+        SetBackgroundActive(false);
+    }
+
+    public void SetupButton(Faction _newFaction, Building.EBuildingType _buildingType, Texture _newIcon, List<BuildingConstructor> _newTeam)
+    {
+        _faction = _newFaction;
+        _constructableBuilding = _buildingType;
+        _button.GetComponent<RawImage>().texture = _newIcon;
+        _constructionTeam = _newTeam;
+        SetBackgroundActive(false);
+    }
+
+    public void SetupButton(UI_Action.EButtonType _newButtonType, List<Unit> _newSelection)
+    {
+        _buttonType = _newButtonType;
+        _selectedUnits = _newSelection;
+
+        if (_newButtonType != UI_Action.EButtonType.Blank)
+        {
+            _button.GetComponent<RawImage>().texture = Load_hudIcon(_buttonType);
+            SetActiveStance();
+        }
+        else
+        {
+            _button.GetComponent<RawImage>().color = Color.clear;
+            SetBackgroundActive(false);
+        }
+        
+    }
+
+    public void UpdateUnitStance()
+    {
+        SetActiveStance();
+    }
+
+    private void SetActiveStance()
+    {
+        if (_buttonType == UI_Action.EButtonType.StancePassive)
+        {
+            if (CheckIfSelectedUnitsHaveStance(Unit.EUnitStance.Passive)) SetBackgroundActive(true);
+            else SetBackgroundActive(false);
+        }
+
+        else if (_buttonType == UI_Action.EButtonType.StanceDefensive)
+        {
+            if (CheckIfSelectedUnitsHaveStance(Unit.EUnitStance.Defensive)) SetBackgroundActive(true);
+            else SetBackgroundActive(false);
+        }
+
+        else if (_buttonType == UI_Action.EButtonType.StanceOffensive)
+        {
+            if (CheckIfSelectedUnitsHaveStance(Unit.EUnitStance.Offensive)) SetBackgroundActive(true);
+            else SetBackgroundActive(false);
+        }
+
+        else
+        {
+            SetBackgroundActive(false);
+        }
+    }
+
+    private bool CheckIfSelectedUnitsHaveStance(Unit.EUnitStance unitStance)
+    {
+        bool haveFoundWithStance = false;
+        if (_selectedUnits.Count > 0)
+        {
+            foreach (Unit unit in _selectedUnits)
+            {
+                //print(name + " checking " + unit.name + " with " + unit.UnitStance().ToString());
+                if (unit.UnitStance() == unitStance) haveFoundWithStance = true;
+            }
+        }
+        //if (haveFoundWithStance) print("have found unit with stance " + unitStance);
+        return haveFoundWithStance;
+    }
+
+    private void SetBackgroundActive(bool isActive)
+    {
+        if (background != null)
+        {
+            background.gameObject.SetActive(isActive);
+            //print(name + " setting background active " + isActive);
+        }
+        else Debug.Log(name + " Action Button Background no found");
     }
 
     private void OnClick()
@@ -64,21 +150,6 @@ public class UI_Action_Button : MonoBehaviour
 
     }
 
-    public void SetupButton(Faction _newFaction, Building.EBuildingType _buildingType, Texture _newIcon, List<BuildingConstructor> _newTeam)
-    {
-        _faction = _newFaction;
-        _constructableBuilding = _buildingType;
-        _button.GetComponent<RawImage>().texture = _newIcon;
-        _constructionTeam = _newTeam;
-    }
-
-    public void SetupButton(UI_Action.EButtonType _newButtonType, List<Unit> _newSelection)
-    {
-        _buttonType = _newButtonType;
-        _selectedUnits = _newSelection;
-        _button.GetComponent<RawImage>().texture = Load_hudIcon(_buttonType);
-    }
-
     private Texture Load_hudIcon(UI_Action.EButtonType _type)
     {
         switch (_type)
@@ -88,6 +159,18 @@ public class UI_Action_Button : MonoBehaviour
 
             case UI_Action.EButtonType.Back:
                 return (Texture)Resources.Load<Texture>("HUD_Icons/Back");
+
+            case UI_Action.EButtonType.StancePassive:
+                return (Texture)Resources.Load<Texture>("HUD_Icons/Passive");
+
+            case UI_Action.EButtonType.StanceDefensive:
+                return (Texture)Resources.Load<Texture>("HUD_Icons/Defensive");
+
+            case UI_Action.EButtonType.StanceOffensive:
+                return (Texture)Resources.Load<Texture>("HUD_Icons/Offensive");
+
+            case UI_Action.EButtonType.Patrol:
+                return (Texture)Resources.Load<Texture>("HUD_Icons/Patrol");
 
             default:
                 return null;
