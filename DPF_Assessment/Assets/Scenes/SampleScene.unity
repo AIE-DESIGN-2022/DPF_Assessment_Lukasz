@@ -757,8 +757,12 @@ PrefabInstance:
       value: Swordsman
       objectReference: {fileID: 0}
     - target: {fileID: 8418730917576266227, guid: 50ea675e450a47a4581431bfa39c3c89, type: 3}
+      propertyPath: flashing
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8418730917576266227, guid: 50ea675e450a47a4581431bfa39c3c89, type: 3}
       propertyPath: unitStance
-      value: 2
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8418730917576266227, guid: 50ea675e450a47a4581431bfa39c3c89, type: 3}
       propertyPath: sightDistance

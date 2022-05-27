@@ -138,6 +138,8 @@ MonoBehaviour:
   _leftHand: {fileID: 0}
   _rightHand: {fileID: 0}
   _unitType: 0
+  unitStance: 2
+  sightDistance: 12
 --- !u!136 &1496767705
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -205,10 +207,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 535332f0fbd536347a723ea59995d7c4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _unitWeapon: {fileID: 0}
+  _unitWeapon: {fileID: 11400000, guid: 062bccb373cb7424b8ab78547a2ed51d, type: 2}
   _attackDamage: 10
   _attackRate: 2
-  _attackRange: 10
+  _attackRange: 8
 --- !u!114 &8499366648956492067
 MonoBehaviour:
   m_ObjectHideFlags: 0

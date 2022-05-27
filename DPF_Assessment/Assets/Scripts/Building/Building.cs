@@ -55,8 +55,9 @@ public class Building : Selectable
 
     }
 
-    private void Update()
+    private new void Update()
     {
+        base.Update();
         switch (_buildState)
         {
             case EBuildState.Placing:

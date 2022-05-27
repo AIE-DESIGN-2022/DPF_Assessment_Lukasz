@@ -16,6 +16,9 @@ public class UI_Action_Button : MonoBehaviour
     private List<Unit> _selectedUnits = new List<Unit>();
     private UI_Action.EButtonType _buttonType;
     private Image background;
+    private bool flashing = false;
+    [SerializeField] private float flashingSpeed = 0.25f;
+    private float flashingTimer;
 
     private void Awake()
     {
@@ -26,6 +29,11 @@ public class UI_Action_Button : MonoBehaviour
     private void Start()
     {
         _button.onClick.AddListener(OnClick);
+    }
+
+    private void Update()
+    {
+        Flashing();
     }
 
     public void SetupButton(UnitProducer _newUnitProducer, Unit.EUnitType _newBuildableUnit, Texture _newIcon)
@@ -181,6 +189,33 @@ public class UI_Action_Button : MonoBehaviour
             default:
                 return null;
         }
+    }
+
+    private void Flashing()
+    {
+        if (flashing)
+        {
+            flashingTimer += Time.deltaTime;
+
+            if (flashingTimer > flashingSpeed)
+            {
+                if (background != null && background.gameObject.activeSelf)
+                {
+                    background.gameObject.SetActive(false);
+                }
+                else if (background != null && !background.gameObject.activeSelf)
+                {
+                    background.gameObject.SetActive(true);
+                }
+
+                flashingTimer = 0;
+            }
+        }
+    }
+
+    public void SetFLashing(bool isFlashing)
+    {
+        flashing = isFlashing;
     }
 }
 // Writen by Lukasz Dziedziczak

@@ -14,6 +14,10 @@ public class Selectable : MonoBehaviour
     protected Health _health;
     protected GameController _gameController;
 
+    [SerializeField] protected bool flashing = false;
+    [SerializeField, Range(0f, 3f)] private float flashingSpeed = 0.5f;
+    private float flashingTimer = 0f;
+
     protected void Awake()
     {
         _selectionIndicator = GetComponentInChildren<SpriteRenderer>();
@@ -28,6 +32,11 @@ public class Selectable : MonoBehaviour
         RigidbodySetup();
         ColliderSetup();
         if (_selectionIndicator == null) Debug.Log("Selection Indicator Missing");
+    }
+
+    protected void Update()
+    {
+        Flashing();
     }
 
     private void RigidbodySetup()
@@ -140,6 +149,32 @@ public class Selectable : MonoBehaviour
         }
     }
 
+    private void Flashing()
+    {
+        if (flashing)
+        {
+            flashingTimer += Time.deltaTime;
+
+            if (flashingTimer > flashingSpeed)
+            {
+                if (_selectionIndicator != null && _selectionIndicator.enabled)
+                {
+                    _selectionIndicator.enabled = false;
+                }
+                else if (_selectionIndicator != null && !_selectionIndicator.enabled)
+                {
+                    _selectionIndicator.enabled = true;
+                }
+
+                flashingTimer = 0;
+            }
+        }
+    }
+
+    public void SetFlashing(bool isFlashing)
+    {
+        flashing = isFlashing;
+    }
 
 }
 // Writen by Lukasz Dziedziczak

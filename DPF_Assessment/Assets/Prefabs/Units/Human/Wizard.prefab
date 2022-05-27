@@ -138,6 +138,8 @@ MonoBehaviour:
   _leftHand: {fileID: 0}
   _rightHand: {fileID: 0}
   _unitType: 0
+  unitStance: 2
+  sightDistance: 12
 --- !u!136 &1496767705
 CapsuleCollider:
   m_ObjectHideFlags: 0

@@ -68,8 +68,9 @@ public class Unit : Selectable
         
     }
 
-    private void Update()
+    private new void Update()
     {
+        base.Update();
         UpdateAnimation();
         PatrolPointSelection();
         PatrolAction();
@@ -406,7 +407,6 @@ public class Unit : Selectable
     {
         List<Selectable> list = new List<Selectable>();
         RaycastHit[] hits = Physics.SphereCastAll(transform.position, sightDistance, Vector3.up);
-
         foreach (RaycastHit hit in hits)
         {
             Unit unit = hit.transform.GetComponent<Unit>();
@@ -438,6 +438,8 @@ public class Unit : Selectable
 
         if (IsSelected()) _gameController.HUD_Manager().Actions_HUD().UpdateUnitStances();
     }
+
+    public bool HasStopped() { return _hasStopped; }
 
 }
 // Writen by Lukasz Dziedziczak

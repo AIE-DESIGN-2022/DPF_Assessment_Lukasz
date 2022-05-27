@@ -62,19 +62,22 @@ public class Attacker : MonoBehaviour
         }
         else if (_target != null && !_target.IsAlive()) ClearTarget();
 
-        if (_unit.UnitStance() == Unit.EUnitStance.Offensive || _unit.UnitStance() == Unit.EUnitStance.Patrol)
+        if ((_unit.UnitStance() == Unit.EUnitStance.Offensive && _unit.HasStopped()) || _unit.UnitStance() == Unit.EUnitStance.Patrol)
         {
             sightTimer += Time.deltaTime;
 
             if (_target == null && sightTimer > 0.5f)
             {
+                //print(name + " running aggressive behaviour");
                 sightTimer = 0;
                 List<Selectable> enemiesInSight = _unit.GetEnemiesInSight();
+                //print(enemiesInSight.Count);
                 if (enemiesInSight.Count == 1) SetTarget(enemiesInSight[0]);
                 if (enemiesInSight.Count > 1)
                 {
                     SetTarget(ClosestTarget(enemiesInSight));
                 }
+                //print(name + "set target of " + _target);
             }
         }
     }
