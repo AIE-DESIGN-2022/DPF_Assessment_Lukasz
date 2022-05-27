@@ -44,7 +44,6 @@ public class BuildingConstructor : MonoBehaviour
             _unit.TakeAStepBack();
             if (possibleFarm != null)
             {
-                print("setting farm");
                 _unit.GetComponent<ResourceGatherer>().SetTargetResource(possibleFarm, true);
             }
         }

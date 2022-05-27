@@ -100,6 +100,7 @@ public class Building : Selectable
                     SetBuildState(EBuildState.Building);
                     _health.NewBuilding();
                     _gameController.PlayerController().PlayerControl(true);
+                    _owningFaction.FinishBuildingPlacement();
 
                     // based on selected units who can construct buildings, give begin actul construction order
                     foreach (BuildingConstructor _constructor in _constructionTeam)

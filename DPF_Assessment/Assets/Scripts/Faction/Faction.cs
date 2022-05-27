@@ -17,6 +17,7 @@ public class Faction : MonoBehaviour
     private List<Unit> _units = new List<Unit>();
     private List<Building> _buildings = new List<Building>();
     private GameController _gameController;
+    private bool placingBuilding = false;
 
     public enum EFaction
     {
@@ -89,15 +90,24 @@ public class Faction : MonoBehaviour
 
     public Building SpawnBuilding(Building.EBuildingType _newType, List<BuildingConstructor> _builders)
     {
-        Building _newBuilding = Instantiate(_config.GetBuildingPrefab(_newType));
-        _newBuilding.Setup(_playerNumber, this);
-        _newBuilding.transform.parent = transform;
-        _buildings.Add(_newBuilding);
-        _newBuilding.SetBuildState(Building.EBuildState.Placing);
-        _newBuilding.SetConstructionTeam(_builders);
-        _gameController.PlayerController().PlayerControl(false);
-        return _newBuilding;
+        if (!placingBuilding)
+        {
+            placingBuilding = true;
+            Building _newBuilding = Instantiate(_config.GetBuildingPrefab(_newType));
+            _newBuilding.Setup(_playerNumber, this);
+            _newBuilding.transform.parent = transform;
+            _buildings.Add(_newBuilding);
+            _newBuilding.SetBuildState(Building.EBuildState.Placing);
+            _newBuilding.SetConstructionTeam(_builders);
+            _gameController.PlayerController().PlayerControl(false);
+            return _newBuilding;
+        }
+        else return null;
     }
+
+    public bool CurrentlyPlacingBuilding() {  return placingBuilding; }
+
+    public void FinishBuildingPlacement() { placingBuilding = false; }
 
     public FactionConfig Config()
     {

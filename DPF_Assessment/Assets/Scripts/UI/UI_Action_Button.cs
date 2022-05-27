@@ -50,7 +50,7 @@ public class UI_Action_Button : MonoBehaviour
 
         else if (_faction != null)
         {
-            if (_faction.CanAfford(_constructableBuilding))
+            if (_faction.CanAfford(_constructableBuilding) && !_faction.CurrentlyPlacingBuilding())
             {
                 _faction.SubtractFromStockpileCostOf(_constructableBuilding);
                 _faction.SpawnBuilding(_constructableBuilding, _constructionTeam);
