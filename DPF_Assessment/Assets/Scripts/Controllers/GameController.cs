@@ -13,6 +13,10 @@ public class GameController : MonoBehaviour
     private GameCameraController _cameraController;
     private UI_Menu pauseMenu;
 
+    [Header("New Game")]
+    [SerializeField] private bool isNewGame = false;
+    [SerializeField] List<Faction.EFaction> listOfPlayers;
+
     private void Awake()
     {
         _hudManager = GetComponentInChildren<HUD_Manager>();
@@ -43,14 +47,37 @@ public class GameController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        BuildListOfFactions();
-        _hudManager.SetPlayerFaction(GetPlayerFaction());
-        _playerController.SetHUD_Manager(_hudManager);
+        if (isNewGame) SetupNewGame();
+        else SetupGame();
     }
 
     private void SetupNewGame()
     {
+        SpawnPoint[] spawnPoints = FindObjectsOfType<SpawnPoint>();
+        if (spawnPoints.Length != listOfPlayers.Count) Debug.LogError(name + " missmatch in number of players and number of spawn points");
 
+        for (int i = 0; i < listOfPlayers.Count; i++)
+        {
+            GameObject newObject = Instantiate(new GameObject(), spawnPoints[i].transform.position, spawnPoints[i].transform.rotation);
+            newObject.AddComponent<Faction>();
+            Faction newFaction = newObject.GetComponent<Faction>();
+            newFaction.SetupFaction(listOfPlayers[i], i + 1);
+
+            newFaction.SpawnFirstBuilding(spawnPoints[i].transform);
+        }
+
+        BuildListOfFactions();
+        _hudManager.SetPlayerFaction(GetPlayerFaction());
+        _playerController.SetHUD_Manager(_hudManager);
+
+        _cameraController.transform.position = _factions[0].transform.position;
+    }
+
+    private void SetupGame()
+    {
+        BuildListOfFactions();
+        _hudManager.SetPlayerFaction(GetPlayerFaction());
+        _playerController.SetHUD_Manager(_hudManager);
     }
 
     private void BuildListOfFactions()

@@ -119,7 +119,7 @@ public class UI_Menu : MonoBehaviour
 
     private void NewSkirmishClicked()
     {
-
+        SceneManager.LoadScene("SkirmishMap");
     }
 
     // Update is called once per frame

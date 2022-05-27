@@ -11,4 +11,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/SampleScene.unity
     guid: 9fc0d4010bbf28b4594072e72b8655ab
+  - enabled: 1
+    path: Assets/Scenes/SkirmishMap.unity
+    guid: 9bbc3331af9198f42b4bfad5afde0f0d
   m_configObjects: {}

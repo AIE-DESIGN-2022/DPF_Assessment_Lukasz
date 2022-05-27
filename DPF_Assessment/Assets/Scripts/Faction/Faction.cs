@@ -105,6 +105,17 @@ public class Faction : MonoBehaviour
         else return null;
     }
 
+    public Building SpawnFirstBuilding(Transform spawnLocartion)
+    {
+        Building _newBuilding = Instantiate(_config.GetBuildingPrefab(Building.EBuildingType.TownCenter));
+        _newBuilding.Setup(_playerNumber, this);
+        _newBuilding.transform.parent = transform;
+        _buildings.Add(_newBuilding);
+        _newBuilding.SetBuildState(Building.EBuildState.Complete);
+        _newBuilding.transform.position = spawnLocartion.position;
+        return _newBuilding;
+    }
+
     public bool CurrentlyPlacingBuilding() {  return placingBuilding; }
 
     public void FinishBuildingPlacement() { placingBuilding = false; }
