@@ -20,6 +20,7 @@ public class Attacker : MonoBehaviour
     private Unit _unit;
     private GameObject _weapon;
     private bool _hasProjectileWeapon;
+    private float sightTimer = 0;
 
     private void Awake()
     {
@@ -60,6 +61,22 @@ public class Attacker : MonoBehaviour
             }
         }
         else if (_target != null && !_target.IsAlive()) ClearTarget();
+
+        if (_unit.UnitStance() == Unit.EUnitStance.Offensive || _unit.UnitStance() == Unit.EUnitStance.Patrol)
+        {
+            sightTimer += Time.deltaTime;
+
+            if (_target == null && sightTimer > 0.5f)
+            {
+                sightTimer = 0;
+                List<Selectable> enemiesInSight = _unit.GetEnemiesInSight();
+                if (enemiesInSight.Count == 1) SetTarget(enemiesInSight[0]);
+                if (enemiesInSight.Count > 1)
+                {
+                    SetTarget(ClosestTarget(enemiesInSight));
+                }
+            }
+        }
     }
 
     private void AttackTarget()
@@ -116,9 +133,28 @@ public class Attacker : MonoBehaviour
             }
             else
             {
-                _target.TakeDamage(_attackDamage);
+                _target.TakeDamage(_attackDamage, _unit);
+                if (!_target.IsAlive()) ClearTarget();
             }
         }
+    }
+
+    private Selectable ClosestTarget(List<Selectable> selectables)
+    {
+        Selectable closest = null;
+        float closestDistance = Mathf.Infinity;
+
+        foreach (Selectable selectable in selectables)
+        {
+            float distance = Vector3.Distance(transform.position, selectable.transform.position);
+            if (distance < closestDistance)
+            {
+                closest = selectable;
+                closestDistance = distance;
+            }
+        }
+
+        return closest;
     }
 }
 // Writen by Lukasz Dziedziczak

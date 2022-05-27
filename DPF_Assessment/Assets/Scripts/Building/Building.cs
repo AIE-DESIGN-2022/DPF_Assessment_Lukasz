@@ -16,7 +16,6 @@ public class Building : Selectable
     private EBuildState _buildState = EBuildState.Complete;
     //private Health _health;
     private MeshRenderer[] _meshRenderers;
-    private GameController _gameController;
     private int _numberOfCollisions = 0;
     private List<BuildingConstructor> _constructionTeam;
     private GameObject _construction;

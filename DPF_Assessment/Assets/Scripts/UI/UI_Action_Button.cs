@@ -88,6 +88,12 @@ public class UI_Action_Button : MonoBehaviour
             else SetBackgroundActive(false);
         }
 
+        else if (_buttonType == UI_Action.EButtonType.StancePatrol)
+        {
+            if (CheckIfSelectedUnitsHaveStance(Unit.EUnitStance.Patrol)) SetBackgroundActive(true);
+            else SetBackgroundActive(false);
+        }
+
         else
         {
             SetBackgroundActive(false);
@@ -169,7 +175,7 @@ public class UI_Action_Button : MonoBehaviour
             case UI_Action.EButtonType.StanceOffensive:
                 return (Texture)Resources.Load<Texture>("HUD_Icons/Offensive");
 
-            case UI_Action.EButtonType.Patrol:
+            case UI_Action.EButtonType.StancePatrol:
                 return (Texture)Resources.Load<Texture>("HUD_Icons/Patrol");
 
             default:

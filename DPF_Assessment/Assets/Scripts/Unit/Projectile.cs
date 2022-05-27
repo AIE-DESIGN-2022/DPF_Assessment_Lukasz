@@ -58,7 +58,7 @@ public class Projectile : MonoBehaviour
     private void Hit(Selectable _target)
     {
         _flyingInAir = false;
-        _target.TakeDamage(_damage);
+        _target.TakeDamage(_damage, _owner);
         //transform.parent = _target.transform;
         Destroy(gameObject, 3);
     }

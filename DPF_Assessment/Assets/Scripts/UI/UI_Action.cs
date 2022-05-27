@@ -18,7 +18,7 @@ public class UI_Action : MonoBehaviour
         StancePassive,
         StanceDefensive,
         StanceOffensive,
-        Patrol
+        StancePatrol
     }
 
     private void Awake()
@@ -82,7 +82,7 @@ public class UI_Action : MonoBehaviour
 
         if (AnyAreAttackers(_selectedUnits))
         {
-            BuildButton(EButtonType.Patrol, _selectedUnits); //this will be patrol button
+            BuildButton(EButtonType.StancePatrol, _selectedUnits); //this will be patrol button
 
             BuildButton(EButtonType.StancePassive, _selectedUnits);
             BuildButton(EButtonType.StanceDefensive, _selectedUnits);
@@ -146,6 +146,10 @@ public class UI_Action : MonoBehaviour
 
             case EButtonType.StanceOffensive:
                 ChangeStanceOnUnits(_units, Unit.EUnitStance.Offensive);
+                break;
+
+            case EButtonType.StancePatrol:
+                ChangeStanceOnUnits(_units, Unit.EUnitStance.Patrol);
                 break;
         }
     }

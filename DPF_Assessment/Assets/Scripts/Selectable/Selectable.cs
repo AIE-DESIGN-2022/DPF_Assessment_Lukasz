@@ -12,11 +12,13 @@ public class Selectable : MonoBehaviour
     [SerializeField, Range(0,4)] private int _owningPlayerNumber = 0;
     protected Faction _owningFaction;
     protected Health _health;
+    protected GameController _gameController;
 
     protected void Awake()
     {
         _selectionIndicator = GetComponentInChildren<SpriteRenderer>();
         _health = GetComponent<Health>();
+        _gameController = FindObjectOfType<GameController>();
     }
 
     // Start is called before the first frame update
@@ -63,13 +65,25 @@ public class Selectable : MonoBehaviour
 
     public Faction Faction() { return _owningFaction; }
 
-    public void TakeDamage(float _damageAmound)
+    public void TakeDamage(float _damageAmound, Unit attacker)
     {
         if (_health != null)
         {
             _health.TakeDamage(_damageAmound);
         }
         HUD_HealthBarUpdate();
+
+        Unit unit = gameObject.GetComponent<Unit>();
+        if (unit != null && unit.UnitStance() != Unit.EUnitStance.Passive)
+        {
+            Attacker defender = unit.GetComponent<Attacker>();
+            if (defender != null && !defender.HasTarget())
+            {
+                defender.SetTarget(attacker);
+            }
+        }
+
+        
     }
 
     public void Heal(float _healAmount)

@@ -25,8 +25,11 @@ public class Unit : Selectable
     [SerializeField] private EUnitStance unitStance = EUnitStance.Passive;
     [SerializeField] private float sightDistance = 15;
 
+    private bool selectingPatrolPoint = false;
     private Vector3 patrolStartPoint;
     private Vector3 patrolEndPoint;
+    private int currentPatrolPoint = 0;
+    private EUnitStance previousStance;
 
     public enum EUnitType
     {
@@ -68,6 +71,53 @@ public class Unit : Selectable
     private void Update()
     {
         UpdateAnimation();
+        PatrolPointSelection();
+        PatrolAction();
+    }
+
+    private void PatrolPointSelection()
+    {
+        if (selectingPatrolPoint && _gameController.CameraController().MouseIsInPlayArea())
+        {
+            if (Input.GetMouseButtonDown(0))
+            {
+                patrolStartPoint = transform.position;
+                patrolEndPoint = _gameController.PlayerController().LocationUnderMouse();
+
+                unitStance = EUnitStance.Patrol;
+
+                _gameController.PlayerController().PlayerControl(true);
+                _gameController.CameraController().allowMovement = true;
+
+                Move(patrolEndPoint);
+            }
+        }
+    }
+
+    private void PatrolAction()
+    {
+        if (unitStance == EUnitStance.Patrol)
+        {
+            if (currentPatrolPoint == 0)
+            {
+                float Distance = Vector3.Distance(transform.position, patrolEndPoint);
+                if (Distance < 1.0f)
+                {
+                    currentPatrolPoint = 1;
+                    Move(patrolStartPoint);
+                }
+            }
+
+            if (currentPatrolPoint == 1)
+            {
+                float Distance = Vector3.Distance(transform.position, patrolStartPoint);
+                if (Distance < 1.0f)
+                {
+                    currentPatrolPoint = 0;
+                    Move(patrolEndPoint);
+                }
+            }
+        }
     }
 
     private void LateUpdate()
@@ -106,6 +156,7 @@ public class Unit : Selectable
         if (_healer != null) _healer.ClearTargetUnit();
         if (_animator != null) _animator.SetTrigger("stop");
         Move(NearestEmptyPosition(_newLocation));
+        ClearPatrol();
         HUD_StatusUpdate();
     }
 
@@ -336,9 +387,52 @@ public class Unit : Selectable
 
     public void ChangeUnitStance(EUnitStance newStance)
     {
+        if (newStance == EUnitStance.Patrol)
+        {
+            previousStance = unitStance;
+            SetPatrol();
+        }
         unitStance = newStance;
     }
 
     public EUnitStance UnitStance() {  return unitStance; }
+
+    public List<Selectable> GetEnemiesInSight()
+    {
+        List<Selectable> list = new List<Selectable>();
+        RaycastHit[] hits = Physics.SphereCastAll(transform.position, sightDistance, Vector3.up);
+
+        foreach (RaycastHit hit in hits)
+        {
+            Unit unit = hit.transform.GetComponent<Unit>();
+            Building building = hit.transform.GetComponent<Building>();
+
+            if (unit != null && unit.PlayerNumber() != PlayerNumber()) list.Add(unit);
+            if (building != null && building.PlayerNumber() != PlayerNumber()) list.Add(building);
+        }
+
+        return list;
+    }
+
+    public void SetPatrol()
+    {
+        _gameController.PlayerController().PlayerControl(false);
+        _gameController.CameraController().allowMovement = false;
+
+        selectingPatrolPoint = true;
+    }
+
+    public void ClearPatrol()
+    {
+        if (unitStance == EUnitStance.Patrol)
+        {
+            unitStance = previousStance;
+            patrolStartPoint = new Vector3();
+            patrolEndPoint = new Vector3();
+        }
+
+        if (IsSelected()) _gameController.HUD_Manager().Actions_HUD().UpdateUnitStances();
+    }
+
 }
 // Writen by Lukasz Dziedziczak
