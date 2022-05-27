@@ -36,10 +36,12 @@ public class GameCameraController : MonoBehaviour
     private float topScreenOffSet = 0;
     private float bottomScreenOffSet = 0;
     private float mousePosX;
+    private GameController gameController;
 
     void Awake()
     {
         _camera = GetComponentInChildren<Camera>();
+        gameController = FindObjectOfType<GameController>();
     }
 
     void Start()
@@ -70,10 +72,41 @@ public class GameCameraController : MonoBehaviour
     {
         CameraMovement();
         CameraHeigh();
+        PanByArrowKey();
+        PanByRightClick();
 
         if (Input.GetMouseButtonDown(2)) allowMovement = false;
         if (Input.GetMouseButton(2)) CameraRotation();
         if (Input.GetMouseButtonUp(2)) allowMovement = true;
+    }
+
+    private void PanByRightClick()
+    {
+        if (Input.GetMouseButton(1) && gameController.PlayerController().NothingSelected())
+        {
+            float MouseX = Input.GetAxis("Mouse X") * -1;
+            float MouseY = Input.GetAxis("Mouse Y") * -1;
+
+            Vector3 step = new Vector3(MouseX, 0, MouseY);
+            if (step.magnitude > 0)
+            {
+                transform.position += step;
+            }
+        }
+    }
+
+    private void PanByArrowKey()
+    {
+        Vector3 step = new Vector3();
+        if (Input.GetKey(KeyCode.DownArrow)) step.z -= scrollSpeed * Time.deltaTime;
+        if (Input.GetKey(KeyCode.UpArrow)) step.z += scrollSpeed * Time.deltaTime;
+        if (Input.GetKey(KeyCode.LeftArrow)) step.x -= scrollSpeed * Time.deltaTime;
+        if (Input.GetKey(KeyCode.RightArrow)) step.x += scrollSpeed * Time.deltaTime;
+
+        if (step.magnitude > 0)
+        {
+            transform.position += step * 5;
+        }
     }
 
     private void CameraRotation()

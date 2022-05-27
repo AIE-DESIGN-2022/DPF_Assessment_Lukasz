@@ -21,6 +21,13 @@ public class Unit : Selectable
     [SerializeField] private Transform _rightHand;
     [SerializeField] private EUnitType _unitType;
 
+    [Header("Behaviour")]
+    [SerializeField] private EUnitStance unitStance = EUnitStance.Passive;
+    [SerializeField] private float sightDistance;
+
+    private Vector3 patrolStartPoint;
+    private Vector3 patrolEndPoint;
+
     public enum EUnitType
     {
         Worker,
@@ -28,6 +35,14 @@ public class Unit : Selectable
         Ranged,
         Magic,
         Healer
+    }
+
+    public enum EUnitStance
+    {
+        Passive,
+        Defensive,
+        Offensive,
+        Patrol
     }
 
     private new void Awake()

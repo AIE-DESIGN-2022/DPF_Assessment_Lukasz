@@ -366,7 +366,7 @@ public class PlayerController : MonoBehaviour
         _playerControlOnline = _online;
     }
 
-    public void MoveInFormation(Vector3 _newLocation)
+    private void MoveInFormation(Vector3 _newLocation)
     {
         int numberOfRows = (_currentSelection.Count / 5) + 1;
         float offSet = 1.0f;
@@ -389,5 +389,7 @@ public class PlayerController : MonoBehaviour
             }
         }
     }
+
+    public bool NothingSelected() { return _currentSelection.Count == 0; }
 }
 // Writen by Lukasz Dziedziczak
