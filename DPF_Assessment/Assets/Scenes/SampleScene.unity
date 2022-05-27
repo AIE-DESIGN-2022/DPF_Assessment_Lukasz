@@ -1123,25 +1123,5 @@ PrefabInstance:
       propertyPath: m_Name
       value: GameManager
       objectReference: {fileID: 0}
-    - target: {fileID: 9025836469153960456, guid: 1ea37eef814277f4f8d96f5c83a930c4, type: 3}
-      propertyPath: cameraRotationSpeed
-      value: 8
-      objectReference: {fileID: 0}
-    - target: {fileID: 9025836469153960456, guid: 1ea37eef814277f4f8d96f5c83a930c4, type: 3}
-      propertyPath: maxDistanceToGround
-      value: 28
-      objectReference: {fileID: 0}
-    - target: {fileID: 9025836469153960456, guid: 1ea37eef814277f4f8d96f5c83a930c4, type: 3}
-      propertyPath: minDistanceToGround
-      value: 8
-      objectReference: {fileID: 0}
-    - target: {fileID: 9025836469153960456, guid: 1ea37eef814277f4f8d96f5c83a930c4, type: 3}
-      propertyPath: timeBeforeScrollStart
-      value: 0.4
-      objectReference: {fileID: 0}
-    - target: {fileID: 9025836469153960456, guid: 1ea37eef814277f4f8d96f5c83a930c4, type: 3}
-      propertyPath: angleChangeDistanceToGround
-      value: 16
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1ea37eef814277f4f8d96f5c83a930c4, type: 3}

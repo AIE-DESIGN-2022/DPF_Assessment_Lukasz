@@ -135,7 +135,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 6392865342641546336, guid: 6c445f2284c829c49bc1099b080394a8, type: 3}
       propertyPath: m_Name
-      value: Player
+      value: PlayerController
       objectReference: {fileID: 0}
     - target: {fileID: 6392865342641546343, guid: 6c445f2284c829c49bc1099b080394a8, type: 3}
       propertyPath: m_RootOrder
@@ -377,8 +377,28 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 9025836469676277014}
     - target: {fileID: 1315889075191875592, guid: b2abf92b6dd021040b8b5af54088989a, type: 3}
+      propertyPath: cameraRotationSpeed
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 1315889075191875592, guid: b2abf92b6dd021040b8b5af54088989a, type: 3}
+      propertyPath: maxDistanceToGround
+      value: 28
+      objectReference: {fileID: 0}
+    - target: {fileID: 1315889075191875592, guid: b2abf92b6dd021040b8b5af54088989a, type: 3}
+      propertyPath: minDistanceToGround
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 1315889075191875592, guid: b2abf92b6dd021040b8b5af54088989a, type: 3}
+      propertyPath: timeBeforeScrollStart
+      value: 0.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 1315889075191875592, guid: b2abf92b6dd021040b8b5af54088989a, type: 3}
       propertyPath: boarderScreenPercentage
       value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 1315889075191875592, guid: b2abf92b6dd021040b8b5af54088989a, type: 3}
+      propertyPath: angleChangeDistanceToGround
+      value: 16
       objectReference: {fileID: 0}
     - target: {fileID: 1315889075191875593, guid: b2abf92b6dd021040b8b5af54088989a, type: 3}
       propertyPath: m_Name
