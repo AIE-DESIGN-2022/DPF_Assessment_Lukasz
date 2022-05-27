@@ -84,7 +84,8 @@ public class Building : Selectable
         if (_gameController.CameraController().MouseIsInPlayArea())
         {
             Vector3 mouseWorldLocation = _gameController.PlayerController().LocationUnderMouse();
-            transform.position = new Vector3(mouseWorldLocation.x, 0.0f, mouseWorldLocation.z);
+            transform.position = new Vector3(mouseWorldLocation.x, mouseWorldLocation.y + 1.0f, mouseWorldLocation.z);
+            //transform.position = mouseWorldLocation;
 
 
             if (_numberOfCollisions > 0)
