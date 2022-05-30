@@ -8,9 +8,11 @@ public class Healer : MonoBehaviour
     [SerializeField] private float healRate = 5;
     [SerializeField] private float healRange = 5;
     [SerializeField] private EquipmentConfig healingHands;
+    [SerializeField] private ParticleSystem healEffectPrefab;
 
     private Unit targetUnit;
     private Unit unit;
+    private ParticleSystem healEffect;
 
     private void Awake()
     {
@@ -48,6 +50,13 @@ public class Healer : MonoBehaviour
         {
             unit.StopMoveTo();
             unit.Animator().SetBool("attack", true);
+        }
+
+        if (healEffectPrefab != null && healEffect == null)
+        {
+            healEffect = Instantiate(healEffectPrefab, targetUnit.transform.position, targetUnit.transform.rotation);
+            healEffect.transform.parent = targetUnit.transform;
+
         }
     }
 
@@ -93,6 +102,13 @@ public class Healer : MonoBehaviour
         if (unit != null && unit.Animator() != null)
         {
             unit.Animator().SetBool("attack", false);
+            unit.Animator().SetTrigger("stop");
+        }
+
+        if (healEffect != null)
+        {
+            Destroy(healEffect.gameObject);
+            healEffect = null;
         }
     }
 

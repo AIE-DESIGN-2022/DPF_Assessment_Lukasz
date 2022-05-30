@@ -135,6 +135,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _owningPlayerNumber: 0
+  flashing: 0
+  flashingSpeed: 0.5
   _leftHand: {fileID: 0}
   _rightHand: {fileID: 0}
   _unitType: 4
@@ -237,9 +239,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ea582d9a4c90b9f4e9016cb966f6cc3e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  healRate: 10
-  healRange: 10
+  healRate: 20
+  healRange: 3
   healingHands: {fileID: 11400000, guid: 4668e63ef7355cd42b3f689f92d5b689, type: 2}
+  healEffectPrefab: {fileID: 19894388, guid: 10c15922afb97ff4f8388964fc892835, type: 3}
 --- !u!1001 &2117264890437930101
 PrefabInstance:
   m_ObjectHideFlags: 0

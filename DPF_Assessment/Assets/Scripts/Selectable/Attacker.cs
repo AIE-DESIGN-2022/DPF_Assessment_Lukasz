@@ -127,6 +127,7 @@ public class Attacker : MonoBehaviour
     public void ClearTarget()
     {
         _target = null;
+        _unit.Animator().SetTrigger("stop");
     }
 
     // Function called by Animation at the point impact on target occurs.
