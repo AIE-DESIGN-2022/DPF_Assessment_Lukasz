@@ -42,6 +42,7 @@ public class UI_Action_Button : MonoBehaviour
         _buildableUnit = _newBuildableUnit;
         _button.GetComponent<RawImage>().texture = _newIcon;
         SetBackgroundActive(false);
+        UpdateCanAfford();
     }
 
     public void SetupButton(Faction _newFaction, Building.EBuildingType _buildingType, Texture _newIcon, List<BuildingConstructor> _newTeam)
@@ -51,6 +52,7 @@ public class UI_Action_Button : MonoBehaviour
         _button.GetComponent<RawImage>().texture = _newIcon;
         _constructionTeam = _newTeam;
         SetBackgroundActive(false);
+        UpdateCanAfford();
     }
 
     public void SetupButton(UI_Action.EButtonType _newButtonType, List<Unit> _newSelection)
@@ -216,6 +218,34 @@ public class UI_Action_Button : MonoBehaviour
     public void SetFLashing(bool isFlashing)
     {
         flashing = isFlashing;
+    }
+
+    public void UpdateCanAfford()
+    {
+        if (_unitProducer != null)
+        {
+            Faction buildingFaction = _unitProducer.GetComponent<Building>().Faction();
+            if (buildingFaction.CanAfford(_buildableUnit))
+            {
+                _button.interactable = true;
+            }
+            else
+            {
+                _button.interactable = false;
+            }
+        }
+
+        else if (_constructionTeam != null)
+        {
+            if (_faction.CanAfford(_constructableBuilding))
+            {
+                _button.interactable = true;
+            }
+            else
+            {
+                _button.interactable = false;
+            }
+        }
     }
 }
 // Writen by Lukasz Dziedziczak

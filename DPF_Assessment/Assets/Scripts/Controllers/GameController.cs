@@ -16,6 +16,9 @@ public class GameController : MonoBehaviour
     [Header("New Game")]
     [SerializeField] private bool isNewGame = false;
     [SerializeField] List<Faction.EFaction> listOfPlayers;
+    [SerializeField] int startingFood = 0;
+    [SerializeField] int startingWood = 0;
+    [SerializeField] int startingGold = 0;
 
     private void Awake()
     {
@@ -58,19 +61,24 @@ public class GameController : MonoBehaviour
 
         for (int i = 0; i < listOfPlayers.Count; i++)
         {
-            GameObject newObject = Instantiate(new GameObject(), spawnPoints[i].transform.position, spawnPoints[i].transform.rotation);
+            //GameObject newObject = Instantiate(new GameObject(), spawnPoints[i].transform.position, spawnPoints[i].transform.rotation);
+            GameObject newObject = new GameObject();
             newObject.AddComponent<Faction>();
             Faction newFaction = newObject.GetComponent<Faction>();
             newFaction.SetupFaction(listOfPlayers[i], i + 1);
+            newFaction.transform.position = spawnPoints[i].transform.position;
+            newFaction.SpawnFirstBuilding(spawnPoints[i].GroundCoordinates());
+            _factions.Add(newFaction);
+            newFaction.SetGameController(this);
+            GiveStartingResources(newFaction);
 
-            newFaction.SpawnFirstBuilding(spawnPoints[i].transform);
+            if (i == 0)
+            {
+                _hudManager.SetPlayerFaction(newFaction);
+                _cameraController.transform.position = spawnPoints[i].transform.position;
+            }
         }
-
-        BuildListOfFactions();
-        _hudManager.SetPlayerFaction(GetPlayerFaction());
         _playerController.SetHUD_Manager(_hudManager);
-
-        _cameraController.transform.position = _factions[0].transform.position;
     }
 
     private void SetupGame()
@@ -149,5 +157,12 @@ public class GameController : MonoBehaviour
     public PlayerController PlayerController() { return _playerController; }
 
     public GameCameraController CameraController() { return _cameraController; }
+
+    private void GiveStartingResources(Faction faction)
+    {
+        faction.AddToStockpile(CollectableResource.EResourceType.Wood, startingWood);
+        faction.AddToStockpile(CollectableResource.EResourceType.Food, startingFood);
+        faction.AddToStockpile(CollectableResource.EResourceType.Gold, startingGold);
+    }
 }
 // Writen by Lukasz Dziedziczak

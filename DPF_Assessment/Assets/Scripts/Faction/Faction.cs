@@ -27,7 +27,7 @@ public class Faction : MonoBehaviour
 
     private void Awake()
     {
-        LoadFactoryConfig();
+        LoadFactionConfig();
     }
 
     // Start is called before the first frame update
@@ -69,7 +69,7 @@ public class Faction : MonoBehaviour
         _faction = _new;
         _playerNumber = _playerNo;
         NameFaction();
-        
+        LoadFactionConfig();
     }
 
     private void NameFaction()
@@ -105,14 +105,14 @@ public class Faction : MonoBehaviour
         else return null;
     }
 
-    public Building SpawnFirstBuilding(Transform spawnLocartion)
+    public Building SpawnFirstBuilding(Vector3 spawnLocartion)
     {
         Building _newBuilding = Instantiate(_config.GetBuildingPrefab(Building.EBuildingType.TownCenter));
         _newBuilding.Setup(_playerNumber, this);
         _newBuilding.transform.parent = transform;
         _buildings.Add(_newBuilding);
         _newBuilding.SetBuildState(Building.EBuildState.Complete);
-        _newBuilding.transform.position = spawnLocartion.position;
+        _newBuilding.transform.position = spawnLocartion;
         return _newBuilding;
     }
 
@@ -215,7 +215,7 @@ public class Faction : MonoBehaviour
                 break;
         }
 
-        if (_gameController.IsPlayerFaction(_playerNumber)) _gameController.HUD_Manager().Resource_HUD().UpdateResources();
+        if (_gameController.IsPlayerFaction(_playerNumber)) _gameController.HUD_Manager().UpdateResources();
     }
 
     public void RemoveFromStockpile(CollectableResource.EResourceType _type, int _amount)
@@ -239,7 +239,7 @@ public class Faction : MonoBehaviour
                 break;
         }
 
-        if (_gameController.IsPlayerFaction(_playerNumber)) _gameController.HUD_Manager().Resource_HUD().UpdateResources();
+        if (_gameController.IsPlayerFaction(_playerNumber)) _gameController.HUD_Manager().UpdateResources();
     }
 
 
@@ -287,7 +287,7 @@ public class Faction : MonoBehaviour
         _wood -= _unitConfig.woodCost;
         _gold -= _unitConfig.goldCost;
 
-        if (_gameController.IsPlayerFaction(_playerNumber)) _gameController.HUD_Manager().Resource_HUD().UpdateResources();
+        if (_gameController.IsPlayerFaction(_playerNumber)) _gameController.HUD_Manager().UpdateResources();
     }
 
     public void AddToStockpileCostOf(Unit.EUnitType _newUnit)
@@ -298,7 +298,7 @@ public class Faction : MonoBehaviour
         _wood += _unitConfig.woodCost;
         _gold += _unitConfig.goldCost;
 
-        if (_gameController.IsPlayerFaction(_playerNumber)) _gameController.HUD_Manager().Resource_HUD().UpdateResources();
+        if (_gameController.IsPlayerFaction(_playerNumber)) _gameController.HUD_Manager().UpdateResources();
     }
 
     public void SubtractFromStockpileCostOf(Building.EBuildingType _newBuilding)
@@ -309,7 +309,7 @@ public class Faction : MonoBehaviour
         _wood -= _buildingConfig.woodCost;
         _gold -= _buildingConfig.goldCost;
 
-        if (_gameController.IsPlayerFaction(_playerNumber)) _gameController.HUD_Manager().Resource_HUD().UpdateResources();
+        if (_gameController.IsPlayerFaction(_playerNumber)) _gameController.HUD_Manager().UpdateResources();
     }
 
     public void AddToStockpileCostOf(Building.EBuildingType _newBuilding)
@@ -320,10 +320,10 @@ public class Faction : MonoBehaviour
         _wood += _buildingConfig.woodCost;
         _gold += _buildingConfig.goldCost;
 
-        if (_gameController.IsPlayerFaction(_playerNumber)) _gameController.HUD_Manager().Resource_HUD().UpdateResources();
+        if (_gameController.IsPlayerFaction(_playerNumber)) _gameController.HUD_Manager().UpdateResources();
     }
 
-    private void LoadFactoryConfig()
+    private void LoadFactionConfig()
     {
         FactionConfig[] _loadedConfigs = Resources.LoadAll<FactionConfig>("Factions/");
         //Debug.Log(_loadedConfigs.Length + " FactoryConfigs loaded for " + name);

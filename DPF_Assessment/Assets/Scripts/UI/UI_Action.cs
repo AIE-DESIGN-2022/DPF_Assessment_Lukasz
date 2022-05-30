@@ -263,5 +263,16 @@ public class UI_Action : MonoBehaviour
             }
         }
     }
+
+    public void UpdateCanAffords()
+    {
+        if (_actionButtons.Count > 0)
+        {
+            foreach (UI_Action_Button action_Button in _actionButtons)
+            {
+                action_Button.UpdateCanAfford();
+            }
+        }
+    }
 }
 // Writen by Lukasz Dziedziczak

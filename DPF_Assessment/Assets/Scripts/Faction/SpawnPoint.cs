@@ -15,4 +15,11 @@ public class SpawnPoint : MonoBehaviour
     {
         
     }
+
+    public Vector3 GroundCoordinates()
+    {
+        RaycastHit hit;
+        Physics.Raycast(transform.position, transform.up * -1, out hit);
+        return hit.point;
+    }
 }

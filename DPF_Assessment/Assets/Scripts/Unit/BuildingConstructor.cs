@@ -86,6 +86,7 @@ public class BuildingConstructor : MonoBehaviour
         _buildingIsInRange = false;
         UnequipTool();
         _unit.HUD_BuildingStatusUpdate();
+        _unit.HUD_StatusUpdate();
     }
 
     public void SetBuildTarget(Building newTarget)
@@ -137,7 +138,15 @@ public class BuildingConstructor : MonoBehaviour
 
     public string CurrentlyBuildingName()
     {
-        return _unit.Faction().Config().PrefabName(_currentBuildTarget.BuildingType());
+        if (_currentBuildTarget != null)
+        {
+            return _unit.Faction().Config().PrefabName(_currentBuildTarget.BuildingType());
+        }
+        else
+        {
+            return "";
+        }
+        
     }
 }
 // Writen by Lukasz Dziedziczak

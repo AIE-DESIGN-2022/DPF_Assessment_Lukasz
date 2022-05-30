@@ -122,7 +122,7 @@ NavMeshSettings:
     preserveTilesOutsideBounds: 0
     debug:
       m_Flags: 0
-  m_NavMeshData: {fileID: 0}
+  m_NavMeshData: {fileID: 23800000, guid: f807f87ca62fc5f48bd63a09872869a8, type: 2}
 --- !u!1001 &530502114
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -140,7 +140,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 764995937411631906, guid: c4d4830d6bf21cb4c869ab9415a1b6d1, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 5.713239
+      value: 6.336
       objectReference: {fileID: 0}
     - target: {fileID: 764995937411631906, guid: c4d4830d6bf21cb4c869ab9415a1b6d1, type: 3}
       propertyPath: m_LocalPosition.z
@@ -383,7 +383,7 @@ GameObject:
   - component: {fileID: 1764691570}
   - component: {fileID: 1764691572}
   - component: {fileID: 1764691571}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Terrain
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -539,6 +539,14 @@ PrefabInstance:
     - target: {fileID: 6842617767896643849, guid: 1ea37eef814277f4f8d96f5c83a930c4, type: 3}
       propertyPath: isNewGame
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6842617767896643849, guid: 1ea37eef814277f4f8d96f5c83a930c4, type: 3}
+      propertyPath: startingFood
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 6842617767896643849, guid: 1ea37eef814277f4f8d96f5c83a930c4, type: 3}
+      propertyPath: startingWood
+      value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 6842617767896643849, guid: 1ea37eef814277f4f8d96f5c83a930c4, type: 3}
       propertyPath: numberOfPlayers

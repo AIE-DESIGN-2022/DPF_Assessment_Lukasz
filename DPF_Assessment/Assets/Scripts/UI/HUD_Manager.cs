@@ -105,5 +105,11 @@ public class HUD_Manager : MonoBehaviour
         _actionsUI.Clear();
         _infoUI.ClearSelection();
     }
+
+    public void UpdateResources()
+    {
+        _resourcesUI.UpdateResources();
+        _actionsUI.UpdateCanAffords();
+    }
 }
 // Writen by Lukasz Dziedziczak
