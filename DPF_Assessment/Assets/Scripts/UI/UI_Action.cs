@@ -69,6 +69,8 @@ public class UI_Action : MonoBehaviour
     public void UnitsSelected(List<Unit> _selectedUnits)
     {
         Clear();
+
+        // 1st button
         if (AnyAreBuildingConstructors(_selectedUnits))
         {
             BuildButton(EButtonType.Build, _selectedUnits);
@@ -78,17 +80,48 @@ public class UI_Action : MonoBehaviour
             BuildButton(EButtonType.Blank, _selectedUnits);
         }
 
+        // 2nd button
         BuildButton(EButtonType.Blank, _selectedUnits);
 
+        // 3rd button
         if (AnyAreAttackers(_selectedUnits))
         {
-            BuildButton(EButtonType.StancePatrol, _selectedUnits); //this will be patrol button
+            BuildButton(EButtonType.StancePatrol, _selectedUnits);
+        }
+        else
+        {
+            BuildButton(EButtonType.Blank, _selectedUnits);
+        }
 
+        // 4th button
+        if (AnyAreAttackers(_selectedUnits) || AnyAreHealers(_selectedUnits))
+        {
             BuildButton(EButtonType.StancePassive, _selectedUnits);
+        }
+        else
+        {
+            BuildButton(EButtonType.Blank, _selectedUnits);
+        }
+
+        // 5th button
+        if (AnyAreAttackers(_selectedUnits) || AnyAreHealers(_selectedUnits))
+        {
             BuildButton(EButtonType.StanceDefensive, _selectedUnits);
+        }
+        else
+        {
+            BuildButton(EButtonType.Blank, _selectedUnits);
+        }
+
+        // 6th button
+        if (AnyAreAttackers(_selectedUnits))
+        {
             BuildButton(EButtonType.StanceOffensive, _selectedUnits);
         }
-        
+        else
+        {
+            BuildButton(EButtonType.Blank, _selectedUnits);
+        }
     }
 
     public void BuildButtonPushed(List<Unit> _selectedUnits)
@@ -172,13 +205,30 @@ public class UI_Action : MonoBehaviour
         return false;
     }
 
+    private bool AnyAreHealers(List<Unit> selectedUnits)
+    {
+        foreach (Unit _unit in selectedUnits)
+        {
+            if (_unit.GetComponent<Healer>() != null) return true;
+        }
+        return false;
+    }
+
     private void ChangeStanceOnUnits(List<Unit> units, Unit.EUnitStance newStance)
     {
         foreach (Unit _unit in units)
         {
-            _unit.ChangeUnitStance(newStance);
-        }
+            Healer healer = _unit.GetComponent<Healer>();
 
+            if (healer != null && (newStance == Unit.EUnitStance.Offensive || newStance == Unit.EUnitStance.Patrol))
+            {
+                _unit.ChangeUnitStance(Unit.EUnitStance.Defensive);
+            }
+            else
+            {
+                _unit.ChangeUnitStance(newStance);
+            }
+        }
         UpdateUnitStances();
     }
 

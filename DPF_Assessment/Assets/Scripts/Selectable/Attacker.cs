@@ -128,6 +128,7 @@ public class Attacker : MonoBehaviour
     {
         _target = null;
         _unit.Animator().SetTrigger("stop");
+        _unit.HUD_StatusUpdate();
     }
 
     // Function called by Animation at the point impact on target occurs.

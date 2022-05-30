@@ -419,6 +419,20 @@ public class Unit : Selectable
         return list;
     }
 
+    public List<Unit> GetFrendlyUnitsInSight()
+    {
+        List<Unit> list = new List<Unit>();
+        RaycastHit[] hits = Physics.SphereCastAll(transform.position, sightDistance, Vector3.up);
+        foreach (RaycastHit hit in hits)
+        {
+            Unit unit = hit.transform.GetComponent<Unit>();
+
+            if (unit != null && unit.PlayerNumber() == PlayerNumber()) list.Add(unit);
+        }
+
+        return list;
+    }
+
     public void SetPatrol()
     {
         _gameController.PlayerController().PlayerControl(false);
@@ -440,6 +454,11 @@ public class Unit : Selectable
     }
 
     public bool HasStopped() { return _hasStopped; }
+
+    public bool NeedsHealing()
+    {
+        return _health.HealthPercentage() != 1;
+    }
 
 }
 // Writen by Lukasz Dziedziczak

@@ -22,11 +22,36 @@ public class Healer : MonoBehaviour
     private void Start()
     {
         unit.Animator().runtimeAnimatorController = healingHands.AnimatorOverrideController();
+
+        if (unit.UnitStance() == Unit.EUnitStance.Offensive || unit.UnitStance() == Unit.EUnitStance.Patrol)
+        {
+            unit.ChangeUnitStance(Unit.EUnitStance.Defensive);
+        }
     }
 
     private void Update()
     {
         HealerLogic();
+        DefensiveStanceLogic();
+    }
+
+    private void DefensiveStanceLogic()
+    {
+        if (unit.UnitStance() == Unit.EUnitStance.Defensive)
+        {
+            if (targetUnit == null)
+            {
+                List<Unit> visibleUnits = unit.GetFrendlyUnitsInSight();
+                foreach (Unit visibleUnit in visibleUnits)
+                {
+                    if (visibleUnit.NeedsHealing())
+                    {
+                        targetUnit = visibleUnit;
+                        return;
+                    }
+                }
+            }
+        }
     }
 
     private void HealerLogic()
