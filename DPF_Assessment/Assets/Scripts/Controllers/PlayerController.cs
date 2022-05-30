@@ -14,12 +14,14 @@ public class PlayerController : MonoBehaviour
     private RectTransform _selectionBox;
     private Vector2 _selectionPoint1;
     private Vector2 _selectionPoint2;
+    private LayerMask terrainMask;
 
 
     private void Awake()
     {
         _cameraController = FindObjectOfType<GameCameraController>();
         _selectionBox = FindSelectionBox();
+        terrainMask |= (1 << LayerMask.NameToLayer("Terrain"));
     }
 
     private RectTransform FindSelectionBox()
@@ -272,6 +274,14 @@ public class PlayerController : MonoBehaviour
     public Vector3 LocationUnderMouse()
     {
         return UnderMouse().point;
+    }
+
+    public Vector3 TerrainLocationUnderMouse()
+    {
+        Ray _ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        RaycastHit _hit;
+        Physics.Raycast(_ray, out _hit, 1000, terrainMask);
+        return _hit.point;
     }
 
     private void ClearSelection()

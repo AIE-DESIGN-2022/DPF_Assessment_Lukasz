@@ -18,6 +18,7 @@ public class Attacker : MonoBehaviour
     private Selectable _target;
     private float _timeSinceLastAttack = Mathf.Infinity;
     private Unit _unit;
+    private Building building;
     private GameObject _weapon;
     private bool _hasProjectileWeapon;
     private float sightTimer = 0;
@@ -25,6 +26,7 @@ public class Attacker : MonoBehaviour
     private void Awake()
     {
         _unit = GetComponent<Unit>();
+        building = GetComponent<Building>();
     }
 
     // Start is called before the first frame update
@@ -62,24 +64,29 @@ public class Attacker : MonoBehaviour
         }
         else if (_target != null && !_target.IsAlive()) ClearTarget();
 
-        if ((_unit.UnitStance() == Unit.EUnitStance.Offensive && _unit.HasStopped()) || _unit.UnitStance() == Unit.EUnitStance.Patrol)
+        if (_unit != null)
         {
-            sightTimer += Time.deltaTime;
-
-            if (_target == null && sightTimer > 0.5f)
+            if ((_unit.UnitStance() == Unit.EUnitStance.Offensive && _unit.HasStopped()) || _unit.UnitStance() == Unit.EUnitStance.Patrol)
             {
-                //print(name + " running aggressive behaviour");
-                sightTimer = 0;
-                List<Selectable> enemiesInSight = _unit.GetEnemiesInSight();
-                //print(enemiesInSight.Count);
-                if (enemiesInSight.Count == 1) SetTarget(enemiesInSight[0]);
-                if (enemiesInSight.Count > 1)
+                sightTimer += Time.deltaTime;
+
+                if (_target == null && sightTimer > 0.5f)
                 {
-                    SetTarget(ClosestTarget(enemiesInSight));
+                    //print(name + " running aggressive behaviour");
+                    sightTimer = 0;
+                    List<Selectable> enemiesInSight = _unit.GetEnemiesInSight();
+                    //print(enemiesInSight.Count);
+                    if (enemiesInSight.Count == 1) SetTarget(enemiesInSight[0]);
+                    if (enemiesInSight.Count > 1)
+                    {
+                        SetTarget(ClosestTarget(enemiesInSight));
+                    }
+                    //print(name + "set target of " + _target);
                 }
-                //print(name + "set target of " + _target);
             }
         }
+
+        
     }
 
     private void AttackTarget()

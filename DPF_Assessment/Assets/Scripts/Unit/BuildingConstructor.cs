@@ -77,6 +77,7 @@ public class BuildingConstructor : MonoBehaviour
             _unit.HUD_BuildingStatusUpdate();
         }
         EquipTool();
+        transform.LookAt(_currentBuildTarget.transform);
     }
 
     public void ClearBuildTarget()
