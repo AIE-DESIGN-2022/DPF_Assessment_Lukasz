@@ -118,8 +118,8 @@ public class Faction : MonoBehaviour
 
     public bool CurrentlyPlacingBuilding()
     {
-        return placingBuilding;
         _gameController.PlayerController().PlayerControl(true);
+        return placingBuilding;
     }
 
     public void FinishBuildingPlacement() { placingBuilding = false; }
