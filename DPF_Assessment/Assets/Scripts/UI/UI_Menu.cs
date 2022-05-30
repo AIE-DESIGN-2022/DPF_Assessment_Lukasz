@@ -15,6 +15,7 @@ public class UI_Menu : MonoBehaviour
     private Button exitToMenuButton;
     private Button exitButton;
     private Button singlePlayerButton;
+    private Button multiplayerButton;
     private Button backButton;
     private Button newCampaignButton;
     private Button newSkirmishButton;
@@ -55,6 +56,7 @@ public class UI_Menu : MonoBehaviour
             if (button.name == "BackButton") backButton = button;
             if (button.name == "NewCampaignButton") newCampaignButton = button;
             if (button.name == "NewSkirmishButton") newSkirmishButton = button;
+            if (button.name == "MultiplayerButton") multiplayerButton = button;
         }
     }
 
@@ -72,6 +74,12 @@ public class UI_Menu : MonoBehaviour
         if (backButton != null) backButton.onClick.AddListener(BackClicked);
         if (newCampaignButton != null) newCampaignButton.onClick.AddListener(NewCampaignClicked);
         if (newSkirmishButton != null) newSkirmishButton.onClick.AddListener(NewSkirmishClicked);
+
+        // deactive buttons for unfinished features;
+        if (multiplayerButton != null) multiplayerButton.interactable = false;
+        if (saveButton != null) saveButton.interactable = false;
+        if (loadButton != null) loadButton.interactable = false;
+        if (settingsButton != null) settingsButton.interactable = false;
 
     }
 
