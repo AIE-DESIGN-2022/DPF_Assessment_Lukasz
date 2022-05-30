@@ -82,6 +82,7 @@ public class Unit : Selectable
         {
             if (Input.GetMouseButtonDown(0))
             {
+                selectingPatrolPoint = false;
                 patrolStartPoint = transform.position;
                 patrolEndPoint = _gameController.PlayerController().LocationUnderMouse();
 
@@ -92,6 +93,11 @@ public class Unit : Selectable
                 
                 HUD_StatusUpdate();
                 Move(patrolEndPoint);
+            }
+
+            if (Input.GetMouseButtonDown(1))
+            {
+                selectingPatrolPoint = false;
             }
         }
     }
