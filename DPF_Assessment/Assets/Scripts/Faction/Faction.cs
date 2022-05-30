@@ -170,6 +170,7 @@ public class Faction : MonoBehaviour
 
     public void CancelBuildingPlacement(Building _building)
     {
+        placingBuilding = false;
         _buildings.Remove(_building);
         AddToStockpileCostOf(_building.BuildingType());
         _gameController.PlayerController().PlayerControl(true);
