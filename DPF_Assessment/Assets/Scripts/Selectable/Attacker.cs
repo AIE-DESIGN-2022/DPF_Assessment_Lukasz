@@ -138,6 +138,7 @@ public class Attacker : MonoBehaviour
             {
                 Vector3 spawnLocation = transform.position;
                 spawnLocation.y += 1;
+                spawnLocation += transform.forward;
                 Projectile projectile = Instantiate(_unitWeapon.Projectile(), spawnLocation, transform.rotation);
                 projectile.Setup(_unit, _attackDamage);
             }

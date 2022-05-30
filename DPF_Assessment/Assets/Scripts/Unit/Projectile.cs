@@ -1,4 +1,5 @@
 // Writen by Lukasz Dziedziczak
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -12,6 +13,23 @@ public class Projectile : MonoBehaviour
     private float _damage;
     private Unit _owner;
     private bool _flyingInAir = true;
+    private ParticleSystem fire;
+    private ParticleSystem explosion;
+
+    private void Awake()
+    {
+        FindParticleSystems();
+    }
+
+    private void FindParticleSystems()
+    {
+        ParticleSystem[] systems = GetComponentsInChildren<ParticleSystem>();
+        foreach (ParticleSystem system in systems)
+        {
+            if (system.name == "FX_Fireworks_Yellow_Small") explosion = system;
+            if (system.name == "FX_Fire") fire = system;
+        }
+    }
 
     // Start is called before the first frame update
     void Start()
@@ -61,6 +79,12 @@ public class Projectile : MonoBehaviour
         _target.TakeDamage(_damage, _owner);
         //transform.parent = _target.transform;
         Destroy(gameObject, 3);
+
+        if (fire != null && explosion != null)
+        {
+            fire.Stop();
+            explosion.Play();
+        }
     }
 
     public void Setup(Unit _newOwner, float _newDamage)
