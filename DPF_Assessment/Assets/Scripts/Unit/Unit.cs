@@ -298,7 +298,7 @@ public class Unit : Selectable
         {
             if (_buildingConstructor.IsConstructingBuilding())
             {
-                _status1 = "Constructing...";
+                _status1 = "Constructing " + _buildingConstructor.CurrentlyBuildingName() + "...";
             }
             else if (_buildingConstructor.HasBuildTarget())
             {

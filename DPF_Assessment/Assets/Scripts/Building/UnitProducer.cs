@@ -154,5 +154,13 @@ public class UnitProducer : MonoBehaviour
     {
         return 1 - (_timeLeft / _faction.Config().BuildTime(_currentlyBuilding));
     }
+
+    public string CurrentlyBuildingName()
+    {
+        string name = _faction.Config().PrefabName(_currentlyBuilding);
+        name = name.Replace("(Female)", "");
+        name = name.Replace("(Male)", "");
+        return name;
+    }
 }
 // Writen by Lukasz Dziedziczak

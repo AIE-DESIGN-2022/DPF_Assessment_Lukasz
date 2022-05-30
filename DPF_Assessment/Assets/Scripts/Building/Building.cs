@@ -134,7 +134,7 @@ public class Building : Selectable
         if (_unitProducer != null)
         {
             if (_unitProducer.IsCurrentlyProducing())
-                _status1 = "Producing " + _unitProducer.CurrentlyProducing().ToString() + "...";
+                _status1 = "Producing " + _unitProducer.CurrentlyBuildingName() + "...";
         }
 
         if (_status1 == "")

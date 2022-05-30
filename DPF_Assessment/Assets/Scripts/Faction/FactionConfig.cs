@@ -170,5 +170,31 @@ public class FactionConfig : ScriptableObject
 
         return null;
     }
+
+    public string PrefabName(Unit.EUnitType _type)
+    {
+        List<Unit> _possiblePrefabs = new List<Unit>();
+
+        foreach (FactionUnit _factionUnit in _units)
+        {
+            if (_factionUnit.unitType == _type)
+            {
+                _possiblePrefabs = _factionUnit.unitPrefabVariations;
+                break;
+            }
+        }
+
+        return _possiblePrefabs[0].name;
+    }
+
+    public string PrefabName(Building.EBuildingType _type)
+    {
+        foreach (FactionBuilding _factionBuilding in _buildings)
+        {
+            if (_factionBuilding.buildingType == _type) return _factionBuilding.buildingPrefab.name;
+        }
+
+        return null;
+    }
 }
 // Writen by Lukasz Dziedziczak

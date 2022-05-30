@@ -134,5 +134,10 @@ public class BuildingConstructor : MonoBehaviour
             _tool = null;
         }
     }
+
+    public string CurrentlyBuildingName()
+    {
+        return _unit.Faction().Config().PrefabName(_currentBuildTarget.BuildingType());
+    }
 }
 // Writen by Lukasz Dziedziczak
