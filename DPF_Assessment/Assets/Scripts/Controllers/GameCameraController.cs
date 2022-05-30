@@ -200,7 +200,6 @@ public class GameCameraController : MonoBehaviour
         }
 
         if (notInTopOrBottom && notInLeftOrRight) timeInScrollSpace = 0;
-
         if (newPosition != new Vector3() && IsInsideTerrain(newPosition) && timeInScrollSpace > timeBeforeScrollStart)
         {
             transform.position = newPosition;
@@ -257,7 +256,6 @@ public class GameCameraController : MonoBehaviour
             if (newPos.x > 0 && newPos.x < terrainX) xOk = true;
             if (newPos.z > 0 && newPos.x < terrainZ) zOk = true;
         }
-        
         return xOk && zOk;
     }
 
