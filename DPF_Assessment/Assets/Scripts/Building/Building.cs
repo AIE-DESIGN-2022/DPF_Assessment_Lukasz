@@ -8,17 +8,17 @@ using UnityEngine.AI;
 [RequireComponent(typeof(Health)), RequireComponent(typeof(NavMeshObstacle))]
 public class Building : Selectable
 {
-    [SerializeField] private EBuildingType _buildingType;
-    [SerializeField] private bool _resourceDropPoint = false;
+    [SerializeField] private EBuildingType buildingType;
+    [SerializeField] private bool resourceDropPoint = false;
     [SerializeField] private float rangeOffset = 3.0f;
 
-    private UnitProducer _unitProducer;
-    private EBuildState _buildState = EBuildState.Complete;
-    //private Health _health;
-    private MeshRenderer[] _meshRenderers;
-    private int _numberOfCollisions = 0;
-    private List<BuildingConstructor> _constructionTeam;
-    private GameObject _construction;
+    private UnitProducer unitProducer;
+    private EBuildState buildState = EBuildState.Complete;
+    //private Health health;
+    private MeshRenderer[] meshRenderers;
+    private int numberOfCollisions = 0;
+    private List<BuildingConstructor> constructionTeam;
+    private GameObject construction;
     private GameObject rubble;
     private List<GameObject> intersectingRubble = new List<GameObject>();
 
@@ -43,10 +43,10 @@ public class Building : Selectable
     private new void Awake()
     {
         base.Awake();
-        _unitProducer = GetComponent<UnitProducer>();
-        _health = GetComponent<Health>();
-        _gameController = FindObjectOfType<GameController>();
-        _meshRenderers = GetComponentsInChildren<MeshRenderer>();
+        unitProducer = GetComponent<UnitProducer>();
+        health = GetComponent<Health>();
+        gameController = FindObjectOfType<GameController>();
+        meshRenderers = GetComponentsInChildren<MeshRenderer>();
     }
 
     private new void Start()
@@ -59,7 +59,7 @@ public class Building : Selectable
     private new void Update()
     {
         base.Update();
-        switch (_buildState)
+        switch (buildState)
         {
             case EBuildState.Placing:
                 ProcessPlacement();
@@ -82,14 +82,14 @@ public class Building : Selectable
 
     private void ProcessPlacement()
     {
-        if (_gameController.CameraController().MouseIsInPlayArea())
+        if (gameController.CameraController().MouseIsInPlayArea())
         {
-            Vector3 mouseWorldLocation = _gameController.PlayerController().TerrainLocationUnderMouse();
+            Vector3 mouseWorldLocation = gameController.PlayerController().TerrainLocationUnderMouse();
             //transform.position = new Vector3(mouseWorldLocation.x, mouseWorldLocation.y + 1.0f, mouseWorldLocation.z);
             transform.position = mouseWorldLocation;
 
 
-            if (_numberOfCollisions > 0)
+            if (numberOfCollisions > 0)
             {
                 SetBuildState(EBuildState.PlacingBad);
             }
@@ -100,9 +100,9 @@ public class Building : Selectable
                 if (Input.GetMouseButtonDown(0)) // Left click to select new building location.
                 {
                     SetBuildState(EBuildState.Building);
-                    _health.NewBuilding();
-                    _gameController.PlayerController().PlayerControl(true);
-                    _owningFaction.FinishBuildingPlacement();
+                    health.NewBuilding();
+                    gameController.PlayerController().PlayerControl(true);
+                    owningFaction.FinishBuildingPlacement();
 
                     // remove any interesting rubble
                     if (intersectingRubble.Count > 0)
@@ -115,16 +115,16 @@ public class Building : Selectable
                     }
 
                     // based on selected units who can construct buildings, give begin actul construction order
-                    foreach (BuildingConstructor _constructor in _constructionTeam)
+                    foreach (BuildingConstructor constructor in constructionTeam)
                     {
-                        _constructor.SetBuildTarget(this);
+                        constructor.SetBuildTarget(this);
                     }
                 }
             }
 
             if (Input.GetMouseButtonDown(1)) // Right click to cancel new building placement.
             {
-                _gameController.GetPlayerFaction().CancelBuildingPlacement(this);
+                gameController.GetPlayerFaction().CancelBuildingPlacement(this);
             }
         }
         else
@@ -133,44 +133,44 @@ public class Building : Selectable
         }
     }
 
-    public EBuildingType BuildingType() { return _buildingType; }
+    public EBuildingType BuildingType() { return buildingType; }
 
-    public bool IsResourceDropPoint() { return _resourceDropPoint; }
+    public bool IsResourceDropPoint() { return resourceDropPoint; }
 
-    public void Status(out string _status1, out string _status2)
+    public void Status(out string status1, out string status2)
     {
-        _status1 = "";
-        _status2 = "";
+        status1 = "";
+        status2 = "";
 
-        if (_unitProducer != null)
+        if (unitProducer != null)
         {
-            if (_unitProducer.IsCurrentlyProducing())
-                _status1 = "Producing " + _unitProducer.CurrentlyBuildingName() + "...";
+            if (unitProducer.IsCurrentlyProducing())
+                status1 = "Producing " + unitProducer.CurrentlyBuildingName() + "...";
         }
 
-        if (_status1 == "")
+        if (status1 == "")
         {
-            _status1 = "Idle";
+            status1 = "Idle";
         }
     }
 
-    public void ConstructBuilding(float _buildRate)
+    public void ConstructBuilding(float buildRate)
     {
-        _health.Heal(_buildRate);
+        health.Heal(buildRate);
 
-        if (_health.IsFull())
+        if (health.IsFull())
         {
-            SetBuildState(EBuildState.Complete);
+            if (buildState != EBuildState.Complete) SetBuildState(EBuildState.Complete);
         }
 
     }
 
-    public void SetBuildState(EBuildState _newState)
+    public void SetBuildState(EBuildState newState)
     {
-        if (_newState == _buildState) return;
-        _buildState = _newState;
+        if (newState == buildState) return;
+        buildState = newState;
 
-        switch (_buildState)
+        switch (buildState)
         {
             case EBuildState.Placing:
                 GetComponent<NavMeshObstacle>().enabled = false;
@@ -206,15 +206,15 @@ public class Building : Selectable
         }
     }
 
-    private void SetMaterialsColour(Color _newColor)
+    private void SetMaterialsColour(Color newColor)
     {
-        if (_meshRenderers != null)
+        if (meshRenderers != null)
         {
-            foreach (MeshRenderer _meshRenderer in _meshRenderers)
+            foreach (MeshRenderer meshRenderer in meshRenderers)
             {
-                foreach (Material _material in _meshRenderer.materials)
+                foreach (Material material in meshRenderer.materials)
                 {
-                    _material.color = _newColor;
+                    material.color = newColor;
                 }
             }
         }
@@ -223,7 +223,7 @@ public class Building : Selectable
 
     private void OnTriggerEnter(Collider other)
     {
-        if ((_buildState != EBuildState.Placing && _buildState != EBuildState.PlacingBad) || other.name == "Terrain") return;
+        if ((buildState != EBuildState.Placing && buildState != EBuildState.PlacingBad) || other.name == "Terrain") return;
 
         if (other.name == "Rubble")
         {
@@ -231,14 +231,14 @@ public class Building : Selectable
         }
         else
         {
-            _numberOfCollisions++;
+            numberOfCollisions++;
         }
         
     }
 
     private void OnTriggerExit(Collider other)
     {
-        if ((_buildState != EBuildState.Placing && _buildState != EBuildState.PlacingBad) || other.name == "Terrain") return;
+        if ((buildState != EBuildState.Placing && buildState != EBuildState.PlacingBad) || other.name == "Terrain") return;
 
         if (other.name == "Rubble")
         {
@@ -246,76 +246,76 @@ public class Building : Selectable
         }
         else
         {
-            _numberOfCollisions--;
+            numberOfCollisions--;
         }
         
     }
 
-    public EBuildState BuildState() { return _buildState; }
+    public EBuildState BuildState() { return buildState; }
 
-    public void SetConstructionTeam(List<BuildingConstructor> _newTeam) { _constructionTeam = _newTeam; }
+    public void SetConstructionTeam(List<BuildingConstructor> newTeam) { constructionTeam = newTeam; }
 
-    public bool ConstructionComplete() { return _buildState == EBuildState.Complete; }
+    public bool ConstructionComplete() { return buildState == EBuildState.Complete; }
 
-    public float PercentageComplete() { return _health.HealthPercentage(); }
+    public float PercentageComplete() { return health.HealthPercentage(); }
 
-    private void EnableRenderersAndColliders(bool _enabled = true)
+    private void EnableRenderersAndColliders(bool enabled = true)
     {
-        if (_meshRenderers != null)
+        if (meshRenderers != null)
         {
-            foreach (MeshRenderer _meshRenderer in _meshRenderers)
+            foreach (MeshRenderer meshRenderer in meshRenderers)
             {
-                _meshRenderer.enabled = _enabled;
+                meshRenderer.enabled = enabled;
             }
         }
 
-        MeshCollider[] _colliders = GetComponentsInChildren<MeshCollider>();
-        if (_colliders != null)
+        MeshCollider[] colliders = GetComponentsInChildren<MeshCollider>();
+        if (colliders != null)
         {
-            foreach (MeshCollider _collider in _colliders)
+            foreach (MeshCollider collider in colliders)
             {
-                _collider.enabled = _enabled;
+                collider.enabled = enabled;
             }
         }
     }
 
-    private void ConstructionSite(bool _enabled = true)
+    private void ConstructionSite(bool enabled = true)
     {
-        if (_enabled)
+        if (enabled)
         {
-            GameObject _constructionPrefab = (GameObject)Resources.Load<GameObject>("Prefabs/ConstructionSite");
-            if (_constructionPrefab == null) Debug.LogError(name + " unable to load ConstructionSite prefab.");
-            _construction = Instantiate(_constructionPrefab, transform.position, transform.rotation);
-            _construction.transform.parent = transform;
-            if (_buildingType != EBuildingType.Tower)
+            GameObject constructionPrefab = (GameObject)Resources.Load<GameObject>("Prefabs/ConstructionSite");
+            if (constructionPrefab == null) Debug.LogError(name + " unable to load ConstructionSite prefab.");
+            construction = Instantiate(constructionPrefab, transform.position, transform.rotation);
+            construction.transform.parent = transform;
+            if (buildingType != EBuildingType.Tower)
             {
-                _construction.transform.localScale = Vector3.one * 1.5f;
+                construction.transform.localScale = Vector3.one * 1.5f;
             }
             else
             {
-                _construction.transform.localScale = Vector3.one * 0.5f;
+                construction.transform.localScale = Vector3.one * 0.5f;
             }
             
         }
         else
         {
-            Destroy(_construction.gameObject);
-            _construction = null;
+            Destroy(construction.gameObject);
+            construction = null;
         }
     }
 
     public float RangeOffset() { return rangeOffset; }
 
-    private void Rubble(bool _enabled = true)
+    private void Rubble(bool enabled = true)
     {
-        if (_enabled)
+        if (enabled)
         {
             GameObject rubblePrefab = (GameObject)Resources.Load<GameObject>("Prefabs/Rubble");
             if (rubblePrefab == null) Debug.LogError(name + " unable to load Rubble prefab.");
             rubble = Instantiate(rubblePrefab, transform.position, transform.rotation);
-            rubble.transform.parent = _gameController.GetMapTransform();
+            rubble.transform.parent = gameController.GetMapTransform();
             rubble.name = "Rubble";
-            if (_buildingType != EBuildingType.Tower)
+            if (buildingType != EBuildingType.Tower)
             {
                 /*rubble.transform.localScale = Vector3.one * 1.5f;*/
             }

@@ -6,11 +6,11 @@ using UnityEngine;
 
 public class GameController : MonoBehaviour
 {
-    [SerializeField] private int _playerNumber = 1;
-    private List<Faction> _factions = new List<Faction>();
-    private HUD_Manager _hudManager;
-    private PlayerController _playerController;
-    private GameCameraController _cameraController;
+    [SerializeField] private int playerNumber = 1;
+    private List<Faction> factions = new List<Faction>();
+    private HUD_Manager hud_Manager;
+    private PlayerController playerController;
+    private GameCameraController cameraController;
     private UI_Menu pauseMenu;
     private Transform mapTransform;
 
@@ -23,9 +23,9 @@ public class GameController : MonoBehaviour
 
     private void Awake()
     {
-        _hudManager = GetComponentInChildren<HUD_Manager>();
-        _playerController = GetComponentInChildren<PlayerController>();
-        _cameraController = GetComponentInChildren<GameCameraController>();
+        hud_Manager = GetComponentInChildren<HUD_Manager>();
+        playerController = GetComponentInChildren<PlayerController>();
+        cameraController = GetComponentInChildren<GameCameraController>();
         FindMenus();
     }
 
@@ -69,32 +69,32 @@ public class GameController : MonoBehaviour
             newFaction.SetupFaction(listOfPlayers[i], i + 1);
             newFaction.transform.position = spawnPoints[i].transform.position;
             newFaction.SpawnFirstBuilding(spawnPoints[i].GroundCoordinates());
-            _factions.Add(newFaction);
+            factions.Add(newFaction);
             newFaction.SetGameController(this);
             GiveStartingResources(newFaction);
 
             if (i == 0)
             {
-                _hudManager.SetPlayerFaction(newFaction);
-                _cameraController.transform.position = spawnPoints[i].GroundCoordinates();
+                hud_Manager.SetPlayerFaction(newFaction);
+                cameraController.transform.position = spawnPoints[i].GroundCoordinates();
             }
         }
-        _playerController.SetHUD_Manager(_hudManager);
+        playerController.SetHUD_Manager(hud_Manager);
     }
 
     internal void FactionDefated(Faction faction)
     {
-        if (faction.PlayerNumber() != _playerNumber)
+        if (faction.PlayerNumber() != playerNumber)
         {
-            _factions.Remove(faction);
+            factions.Remove(faction);
             Destroy(faction.gameObject);
 
-            if (_factions.Count == 1)
+            if (factions.Count == 1)
             {
                 print("player wins");
             }
         }
-        else if (faction.PlayerNumber() == _playerNumber)
+        else if (faction.PlayerNumber() == playerNumber)
         {
             // lose state
         }
@@ -103,18 +103,18 @@ public class GameController : MonoBehaviour
     private void SetupGame()
     {
         BuildListOfFactions();
-        _hudManager.SetPlayerFaction(GetPlayerFaction());
-        _playerController.SetHUD_Manager(_hudManager);
+        hud_Manager.SetPlayerFaction(GetPlayerFaction());
+        playerController.SetHUD_Manager(hud_Manager);
     }
 
     private void BuildListOfFactions()
     {
-        Faction[] _newFactions = FindObjectsOfType<Faction>();
-        foreach (Faction _faction in _newFactions)
+        Faction[] newFactions = FindObjectsOfType<Faction>();
+        foreach (Faction faction in newFactions)
         {
-            //Debug.Log(name + " found " + _faction.ToString() + " with FactionType " + _faction.FactionType().ToString());
-            _factions.Add(_faction);
-            _faction.SetGameController(this);
+            //Debug.Log(name + " found " + faction.ToString() + " with FactionType " + faction.FactionType().ToString());
+            factions.Add(faction);
+            faction.SetGameController(this);
 
         }
     }
@@ -127,25 +127,25 @@ public class GameController : MonoBehaviour
 
     private void AddFaction()
     {
-        GameObject _new = Instantiate(new GameObject(), transform);
-        _new.AddComponent<Faction>();
-        Faction _faction = _new.GetComponent<Faction>();
-        //_faction.SetFaction();
+        GameObject newFaction = Instantiate(new GameObject(), transform);
+        newFaction.AddComponent<Faction>();
+        Faction faction = newFaction.GetComponent<Faction>();
+        //faction.SetFaction();
     }
 
-    public Faction GetFaction(int _playerNumber)
+    public Faction GetFaction(int playerNumber)
     {
-        if (_factions.Count > 0)
+        if (factions.Count > 0)
         {
-            foreach (Faction _faction in _factions)
+            foreach (Faction faction in factions)
             {
-                if (_faction.PlayerNumber() == _playerNumber)
+                if (faction.PlayerNumber() == playerNumber)
                 {
-                    return _faction;
+                    return faction;
                 }
             }
 
-            Debug.LogError("GameController canot not find faction with PlayerNumber =" + _playerNumber);
+            Debug.LogError("GameController canot not find faction with PlayerNumber =" + playerNumber);
             return null;
         }
         else
@@ -159,23 +159,23 @@ public class GameController : MonoBehaviour
 
     public Faction GetPlayerFaction()
     {
-        return GetFaction(_playerNumber);
+        return GetFaction(playerNumber);
     }
 
     public HUD_Manager HUD_Manager()
     {
-        if (_hudManager != null) return _hudManager;
+        if (hud_Manager != null) return hud_Manager;
         else return null;
     }
 
-    public bool IsPlayerFaction(int _factionNumber)
+    public bool IsPlayerFaction(int factionNumber)
     {
-        return _playerNumber == _factionNumber;
+        return playerNumber == factionNumber;
     }
 
-    public PlayerController PlayerController() { return _playerController; }
+    public PlayerController PlayerController() { return playerController; }
 
-    public GameCameraController CameraController() { return _cameraController; }
+    public GameCameraController CameraController() { return cameraController; }
 
     private void GiveStartingResources(Faction faction)
     {

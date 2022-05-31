@@ -77,18 +77,18 @@ public class Unit : Selectable
 
     private void PatrolPointSelection()
     {
-        if (selectingPatrolPoint && _gameController.CameraController().MouseIsInPlayArea())
+        if (selectingPatrolPoint && gameController.CameraController().MouseIsInPlayArea())
         {
             if (Input.GetMouseButtonDown(0))
             {
                 selectingPatrolPoint = false;
                 patrolStartPoint = transform.position;
-                patrolEndPoint = _gameController.PlayerController().LocationUnderMouse();
+                patrolEndPoint = gameController.PlayerController().LocationUnderMouse();
 
                 unitStance = EUnitStance.Patrol;
 
-                _gameController.PlayerController().PlayerControl(true);
-                _gameController.CameraController().allowMovement = true;
+                gameController.PlayerController().PlayerControl(true);
+                gameController.CameraController().allowMovement = true;
                 
                 HUD_StatusUpdate();
                 Move(patrolEndPoint);
@@ -424,8 +424,8 @@ public class Unit : Selectable
 
     public void SetPatrol()
     {
-        _gameController.PlayerController().PlayerControl(false);
-        _gameController.CameraController().allowMovement = false;
+        gameController.PlayerController().PlayerControl(false);
+        gameController.CameraController().allowMovement = false;
         
         selectingPatrolPoint = true;
     }
@@ -439,14 +439,14 @@ public class Unit : Selectable
             patrolEndPoint = new Vector3();
         }
 
-        if (IsSelected()) _gameController.HUD_Manager().Actions_HUD().UpdateUnitStances();
+        if (IsSelected()) gameController.HUD_Manager().Actions_HUD().UpdateUnitStances();
     }
 
     public bool HasStopped() { return _hasStopped; }
 
     public bool NeedsHealing()
     {
-        return _health.HealthPercentage() != 1;
+        return health.HealthPercentage() != 1;
     }
 
 }

@@ -5,17 +5,17 @@ using UnityEngine;
 
 public class BuildingConstructor : MonoBehaviour
 {
-    [SerializeField] private EquipmentConfig _constructionTool;
-    [SerializeField] private float _buildRate = 100;
+    [SerializeField] private EquipmentConfig constructionTool;
+    [SerializeField] private float buildRate = 100;
 
-    private Unit _unit;
-    private Building _currentBuildTarget;
-    private bool _buildingIsInRange = false;
-    private GameObject _tool;
+    private Unit unit;
+    private Building currentBuildTarget;
+    private bool buildingIsInRange = false;
+    private GameObject tool;
 
     private void Awake()
     {
-        _unit = GetComponent<Unit>();
+        unit = GetComponent<Unit>();
     }
 
     private void Update()
@@ -26,43 +26,43 @@ public class BuildingConstructor : MonoBehaviour
 
     private void CheckBuildState()
     {
-        if (_currentBuildTarget == null)
+        if (currentBuildTarget == null)
         {
-            if (_unit != null && _unit.Animator() != null && _unit.Animator().GetBool("building"))
+            if (unit != null && unit.Animator() != null && unit.Animator().GetBool("building"))
             {
-                _unit.Animator().SetBool("building", false);
-                _unit.HUD_StatusUpdate();
+                unit.Animator().SetBool("building", false);
+                unit.HUD_StatusUpdate();
             }
             return;
         }
 
-        if (_currentBuildTarget.BuildState() != Building.EBuildState.Building)
+        if (currentBuildTarget.BuildState() != Building.EBuildState.Building)
         {
-            CollectableResource possibleFarm = _currentBuildTarget.GetComponent<CollectableResource>();
+            CollectableResource possibleFarm = currentBuildTarget.GetComponent<CollectableResource>();
             ClearBuildTarget();
 
-            _unit.TakeAStepBack();
+            unit.TakeAStepBack();
             if (possibleFarm != null)
             {
-                _unit.GetComponent<ResourceGatherer>().SetTargetResource(possibleFarm, true);
+                unit.GetComponent<ResourceGatherer>().SetTargetResource(possibleFarm, true);
             }
         }
     }
 
     private void ProcessBuilding()
     {
-        if (_currentBuildTarget == null) return;
+        if (currentBuildTarget == null) return;
 
-        if (_buildingIsInRange)
+        if (buildingIsInRange)
         {
             ConstructBuilding();
         }
         else
         {
-            _unit.MoveTo(_currentBuildTarget);
-            if (_unit != null && _unit.Animator() != null && _unit.Animator().GetBool("building"))
+            unit.MoveTo(currentBuildTarget);
+            if (unit != null && unit.Animator() != null && unit.Animator().GetBool("building"))
             {
-                _unit.Animator().SetBool("building", false);
+                unit.Animator().SetBool("building", false);
             }
         }
 
@@ -70,77 +70,77 @@ public class BuildingConstructor : MonoBehaviour
 
     private void ConstructBuilding()
     {
-        if (_unit != null && _unit.Animator() != null & !_unit.Animator().GetBool("building"))
+        if (unit != null && unit.Animator() != null & !unit.Animator().GetBool("building"))
         {
-            _unit.Animator().SetBool("building", true);
-            transform.forward = _currentBuildTarget.transform.position;
-            _unit.HUD_BuildingStatusUpdate();
+            unit.Animator().SetBool("building", true);
+            transform.forward = currentBuildTarget.transform.position;
+            unit.HUD_BuildingStatusUpdate();
         }
         EquipTool();
-        transform.LookAt(_currentBuildTarget.transform);
+        transform.LookAt(currentBuildTarget.transform);
     }
 
     public void ClearBuildTarget()
     {
-        _currentBuildTarget = null;
-        _buildingIsInRange = false;
+        currentBuildTarget = null;
+        buildingIsInRange = false;
         UnequipTool();
-        _unit.HUD_BuildingStatusUpdate();
-        _unit.HUD_StatusUpdate();
+        unit.HUD_BuildingStatusUpdate();
+        unit.HUD_StatusUpdate();
     }
 
     public void SetBuildTarget(Building newTarget)
     {
-        _currentBuildTarget = newTarget;
-        _unit.HUD_BuildingStatusUpdate();
+        currentBuildTarget = newTarget;
+        unit.HUD_BuildingStatusUpdate();
     }
 
     public void BuildEffect()
     {
-        if (_currentBuildTarget != null)
+        if (currentBuildTarget != null)
         {
-            _currentBuildTarget.ConstructBuilding(_buildRate);
+            currentBuildTarget.ConstructBuilding(buildRate);
         }
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        Building _building = other.gameObject.GetComponent<Building>();
-        if (_building != null && _building == _currentBuildTarget)
+        Building building = other.gameObject.GetComponent<Building>();
+        if (building != null && building == currentBuildTarget)
         {
-            _buildingIsInRange = true;
-            _unit.StopMoveTo();
+            buildingIsInRange = true;
+            unit.StopMoveTo();
         }
     }
 
-    public bool HasBuildTarget() { return _currentBuildTarget != null; }
+    public bool HasBuildTarget() { return currentBuildTarget != null; }
 
-    public Building BuildTarget() { return _currentBuildTarget; }
+    public Building BuildTarget() { return currentBuildTarget; }
 
-    public bool IsConstructingBuilding() { return _unit.Animator().GetBool("building"); }
+    public bool IsConstructingBuilding() { return unit.Animator().GetBool("building"); }
 
     private void EquipTool()
     {
-        if (_currentBuildTarget != null && _constructionTool != null && _tool == null)
+        if (currentBuildTarget != null && constructionTool != null && tool == null)
         {
-            _tool = _constructionTool.Spawn(_unit);
+            tool = constructionTool.Spawn(unit);
         }
     }
 
     private void UnequipTool()
     {
-        if (_tool != null)
+        if (tool != null)
         {
-            Destroy(_tool.gameObject);
-            _tool = null;
+            Destroy(tool.gameObject);
+            tool = null;
         }
     }
 
     public string CurrentlyBuildingName()
     {
-        if (_currentBuildTarget != null)
+        if (currentBuildTarget != null)
         {
-            return _unit.Faction().Config().PrefabName(_currentBuildTarget.BuildingType());
+            return unit.Faction().Config().PrefabName(currentBuildTarget.BuildingType());
         }
         else
         {

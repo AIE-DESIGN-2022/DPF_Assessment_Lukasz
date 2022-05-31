@@ -6,30 +6,30 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    private List<Selectable> _currentSelection;
-    private int _playerNumber = 1;
-    private HUD_Manager _hudManager;
-    private GameCameraController _cameraController;
-    private bool _playerControlOnline = true;
-    private RectTransform _selectionBox;
-    private Vector2 _selectionPoint1;
-    private Vector2 _selectionPoint2;
+    private List<Selectable> currentSelection;
+    private int playerNumber = 1;
+    private HUD_Manager HUD_Manager;
+    private GameCameraController cameraController;
+    private bool playerControlOnline = true;
+    private RectTransform selectionBox;
+    private Vector2 selectionPoint1;
+    private Vector2 selectionPoint2;
     private LayerMask terrainMask;
 
 
     private void Awake()
     {
-        _cameraController = FindObjectOfType<GameCameraController>();
-        _selectionBox = FindSelectionBox();
+        cameraController = FindObjectOfType<GameCameraController>();
+        selectionBox = FindSelectionBox();
         terrainMask |= (1 << LayerMask.NameToLayer("Terrain"));
     }
 
     private RectTransform FindSelectionBox()
     {
-        RectTransform[] _rectTrans = FindObjectsOfType<RectTransform>();
-        foreach (RectTransform _rectTran in _rectTrans)
+        RectTransform[] rectTrans = FindObjectsOfType<RectTransform>();
+        foreach (RectTransform rectTran in rectTrans)
         {
-            if (_rectTran.name == "SelectionBox") return _rectTran;
+            if (rectTran.name == "SelectionBox") return rectTran;
         }
 
         Debug.LogError(name + " unable to find SelectionBox.");
@@ -39,14 +39,14 @@ public class PlayerController : MonoBehaviour
     // Start is called before the first frame update
     private void Start()
     {
-        _currentSelection = new List<Selectable>();
-        _selectionBox.gameObject.SetActive(false);
+        currentSelection = new List<Selectable>();
+        selectionBox.gameObject.SetActive(false);
     }
 
     // Update is called once per frame
     private void Update()
     {
-        if (!_playerControlOnline) return;
+        if (!playerControlOnline) return;
 
         if (Input.GetMouseButtonDown(0)) HandleLeftClick();
 
@@ -66,108 +66,108 @@ public class PlayerController : MonoBehaviour
 
     private void HandleLeftClick()
     {
-        if (!_cameraController.MouseIsInPlayArea()) return;
+        if (!cameraController.MouseIsInPlayArea()) return;
         if (!Input.GetKey(KeyCode.LeftShift)) ClearSelection();
 
-        RaycastHit _hit = UnderMouse();
-        Selectable _selectable = _hit.transform.GetComponent<Selectable>();
-        if (_selectable != null && _selectable.PlayerNumber() == _playerNumber)
+        RaycastHit hit = UnderMouse();
+        Selectable selectable = hit.transform.GetComponent<Selectable>();
+        if (selectable != null && selectable.PlayerNumber() == playerNumber)
         {
-            AddToSelection(_selectable);
+            AddToSelection(selectable);
         }
 
-        if (_selectable != null && _currentSelection.Count == 0)
+        if (selectable != null && currentSelection.Count == 0)
         {
-            AddToSelection(_selectable);
+            AddToSelection(selectable);
         }
 
-        if (_selectable == null) // if no selectable object was hit with mouse click
+        if (selectable == null) // if no selectable object was hit with mouse click
         {
-            _selectionPoint1 = Input.mousePosition;
+            selectionPoint1 = Input.mousePosition;
         }
     }
 
-    private void AddToSelection(Selectable _selectable)
+    private void AddToSelection(Selectable selectable)
     {
-        if (_selectable.GetComponent<Building>() != null && _selectable.GetComponent<Building>().BuildState() == Building.EBuildState.Destroyed) return;
+        if (selectable.GetComponent<Building>() != null && selectable.GetComponent<Building>().BuildState() == Building.EBuildState.Destroyed) return;
 
-        _selectable.Selected(true);
-        _currentSelection.Add(_selectable);
-        _hudManager.NewSelection(_currentSelection);
+        selectable.Selected(true);
+        currentSelection.Add(selectable);
+        HUD_Manager.NewSelection(currentSelection);
     }
 
-    private void AddToSelection(List<Selectable> _selectables)
+    private void AddToSelection(List<Selectable> selectables)
     {
-        foreach (Selectable _selectable in _selectables)
+        foreach (Selectable selectable in selectables)
         {
-            _selectable.Selected(true);
-            _currentSelection.Add(_selectable);
+            selectable.Selected(true);
+            currentSelection.Add(selectable);
         }
-        _hudManager.NewSelection(_currentSelection);
+        HUD_Manager.NewSelection(currentSelection);
     }
 
     private void HandleLeftMouseDown()
     {
-        if (_selectionPoint1 == new Vector2()) return;
-        _selectionPoint2 = Input.mousePosition;
+        if (selectionPoint1 == new Vector2()) return;
+        selectionPoint2 = Input.mousePosition;
 
-        if (Vector3.Distance(_selectionPoint1, _selectionPoint2) > 2.0f && _cameraController.MouseIsInPlayArea())
+        if (Vector3.Distance(selectionPoint1, selectionPoint2) > 2.0f && cameraController.MouseIsInPlayArea())
         {
-            _selectionBox.gameObject.SetActive(true);
-            _cameraController.allowMovement = false;
+            selectionBox.gameObject.SetActive(true);
+            cameraController.allowMovement = false;
 
-            float _width = _selectionPoint2.x - _selectionPoint1.x;
-            float _height = _selectionPoint2.y - _selectionPoint1.y;
+            float width = selectionPoint2.x - selectionPoint1.x;
+            float height = selectionPoint2.y - selectionPoint1.y;
 
-            _selectionBox.sizeDelta = new Vector2(Mathf.Abs(_width), Mathf.Abs(_height));
-            _selectionBox.anchoredPosition = _selectionPoint1 + new Vector2(_width/2 , _height/2);
+            selectionBox.sizeDelta = new Vector2(Mathf.Abs(width), Mathf.Abs(height));
+            selectionBox.anchoredPosition = selectionPoint1 + new Vector2(width/2 , height/2);
         }
         else
         {
-            _selectionBox.gameObject.SetActive(false);
-            _cameraController.allowMovement = true;
+            selectionBox.gameObject.SetActive(false);
+            cameraController.allowMovement = true;
         }
     }
 
     private void HandleLeftMouseUp()
     {
-        if (_selectionBox.gameObject.activeInHierarchy && _cameraController.MouseIsInPlayArea())
+        if (selectionBox.gameObject.activeInHierarchy && cameraController.MouseIsInPlayArea())
         {
             AddToSelection(PlayersUnits(InSelectionBox()));
 
-            _selectionBox.gameObject.SetActive(false);
-            _cameraController.allowMovement = true;
+            selectionBox.gameObject.SetActive(false);
+            cameraController.allowMovement = true;
         }
-        _selectionPoint1 = new Vector2();
-        _selectionPoint2 = new Vector2();
+        selectionPoint1 = new Vector2();
+        selectionPoint2 = new Vector2();
     }
 
     private void HandleRightClick()
     {
-        if (!_cameraController.MouseIsInPlayArea()) return;
-        if (_currentSelection.Count > 0)
+        if (!cameraController.MouseIsInPlayArea()) return;
+        if (currentSelection.Count > 0)
         {
-            RaycastHit _hit = UnderMouse();
-            Selectable _hitSelectable = _hit.transform.GetComponent<Selectable>();
-            CollectableResource _collectableResource;
-            Building _building;
-            Unit _unit;
+            RaycastHit hit = UnderMouse();
+            Selectable hitSelectable = hit.transform.GetComponent<Selectable>();
+            CollectableResource collectableResource;
+            Building building;
+            Unit unit;
 
-            if (_hitSelectable != null)
+            if (hitSelectable != null)
             {
-                _collectableResource = _hitSelectable.GetComponent<CollectableResource>();
-                _building = _hitSelectable.GetComponent<Building>();
-                _unit = _hitSelectable.GetComponent<Unit>();
+                collectableResource = hitSelectable.GetComponent<CollectableResource>();
+                building = hitSelectable.GetComponent<Building>();
+                unit = hitSelectable.GetComponent<Unit>();
 
-                if (_collectableResource != null) GiveCollectResourceOrder(_collectableResource);
+                if (collectableResource != null) GiveCollectResourceOrder(collectableResource);
 
-                if (_building != null) RightClickOnBuilding(_building);
+                if (building != null) RightClickOnBuilding(building);
 
-                if (_unit != null) RightClickOnUnit(_unit);
+                if (unit != null) RightClickOnUnit(unit);
             }
             else
             {
-                GiveMoveOrder(_hit.point);
+                GiveMoveOrder(hit.point);
             }
         }
     }
@@ -175,7 +175,7 @@ public class PlayerController : MonoBehaviour
     private void RightClickOnBuilding(Building building)
     {
         // check if owned by player
-        if (building.PlayerNumber() == _playerNumber)
+        if (building.PlayerNumber() == playerNumber)
         {
             GiveUnitToBuildingOrder(building);
         }
@@ -188,7 +188,7 @@ public class PlayerController : MonoBehaviour
     private void RightClickOnUnit(Unit unit)
     {
         // check if owned by player
-        if (unit.PlayerNumber() == _playerNumber)
+        if (unit.PlayerNumber() == playerNumber)
         {
             GiveUnitHealOrder(unit);
         }
@@ -201,62 +201,62 @@ public class PlayerController : MonoBehaviour
 
     private List<Selectable> InSelectionBox()
     {
-        List<Selectable> _list = new List<Selectable>();
+        List<Selectable> list = new List<Selectable>();
 
-        Vector2 min = _selectionBox.anchoredPosition - (_selectionBox.sizeDelta / 2);
-        Vector2 max = _selectionBox.anchoredPosition + (_selectionBox.sizeDelta / 2);
+        Vector2 min = selectionBox.anchoredPosition - (selectionBox.sizeDelta / 2);
+        Vector2 max = selectionBox.anchoredPosition + (selectionBox.sizeDelta / 2);
 
-        Selectable[] _allSelectables = GameObject.FindObjectsOfType<Selectable>();
-        foreach (Selectable _selectable in _allSelectables)
+        Selectable[] allSelectables = GameObject.FindObjectsOfType<Selectable>();
+        foreach (Selectable selectable in allSelectables)
         {
-            Vector3 _screenPos = _cameraController.Camera().WorldToScreenPoint(_selectable.transform.position);
-            if (_screenPos.x > min.x && _screenPos.x < max.x && _screenPos.y > min.y && _screenPos.y < max.y)
+            Vector3 screenPos = cameraController.Camera().WorldToScreenPoint(selectable.transform.position);
+            if (screenPos.x > min.x && screenPos.x < max.x && screenPos.y > min.y && screenPos.y < max.y)
             {
-                _list.Add(_selectable);
+                list.Add(selectable);
             }
         }
 
-        return _list;
+        return list;
     }
 
-    private List<Selectable> PlayersUnits(List<Selectable> _selectables)
+    private List<Selectable> PlayersUnits(List<Selectable> selectables)
     {
-        List<Selectable> _list = new List<Selectable>();
+        List<Selectable> list = new List<Selectable>();
 
-        foreach (Selectable _selectable in _selectables)
+        foreach (Selectable selectable in selectables)
         {
-            if (_selectable.PlayerNumber() == _playerNumber)
+            if (selectable.PlayerNumber() == playerNumber)
             {
-                Unit _unit = _selectable.GetComponent<Unit>();
-                if (_unit != null) _list.Add(_unit);
+                Unit unit = selectable.GetComponent<Unit>();
+                if (unit != null) list.Add(unit);
             }
         }
 
-        return _list;
+        return list;
     }
 
-    private void GiveUnitToBuildingOrder(Building _building)
+    private void GiveUnitToBuildingOrder(Building building)
     {
-        if (_building.IsResourceDropPoint())
+        if (building.IsResourceDropPoint())
         {
-            foreach (Selectable _selectable in _currentSelection)
+            foreach (Selectable selectable in currentSelection)
             {
-                Unit _unit = _selectable.GetComponent<Unit>();
-                if (_unit != null && _unit.IsCarryingResource())
+                Unit unit = selectable.GetComponent<Unit>();
+                if (unit != null && unit.IsCarryingResource())
                 {
-                    _unit.SetResourceDropOffPoint(_building);
+                    unit.SetResourceDropOffPoint(building);
                 }
             }
         }
 
-        if (_building.BuildState() == Building.EBuildState.Building)
+        if (building.BuildState() == Building.EBuildState.Building || (building.BuildState() == Building.EBuildState.Complete && !building.GetComponent<Health>().IsFull()))
         {
-            foreach (Selectable _selectable in _currentSelection)
+            foreach (Selectable selectable in currentSelection)
             {
-                BuildingConstructor _constructor = _selectable.GetComponent<BuildingConstructor>();
-                if (_constructor != null)
+                BuildingConstructor constructor = selectable.GetComponent<BuildingConstructor>();
+                if (constructor != null)
                 {
-                    _constructor.SetBuildTarget(_building);
+                    constructor.SetBuildTarget(building);
                 }
             }
         }
@@ -264,11 +264,11 @@ public class PlayerController : MonoBehaviour
 
     private RaycastHit UnderMouse()
     {
-        Ray _ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        RaycastHit _hit;
-        Physics.Raycast(_ray, out _hit);
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        RaycastHit hit;
+        Physics.Raycast(ray, out hit);
 
-        return _hit;
+        return hit;
     }
 
     public Vector3 LocationUnderMouse()
@@ -278,63 +278,63 @@ public class PlayerController : MonoBehaviour
 
     public Vector3 TerrainLocationUnderMouse()
     {
-        Ray _ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        RaycastHit _hit;
-        Physics.Raycast(_ray, out _hit, 1000, terrainMask);
-        return _hit.point;
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        RaycastHit hit;
+        Physics.Raycast(ray, out hit, 1000, terrainMask);
+        return hit.point;
     }
 
     private void ClearSelection()
     {
-        if (_currentSelection.Count <= 0) return;
+        if (currentSelection.Count <= 0) return;
 
-        foreach (Selectable _selectable in _currentSelection)
+        foreach (Selectable selectable in currentSelection)
         {
-            _selectable.Selected(false);
+            selectable.Selected(false);
         }
-        _currentSelection.Clear();
-        _hudManager.ClearSelection();
+        currentSelection.Clear();
+        HUD_Manager.ClearSelection();
     }
 
-    private void GiveMoveOrder(Vector3 _newLocation)
+    private void GiveMoveOrder(Vector3 newLocation)
     {
-        if (_currentSelection.Count == 1)
+        if (currentSelection.Count == 1)
         {
-            Unit _unit = _currentSelection[0].GetComponent<Unit>();
-            if (_unit != null && _unit.PlayerNumber() == _playerNumber)
+            Unit unit = currentSelection[0].GetComponent<Unit>();
+            if (unit != null && unit.PlayerNumber() == playerNumber)
             {
-                _unit.MoveTo(_newLocation);
+                unit.MoveTo(newLocation);
             }
         }
         else
         {
-            MoveInFormation(_newLocation);
+            MoveInFormation(newLocation);
         }
 
 
-        /*foreach (Selectable _selectable in _currentSelection)
+        /*foreach (Selectable selectable in currentSelection)
         {
-            Unit _unit = _selectable.GetComponent<Unit>();
-            if (_unit != null && _unit.PlayerNumber() == _playerNumber)
+            Unit unit = selectable.GetComponent<Unit>();
+            if (unit != null && unit.PlayerNumber() == playerNumber)
             {
-                _unit.MoveTo(_newLocation);
+                unit.MoveTo(newLocation);
             }
         }*/
     }
 
-    private void GiveAttackOrder(Selectable _newTarget)
+    private void GiveAttackOrder(Selectable newTarget)
     {
-        foreach (Selectable _selectable in _currentSelection)
+        foreach (Selectable selectable in currentSelection)
         {
-            Unit _unit = _selectable.GetComponent<Unit>();
-            if (_unit != null && _unit.PlayerNumber() == _playerNumber && _unit.UnitType() != Unit.EUnitType.Worker)
+            Unit unit = selectable.GetComponent<Unit>();
+            if (unit != null && unit.PlayerNumber() == playerNumber && unit.UnitType() != Unit.EUnitType.Worker)
             {
-                _unit.SetTarget(_newTarget);
+                unit.SetTarget(newTarget);
             }
             else
             {
-                Building _building = _selectable.GetComponent<Building>();
-                if (_building != null)
+                Building building = selectable.GetComponent<Building>();
+                if (building != null)
                 {
 
                 }
@@ -344,9 +344,9 @@ public class PlayerController : MonoBehaviour
 
     private void GiveUnitHealOrder(Unit unit)
     {
-        foreach (Selectable _selectable in _currentSelection)
+        foreach (Selectable selectable in currentSelection)
         {
-            Healer selectedHealer = _selectable.GetComponent<Healer>();
+            Healer selectedHealer = selectable.GetComponent<Healer>();
             if (selectedHealer != null)
             {
                 selectedHealer.SetTargetHealUnit(unit);
@@ -354,31 +354,31 @@ public class PlayerController : MonoBehaviour
         }    
     }
 
-    private void GiveCollectResourceOrder(CollectableResource _newResource)
+    private void GiveCollectResourceOrder(CollectableResource newResource)
     {
-        foreach (Selectable _selectable in _currentSelection)
+        foreach (Selectable selectable in currentSelection)
         {
-            Unit _unit = _selectable.GetComponent<Unit>();
-            if (_unit != null && _unit.UnitType() == Unit.EUnitType.Worker)
+            Unit unit = selectable.GetComponent<Unit>();
+            if (unit != null && unit.UnitType() == Unit.EUnitType.Worker)
             {
-                _unit.SetTarget(_newResource);
+                unit.SetTarget(newResource);
             }
         }
     }
 
-    public void SetHUD_Manager(HUD_Manager _newManager)
+    public void SetHUD_Manager(HUD_Manager newManager)
     {
-        _hudManager = _newManager;
+        HUD_Manager = newManager;
     }
 
-    public void PlayerControl(bool _online)
+    public void PlayerControl(bool online)
     {
-        _playerControlOnline = _online;
+        playerControlOnline = online;
     }
 
-    private void MoveInFormation(Vector3 _newLocation)
+    private void MoveInFormation(Vector3 newLocation)
     {
-        int numberOfRows = (_currentSelection.Count / 5) + 1;
+        int numberOfRows = (currentSelection.Count / 5) + 1;
         float offSet = 1.0f;
 
         /*print(numberOfRows);*/
@@ -389,17 +389,17 @@ public class PlayerController : MonoBehaviour
             {
                 int currentIndex = j + (i * 5);
 
-                if (currentIndex < _currentSelection.Count)
+                if (currentIndex < currentSelection.Count)
                 {
-                    Vector3 newDestination = new Vector3(_newLocation.x + (offSet * j),
-                                               _newLocation.y,
-                                               _newLocation.z + (offSet * i));
-                    _currentSelection[currentIndex].GetComponent<Unit>().MoveTo(newDestination);
+                    Vector3 newDestination = new Vector3(newLocation.x + (offSet * j),
+                                               newLocation.y,
+                                               newLocation.z + (offSet * i));
+                    currentSelection[currentIndex].GetComponent<Unit>().MoveTo(newDestination);
                 }
             }
         }
     }
 
-    public bool NothingSelected() { return _currentSelection.Count == 0; }
+    public bool NothingSelected() { return currentSelection.Count == 0; }
 }
 // Writen by Lukasz Dziedziczak

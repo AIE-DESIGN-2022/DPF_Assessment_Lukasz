@@ -6,13 +6,13 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody)),RequireComponent(typeof(Collider))]
 public class Selectable : MonoBehaviour
 {
-    private SpriteRenderer _selectionIndicator;
+    private SpriteRenderer selectionIndicator;
 
     [Tooltip("The player number whom owns this unit. 0 = none")]
-    [SerializeField, Range(0,4)] private int _owningPlayerNumber = 0;
-    protected Faction _owningFaction;
-    protected Health _health;
-    protected GameController _gameController;
+    [SerializeField, Range(0,4)] private int owningPlayerNumber = 0;
+    protected Faction owningFaction;
+    protected Health health;
+    protected GameController gameController;
 
     [SerializeField] protected bool flashing = false;
     [SerializeField, Range(0f, 3f)] private float flashingSpeed = 0.5f;
@@ -22,9 +22,9 @@ public class Selectable : MonoBehaviour
 
     protected void Awake()
     {
-        _selectionIndicator = GetComponentInChildren<SpriteRenderer>();
-        _health = GetComponent<Health>();
-        _gameController = FindObjectOfType<GameController>();
+        selectionIndicator = GetComponentInChildren<SpriteRenderer>();
+        health = GetComponent<Health>();
+        gameController = FindObjectOfType<GameController>();
     }
 
     // Start is called before the first frame update
@@ -33,7 +33,7 @@ public class Selectable : MonoBehaviour
         Selected(false);
         RigidbodySetup();
         ColliderSetup();
-        if (_selectionIndicator == null) Debug.Log("Selection Indicator Missing");
+        if (selectionIndicator == null) Debug.Log("Selection Indicator Missing");
     }
 
     protected void Update()
@@ -57,30 +57,30 @@ public class Selectable : MonoBehaviour
 
     public void Selected(bool isSelected)
     {
-        if (_selectionIndicator != null)
+        if (selectionIndicator != null)
         {
-            _selectionIndicator.enabled = isSelected;
+            selectionIndicator.enabled = isSelected;
         }
         
     }
 
-    public bool IsSelected() { return _selectionIndicator.enabled; }
+    public bool IsSelected() { return selectionIndicator.enabled; }
 
-    public void Setup(int _newPlayerNumber, Faction _newFaction)
+    public void Setup(int newPlayerNumber, Faction newFaction)
     {
-        _owningPlayerNumber = _newPlayerNumber;
-        _owningFaction = _newFaction;
+        owningPlayerNumber = newPlayerNumber;
+        owningFaction = newFaction;
     }
 
-    public int PlayerNumber() { return _owningPlayerNumber; }
+    public int PlayerNumber() { return owningPlayerNumber; }
 
-    public Faction Faction() { return _owningFaction; }
+    public Faction Faction() { return owningFaction; }
 
-    public void TakeDamage(float _damageAmound, Selectable attacker)
+    public void TakeDamage(float damageAmound, Selectable attacker)
     {
-        if (_health != null)
+        if (health != null)
         {
-            _health.TakeDamage(_damageAmound);
+            health.TakeDamage(damageAmound);
         }
         HUD_HealthBarUpdate();
 
@@ -97,24 +97,24 @@ public class Selectable : MonoBehaviour
         
     }
 
-    public void Heal(float _healAmount)
+    public void Heal(float healAmount)
     {
-        if (_health != null)
+        if (health != null)
         {
-            _health.Heal(_healAmount);
+            health.Heal(healAmount);
         }
         HUD_HealthBarUpdate();
     }
 
     public bool IsAlive() 
     { 
-        if (_health != null) return _health.IsAlive();
+        if (health != null) return health.IsAlive();
         else return false;
     }
 
     private void DeathEnd()
     {
-        FindObjectOfType<GameController>().GetFaction(_owningPlayerNumber).Death(this);
+        FindObjectOfType<GameController>().GetFaction(owningPlayerNumber).Death(this);
         Destroy(gameObject);
     } 
     
@@ -159,13 +159,13 @@ public class Selectable : MonoBehaviour
 
             if (flashingTimer > flashingSpeed)
             {
-                if (_selectionIndicator != null && _selectionIndicator.enabled)
+                if (selectionIndicator != null && selectionIndicator.enabled)
                 {
-                    _selectionIndicator.enabled = false;
+                    selectionIndicator.enabled = false;
                 }
-                else if (_selectionIndicator != null && !_selectionIndicator.enabled)
+                else if (selectionIndicator != null && !selectionIndicator.enabled)
                 {
-                    _selectionIndicator.enabled = true;
+                    selectionIndicator.enabled = true;
                 }
 
                 flashingTimer = 0;

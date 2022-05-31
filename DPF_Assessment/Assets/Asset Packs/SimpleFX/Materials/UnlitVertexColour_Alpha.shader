@@ -1,8 +1,8 @@
-Shader "Simple/Unlit Vertex Color_Alpha" 
+Shader "Simple/Unlit Vertex ColorAlpha" 
 {
 
 Properties {
-    _MainTex ("Base (RGB)", 2D) = "white" {}
+    MainTex ("Base (RGB)", 2D) = "white" {}
 }
 
 SubShader 
@@ -20,7 +20,7 @@ SubShader
    
    Pass {
         ColorMaterial AmbientAndDiffuse
-        SetTexture [_MainTex] {Combine texture * primary
+        SetTexture [MainTex] {Combine texture * primary
         }
     }
 }

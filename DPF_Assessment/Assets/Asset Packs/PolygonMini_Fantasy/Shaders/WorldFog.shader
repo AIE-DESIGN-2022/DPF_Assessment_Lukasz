@@ -4,16 +4,16 @@ Shader "SyntyStudios/WorldFog"
 {
 	Properties
 	{
-		_Texture("Texture", 2D) = "white" {}
-		_FogColor("Fog Color", Color) = (0,1,0.7517242,0)
-		_FogAmount("Fog Amount", Range( 0 , 1)) = 0
-		_FogOffset("Fog Offset", Float) = 0
-		_FogDistance("Fog Distance", Float) = 0
-		_FogFalloff("Fog Falloff", Range( 0.001 , 1)) = 0.001
-		_Specular("Specular", Range( 0 , 1)) = 0
-		_SpecularSmoothness("Specular Smoothness", Range( 0 , 1)) = 0
-		[HideInInspector] _texcoord( "", 2D ) = "white" {}
-		[HideInInspector] __dirty( "", Int ) = 1
+		Texture("Texture", 2D) = "white" {}
+		FogColor("Fog Color", Color) = (0,1,0.7517242,0)
+		FogAmount("Fog Amount", Range( 0 , 1)) = 0
+		FogOffset("Fog Offset", Float) = 0
+		FogDistance("Fog Distance", Float) = 0
+		FogFalloff("Fog Falloff", Range( 0.001 , 1)) = 0.001
+		Specular("Specular", Range( 0 , 1)) = 0
+		SpecularSmoothness("Specular Smoothness", Range( 0 , 1)) = 0
+		[HideInInspector] texcoord( "", 2D ) = "white" {}
+		[HideInInspector] dirty( "", Int ) = 1
 	}
 
 	SubShader
@@ -25,33 +25,33 @@ Shader "SyntyStudios/WorldFog"
 		#pragma surface surf StandardSpecular keepalpha addshadow fullforwardshadows 
 		struct Input
 		{
-			float2 uv_texcoord;
+			float2 uvtexcoord;
 			float3 worldPos;
 		};
 
-		uniform sampler2D _Texture;
-		uniform float4 _Texture_ST;
-		uniform float4 _FogColor;
-		uniform float _FogAmount;
-		uniform float _FogOffset;
-		uniform float _FogDistance;
-		uniform float _FogFalloff;
-		uniform float _Specular;
-		uniform float _SpecularSmoothness;
+		uniform sampler2D Texture;
+		uniform float4 TextureST;
+		uniform float4 FogColor;
+		uniform float FogAmount;
+		uniform float FogOffset;
+		uniform float FogDistance;
+		uniform float FogFalloff;
+		uniform float Specular;
+		uniform float SpecularSmoothness;
 
 		void surf( Input i , inout SurfaceOutputStandardSpecular o )
 		{
-			float2 uv_Texture = i.uv_texcoord * _Texture_ST.xy + _Texture_ST.zw;
-			float4 tex2DNode12 = tex2D( _Texture, uv_Texture );
-			float4 lerpResult14 = lerp( tex2DNode12 , _FogColor , _FogAmount);
-			float3 ase_worldPos = i.worldPos;
-			float clampResult13 = clamp( ( ( _FogOffset + ase_worldPos.y ) / _FogDistance ) , 0 , 1 );
-			float temp_output_8_0 = pow( clampResult13 , _FogFalloff );
-			float4 lerpResult11 = lerp( lerpResult14 , tex2DNode12 , temp_output_8_0);
+			float2 uvTexture = i.uvtexcoord * TextureST.xy + TextureST.zw;
+			float4 tex2DNode12 = tex2D( Texture, uvTexture );
+			float4 lerpResult14 = lerp( tex2DNode12 , FogColor , FogAmount);
+			float3 aseworldPos = i.worldPos;
+			float clampResult13 = clamp( ( ( FogOffset + aseworldPos.y ) / FogDistance ) , 0 , 1 );
+			float tempoutput80 = pow( clampResult13 , FogFalloff );
+			float4 lerpResult11 = lerp( lerpResult14 , tex2DNode12 , tempoutput80);
 			o.Albedo = lerpResult11.rgb;
-			float3 temp_cast_1 = (_Specular).xxx;
-			o.Specular = temp_cast_1;
-			o.Smoothness = _SpecularSmoothness;
+			float3 tempcast1 = (Specular).xxx;
+			o.Specular = tempcast1;
+			o.Smoothness = SpecularSmoothness;
 			o.Alpha = 1;
 		}
 
@@ -63,22 +63,22 @@ Shader "SyntyStudios/WorldFog"
 /*ASEBEGIN
 Version=14501
 2567;34;2546;1557;1249.864;571.367;1;True;True
-Node;AmplifyShaderEditor.RangedFloatNode;19;-530.864,121.633;Float;False;Property;_FogOffset;Fog Offset;3;0;Create;True;0;0;26.29;0;0;0;1;FLOAT;0
+Node;AmplifyShaderEditor.RangedFloatNode;19;-530.864,121.633;Float;False;Property;FogOffset;Fog Offset;3;0;Create;True;0;0;26.29;0;0;0;1;FLOAT;0
 Node;AmplifyShaderEditor.WorldPosInputsNode;5;-622.6179,241.7576;Float;False;0;4;FLOAT3;0;FLOAT;1;FLOAT;2;FLOAT;3
 Node;AmplifyShaderEditor.SimpleAddOpNode;18;-376.864,249.633;Float;False;2;2;0;FLOAT;0;False;1;FLOAT;0;False;1;FLOAT;0
-Node;AmplifyShaderEditor.RangedFloatNode;7;-569.8688,521.9848;Float;False;Property;_FogDistance;Fog Distance;4;0;Create;True;0;0;14.5;0;0;0;1;FLOAT;0
+Node;AmplifyShaderEditor.RangedFloatNode;7;-569.8688,521.9848;Float;False;Property;FogDistance;Fog Distance;4;0;Create;True;0;0;14.5;0;0;0;1;FLOAT;0
 Node;AmplifyShaderEditor.SimpleDivideOpNode;6;-255.4985,461.4078;Float;False;2;0;FLOAT;0;False;1;FLOAT;0;False;1;FLOAT;0
 Node;AmplifyShaderEditor.ClampOpNode;13;-130.864,300.633;Float;False;3;0;FLOAT;0;False;1;FLOAT;0;False;2;FLOAT;1;False;1;FLOAT;0
-Node;AmplifyShaderEditor.ColorNode;2;-311.2385,-297.9739;Float;False;Property;_FogColor;Fog Color;1;0;Create;True;0;0,1,0.7517242,0;0.2745098,0,0.7960785,0;0;5;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
-Node;AmplifyShaderEditor.SamplerNode;12;-317.2582,-112.6559;Float;True;Property;_Texture;Texture;0;0;Create;True;0;None;65bf252a1d0243b40a63ee08ad703289;True;0;False;white;Auto;False;Object;-1;Auto;Texture2D;6;0;SAMPLER2D;;False;1;FLOAT2;0,0;False;2;FLOAT;0;False;3;FLOAT2;0,0;False;4;FLOAT2;0,0;False;5;FLOAT;1;False;5;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
-Node;AmplifyShaderEditor.RangedFloatNode;15;-59.86401,-420.367;Float;False;Property;_FogAmount;Fog Amount;2;0;Create;True;0;0;0.894;0;1;0;1;FLOAT;0
-Node;AmplifyShaderEditor.RangedFloatNode;9;-293.909,706.7017;Float;False;Property;_FogFalloff;Fog Falloff;5;0;Create;True;0;0.001;1;0.001;1;0;1;FLOAT;0
+Node;AmplifyShaderEditor.ColorNode;2;-311.2385,-297.9739;Float;False;Property;FogColor;Fog Color;1;0;Create;True;0;0,1,0.7517242,0;0.2745098,0,0.7960785,0;0;5;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
+Node;AmplifyShaderEditor.SamplerNode;12;-317.2582,-112.6559;Float;True;Property;Texture;Texture;0;0;Create;True;0;None;65bf252a1d0243b40a63ee08ad703289;True;0;False;white;Auto;False;Object;-1;Auto;Texture2D;6;0;SAMPLER2D;;False;1;FLOAT2;0,0;False;2;FLOAT;0;False;3;FLOAT2;0,0;False;4;FLOAT2;0,0;False;5;FLOAT;1;False;5;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
+Node;AmplifyShaderEditor.RangedFloatNode;15;-59.86401,-420.367;Float;False;Property;FogAmount;Fog Amount;2;0;Create;True;0;0;0.894;0;1;0;1;FLOAT;0
+Node;AmplifyShaderEditor.RangedFloatNode;9;-293.909,706.7017;Float;False;Property;FogFalloff;Fog Falloff;5;0;Create;True;0;0.001;1;0.001;1;0;1;FLOAT;0
 Node;AmplifyShaderEditor.PowerNode;8;42.73656,486.9279;Float;False;2;0;FLOAT;0;False;1;FLOAT;0;False;1;FLOAT;0
 Node;AmplifyShaderEditor.LerpOp;14;117.136,-305.367;Float;False;3;0;COLOR;0,0,0,0;False;1;COLOR;0,0,0,0;False;2;FLOAT;0;False;1;COLOR;0
 Node;AmplifyShaderEditor.ClampOpNode;10;359.1562,331.4656;Float;False;3;0;FLOAT;0;False;1;FLOAT;0;False;2;FLOAT;1;False;1;FLOAT;0
 Node;AmplifyShaderEditor.LerpOp;11;116.7418,-138.6559;Float;False;3;0;COLOR;0,0,0,0;False;1;COLOR;0,0,0,0;False;2;FLOAT;0;False;1;COLOR;0
-Node;AmplifyShaderEditor.RangedFloatNode;17;-5.864014,153.633;Float;False;Property;_SpecularSmoothness;Specular Smoothness;7;0;Create;True;0;0;0.414;0;1;0;1;FLOAT;0
-Node;AmplifyShaderEditor.RangedFloatNode;16;-3.864014,74.633;Float;False;Property;_Specular;Specular;6;0;Create;True;0;0;0.072;0;1;0;1;FLOAT;0
+Node;AmplifyShaderEditor.RangedFloatNode;17;-5.864014,153.633;Float;False;Property;SpecularSmoothness;Specular Smoothness;7;0;Create;True;0;0;0.414;0;1;0;1;FLOAT;0
+Node;AmplifyShaderEditor.RangedFloatNode;16;-3.864014,74.633;Float;False;Property;Specular;Specular;6;0;Create;True;0;0;0.072;0;1;0;1;FLOAT;0
 Node;AmplifyShaderEditor.StandardSurfaceOutputNode;0;391.0693,-233.56;Float;False;True;2;Float;ASEMaterialInspector;0;0;StandardSpecular;SyntyStudios/WorldFog;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;Back;0;0;False;0;0;False;0;Opaque;0.5;True;True;0;False;Opaque;;Geometry;All;True;True;True;True;True;True;True;True;True;True;True;True;True;True;True;True;True;False;0;255;255;0;0;0;0;0;0;0;0;False;2;15;10;25;False;0.5;True;0;Zero;Zero;0;Zero;Zero;OFF;OFF;0;False;0;0,0,0,0;VertexOffset;True;False;Cylindrical;False;Relative;0;;-1;-1;-1;-1;0;0;0;False;0;0;16;0;FLOAT3;0,0,0;False;1;FLOAT3;0,0,0;False;2;FLOAT3;0,0,0;False;3;FLOAT3;0,0,0;False;4;FLOAT;0;False;5;FLOAT;0;False;6;FLOAT3;0,0,0;False;7;FLOAT3;0,0,0;False;8;FLOAT;0;False;9;FLOAT;0;False;10;FLOAT;0;False;13;FLOAT3;0,0,0;False;11;FLOAT3;0,0,0;False;12;FLOAT3;0,0,0;False;14;FLOAT4;0,0,0,0;False;15;FLOAT3;0,0,0;False;0
 WireConnection;18;0;19;0
 WireConnection;18;1;5;2
