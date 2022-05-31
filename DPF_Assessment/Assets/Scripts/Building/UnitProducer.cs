@@ -6,31 +6,31 @@ using UnityEngine;
 
 public class UnitProducer : MonoBehaviour
 {
-    private Transform _spawnTransform;
-    private Transform _rallyPoint;
+    private Transform spawnTransform;
+    private Transform rallyPoint;
     
-    private List<Unit.EUnitType> _buildableUnits;
-    private bool _isCurrentlyBuilding;
-    private Unit.EUnitType _currentlyBuilding;
-    private List<Unit.EUnitType> _buildQue;
-    private float _timeLeft;
-    private Building _building;
-    private Faction _faction;
+    private List<Unit.EUnitType> buildableUnits;
+    private bool isCurrentlyBuilding;
+    private Unit.EUnitType currentlyBuilding;
+    private List<Unit.EUnitType> buildQue;
+    private float timeLeft;
+    private Building building;
+    private Faction faction;
 
     private void Awake()
     {
-        _buildQue = new List<Unit.EUnitType>();
-        _building = GetComponent<Building>();
+        buildQue = new List<Unit.EUnitType>();
+        building = GetComponent<Building>();
         SetTransforms();
     }
 
     private void SetTransforms()
     {
-        Transform[] _transforms = GetComponentsInChildren<Transform>();
-        foreach (Transform _transform in _transforms)
+        Transform[] transforms = GetComponentsInChildren<Transform>();
+        foreach (Transform transform in transforms)
         {
-            if (_transform.name == "SpawnPoint") _spawnTransform = _transform;
-            if ( _transform.name == "RallyPoint") _rallyPoint = _transform;
+            if (transform.name == "SpawnPoint") spawnTransform = transform;
+            if ( transform.name == "RallyPoint") rallyPoint = transform;
         }
     }
 
@@ -46,118 +46,118 @@ public class UnitProducer : MonoBehaviour
 
     private void ProcessCurrentBuild()
     {
-        if (!_isCurrentlyBuilding) return;
-        _timeLeft -= Time.deltaTime;
+        if (!isCurrentlyBuilding) return;
+        timeLeft -= Time.deltaTime;
 
-        if (_timeLeft <= 0)
+        if (timeLeft <= 0)
         {
-            _isCurrentlyBuilding = false;
-            Unit _newUnit = _faction.SpawnUnit(_currentlyBuilding, _spawnTransform);
-            _newUnit.MoveTo(_rallyPoint.position);
-            _building.HUD_BuildingStatusUpdate();
+            isCurrentlyBuilding = false;
+            Unit newUnit = faction.SpawnUnit(currentlyBuilding, spawnTransform);
+            newUnit.MoveTo(rallyPoint.position);
+            building.HUD_BuildingStatusUpdate();
         }
 
     }
 
     private void ProcessBuildQue()
     {
-        if (!_isCurrentlyBuilding && _buildQue.Count > 0)
+        if (!isCurrentlyBuilding && buildQue.Count > 0)
         {
-            _currentlyBuilding = _buildQue[0];
-            _buildQue.RemoveAt(0);
-            _timeLeft = _faction.Config().BuildTime(_currentlyBuilding);
-            _isCurrentlyBuilding = true;
-            _building.HUD_BuildingStatusUpdate();
-            _building.HUD_BuildingQueUpdate();
+            currentlyBuilding = buildQue[0];
+            buildQue.RemoveAt(0);
+            timeLeft = faction.Config().BuildTime(currentlyBuilding);
+            isCurrentlyBuilding = true;
+            building.HUD_BuildingStatusUpdate();
+            building.HUD_BuildingQueUpdate();
         }
     }
 
     private void SetFaction()
     {
-        if (_building.PlayerNumber() != 0 && _faction == null)
+        if (building.PlayerNumber() != 0 && faction == null)
         {
-            _faction = FindObjectOfType<GameController>().GetFaction(_building.PlayerNumber());
+            faction = FindObjectOfType<GameController>().GetFaction(building.PlayerNumber());
         }
     }
 
     private void SetListOfBuildableUnits()
     {
-        if (_faction == null) SetFaction();
+        if (faction == null) SetFaction();
 
-        if (_faction != null && _buildableUnits == null)
+        if (faction != null && buildableUnits == null)
         {
-            _buildableUnits = _faction.Config().BuildableUnits(_building.BuildingType());
+            buildableUnits = faction.Config().BuildableUnits(building.BuildingType());
         }
     }
 
     public List<Unit.EUnitType> GetListOfBuildableUnits()
     {
-        if (_buildableUnits == null) SetListOfBuildableUnits();
+        if (buildableUnits == null) SetListOfBuildableUnits();
 
-        if (_buildableUnits != null)
+        if (buildableUnits != null)
         {
-            return _buildableUnits;
+            return buildableUnits;
         }
         else return null;
     }
 
-    public void AddToQue(Unit.EUnitType _newUnit)
+    public void AddToQue(Unit.EUnitType newUnit)
     {
-        if (_buildQue.Count < 20 && CanAfford(_newUnit))
+        if (buildQue.Count < 20 && CanAfford(newUnit))
         {
-            _buildQue.Add(_newUnit);
-            _faction.SubtractFromStockpileCostOf(_newUnit);
-            _building.HUD_BuildingQueUpdate();
+            buildQue.Add(newUnit);
+            faction.SubtractFromStockpileCostOf(newUnit);
+            building.HUD_BuildingQueUpdate();
         }
     }
 
-    public void RemoveFromQue(Unit.EUnitType _newUnit)
+    public void RemoveFromQue(Unit.EUnitType newUnit)
     {
-        if (_buildQue.Contains(_newUnit))
+        if (buildQue.Contains(newUnit))
         {
-            _buildQue.Remove(_newUnit);
-            _faction.AddToStockpileCostOf(_newUnit);
-            _building.HUD_BuildingQueUpdate();
+            buildQue.Remove(newUnit);
+            faction.AddToStockpileCostOf(newUnit);
+            building.HUD_BuildingQueUpdate();
         }
     }
 
     public void CancelBuildItem()
     {
-        _isCurrentlyBuilding = false;
-        _faction.AddToStockpileCostOf(_currentlyBuilding);
-        _building.HUD_BuildingStatusUpdate();
+        isCurrentlyBuilding = false;
+        faction.AddToStockpileCostOf(currentlyBuilding);
+        building.HUD_BuildingStatusUpdate();
     }
 
     public List<Unit.EUnitType> BuildQue()
     {
-        return _buildQue;
+        return buildQue;
     }
 
-    private bool CanAfford(Unit.EUnitType _newUnit)
+    private bool CanAfford(Unit.EUnitType newUnit)
     {
-        if (_faction == null) SetFaction();
+        if (faction == null) SetFaction();
 
-        return _faction.CanAfford(_newUnit);
+        return faction.CanAfford(newUnit);
     }
 
     public bool IsCurrentlyProducing()
     {
-        return _isCurrentlyBuilding;
+        return isCurrentlyBuilding;
     }
 
     public Unit.EUnitType CurrentlyProducing()
     {
-        return _currentlyBuilding;
+        return currentlyBuilding;
     }
 
     public float PercentageComplete()
     {
-        return 1 - (_timeLeft / _faction.Config().BuildTime(_currentlyBuilding));
+        return 1 - (timeLeft / faction.Config().BuildTime(currentlyBuilding));
     }
 
     public string CurrentlyBuildingName()
     {
-        string name = _faction.Config().PrefabName(_currentlyBuilding);
+        string name = faction.Config().PrefabName(currentlyBuilding);
         name = name.Replace("(Female)", "");
         name = name.Replace("(Male)", "");
         return name;

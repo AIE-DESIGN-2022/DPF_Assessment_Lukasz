@@ -6,94 +6,94 @@ using UnityEngine;
 
 public class HUD_Manager : MonoBehaviour
 {
-    private UI_Resources _resourcesUI;
-    private UI_Action _actionsUI;
-    private List<Selectable> _selection;
-    private FactionConfig _config;
-    private UI_Info _infoUI;
+    private UI_Resources resourcesUI;
+    private UI_Action actionsUI;
+    private List<Selectable> selection;
+    private FactionConfig config;
+    private UI_Info infoUI;
 
     private void Awake()
     {
-        _resourcesUI = GetComponentInChildren<UI_Resources>();
-        _actionsUI = GetComponentInChildren<UI_Action>();
-        _infoUI = GetComponentInChildren<UI_Info>();
+        resourcesUI = GetComponentInChildren<UI_Resources>();
+        actionsUI = GetComponentInChildren<UI_Action>();
+        infoUI = GetComponentInChildren<UI_Info>();
     }
 
-    public void SetPlayerFaction(Faction _playerFaction)
+    public void SetPlayerFaction(Faction playerFaction)
     {
-        if (_resourcesUI != null) _resourcesUI.SetPlayerFaction(_playerFaction);
-        if (_actionsUI != null) _actionsUI.SetFaction(_playerFaction);
-        _config = _playerFaction.Config();
-        if (_infoUI != null) _infoUI.SetFactionConfig(_config);
+        if (resourcesUI != null) resourcesUI.SetPlayerFaction(playerFaction);
+        if (actionsUI != null) actionsUI.SetFaction(playerFaction);
+        config = playerFaction.Config();
+        if (infoUI != null) infoUI.SetFactionConfig(config);
     }
     
     public UI_Resources Resource_HUD()
     {
-        if (_resourcesUI !=null) return _resourcesUI;
+        if (resourcesUI !=null) return resourcesUI;
         else return null;
     }
 
     public UI_Info Info_HUD()
     {
-        return _infoUI;
+        return infoUI;
     }
 
     public UI_Action Actions_HUD()
     {
-        return _actionsUI;
+        return actionsUI;
     }
 
-    public void NewSelection(List<Selectable> _newSelection)
+    public void NewSelection(List<Selectable> newSelection)
     {
         ClearSelection();
-        _selection = _newSelection;
+        selection = newSelection;
         //print("HUD manager sees new selection");
 
-        if (_selection.Count == 1)
+        if (selection.Count == 1)
         {
-            Unit _selectedUnit = _selection[0].GetComponent<Unit>();
-            Building _selectedBuilding = _selection[0].GetComponent<Building>();
-            CollectableResource _selectedCollectableResource = _selection[0].GetComponent<CollectableResource>();
+            Unit selectedUnit = selection[0].GetComponent<Unit>();
+            Building selectedBuilding = selection[0].GetComponent<Building>();
+            CollectableResource selectedCollectableResource = selection[0].GetComponent<CollectableResource>();
 
 
-            if (_selectedBuilding != null)
+            if (selectedBuilding != null)
             {
-                _infoUI.NewSelection(_selectedBuilding);
-                _actionsUI.BuildingSelected(_selectedBuilding);
+                infoUI.NewSelection(selectedBuilding);
+                actionsUI.BuildingSelected(selectedBuilding);
             }
 
-            if (_selectedUnit != null)
+            if (selectedUnit != null)
             {
-                _infoUI.NewSelection(_selectedUnit);
-                _actionsUI.UnitSelected(_selectedUnit);
+                infoUI.NewSelection(selectedUnit);
+                actionsUI.UnitSelected(selectedUnit);
             }
 
-            if (_selectedCollectableResource != null)
+            if (selectedCollectableResource != null)
             {
-                _infoUI.NewSelection(_selectedCollectableResource);
+                infoUI.NewSelection(selectedCollectableResource);
             }
         }
 
-        if (_selection.Count > 1)
+        if (selection.Count > 1)
         {
             List<Unit> selectedUnits = new List<Unit>();
             List<Building> selectedBuildings = new List<Building>();
             List<CollectableResource> selectedResources = new List<CollectableResource> ();
 
-            foreach (Selectable item in _selection)
+            foreach (Selectable item in selection)
             {
-                Unit _selectedUnit = item.GetComponent<Unit>();
-                Building _selectedBuilding = item.GetComponent<Building>();
-                CollectableResource _selectedCollectableResource = item.GetComponent<CollectableResource>();
+                Unit selectedUnit = item.GetComponent<Unit>();
+                Building selectedBuilding = item.GetComponent<Building>();
+                CollectableResource selectedCollectableResource = item.GetComponent<CollectableResource>();
 
-                if (_selectedUnit != null) selectedUnits.Add(_selectedUnit);
-                if (_selectedBuilding != null) selectedBuildings.Add(_selectedBuilding);
-                if (_selectedCollectableResource != null) selectedResources.Add(_selectedCollectableResource);
+                if (selectedUnit != null) selectedUnits.Add(selectedUnit);
+                if (selectedBuilding != null) selectedBuildings.Add(selectedBuilding);
+                if (selectedCollectableResource != null) selectedResources.Add(selectedCollectableResource);
             }
 
             if (selectedUnits.Count > 0)
             {
-                _actionsUI.UnitsSelected(selectedUnits);
+                actionsUI.UnitsSelected(selectedUnits);
             }
         }
         
@@ -101,15 +101,15 @@ public class HUD_Manager : MonoBehaviour
 
     public void ClearSelection()
     {
-        _selection = null;
-        _actionsUI.Clear();
-        _infoUI.ClearSelection();
+        selection = null;
+        actionsUI.Clear();
+        infoUI.ClearSelection();
     }
 
     public void UpdateResources()
     {
-        _resourcesUI.UpdateResources();
-        _actionsUI.UpdateCanAffords();
+        resourcesUI.UpdateResources();
+        actionsUI.UpdateCanAffords();
     }
 }
 // Writen by Lukasz Dziedziczak

@@ -8,18 +8,18 @@ using UnityEngine.AI;
 [RequireComponent(typeof(NavMeshAgent)), RequireComponent(typeof(Animator)), RequireComponent(typeof(Health))]
 public class Unit : Selectable
 {
-    private Animator _animator;
-    private NavMeshAgent _navMeshAgent;
-    private ResourceGatherer _resourceGatherer;
-    private BuildingConstructor _buildingConstructor;
-    private Attacker _attacker;
-    private bool _hasStopped = true;
-    private Healer _healer;
+    private Animator animator;
+    private NavMeshAgent navMeshAgent;
+    private ResourceGatherer resourceGatherer;
+    private BuildingConstructor buildingConstructor;
+    private Attacker attacker;
+    private bool hasStopped = true;
+    private Healer healer;
 
     [Header("Unit Config")]
-    [SerializeField] private Transform _leftHand;
-    [SerializeField] private Transform _rightHand;
-    [SerializeField] private EUnitType _unitType;
+    [SerializeField] private Transform leftHand;
+    [SerializeField] private Transform rightHand;
+    [SerializeField] private EUnitType unitType;
 
     [Header("Behaviour")]
     [SerializeField] private EUnitStance unitStance = EUnitStance.Passive;
@@ -50,20 +50,20 @@ public class Unit : Selectable
     private new void Awake()
     {
         base.Awake();
-        _navMeshAgent = GetComponent<NavMeshAgent>();
-        _animator = GetComponent<Animator>();
-        _resourceGatherer = GetComponent<ResourceGatherer>();
-        _attacker = GetComponent<Attacker>();
-        _buildingConstructor = GetComponent<BuildingConstructor>();
-        _healer = GetComponent<Healer>();
-        if (_leftHand == null) _leftHand = FindByName("hand_l");
-        if (_rightHand == null) _rightHand = FindByName("hand_r");
+        navMeshAgent = GetComponent<NavMeshAgent>();
+        animator = GetComponent<Animator>();
+        resourceGatherer = GetComponent<ResourceGatherer>();
+        attacker = GetComponent<Attacker>();
+        buildingConstructor = GetComponent<BuildingConstructor>();
+        healer = GetComponent<Healer>();
+        if (leftHand == null) leftHand = FindByName("handl");
+        if (rightHand == null) rightHand = FindByName("handr");
     }
 
     private new void Start()
     {
         base.Start();
-        if (_navMeshAgent != null) _navMeshAgent.updateRotation = false;
+        if (navMeshAgent != null) navMeshAgent.updateRotation = false;
         
     }
 
@@ -129,134 +129,134 @@ public class Unit : Selectable
 
     private void LateUpdate()
     {
-        if (_navMeshAgent.velocity.sqrMagnitude > Mathf.Epsilon)
+        if (navMeshAgent.velocity.sqrMagnitude > Mathf.Epsilon)
         {
-            transform.rotation = Quaternion.LookRotation(_navMeshAgent.velocity.normalized);
+            transform.rotation = Quaternion.LookRotation(navMeshAgent.velocity.normalized);
         }
     }
 
     private void UpdateAnimation()
     {
-        if (_animator != null && _navMeshAgent != null)
+        if (animator != null && navMeshAgent != null)
         {
-            Vector3 velocity = transform.InverseTransformDirection(_navMeshAgent.velocity);
-            _animator.SetFloat("speed", velocity.z);
+            Vector3 velocity = transform.InverseTransformDirection(navMeshAgent.velocity);
+            animator.SetFloat("speed", velocity.z);
 
-            if (!_hasStopped && DistanceToNavMeshTarget() < 1 && velocity.z < 0.5f)
+            if (!hasStopped && DistanceToNavMeshTarget() < 1 && velocity.z < 0.5f)
             {
-                _hasStopped = true;
+                hasStopped = true;
                 if (IsSelected()) HUD_StatusUpdate();
             }
         }
     }
 
-    public void MoveTo(Vector3 _newLocation)
+    public void MoveTo(Vector3 newLocation)
     {
         //Debug.Log(name + "Recieved MoveTo order");
-        if (_resourceGatherer != null)
+        if (resourceGatherer != null)
         {
-            _resourceGatherer.ClearTargetResource();
-            _resourceGatherer.ClearDropOffPoint();
+            resourceGatherer.ClearTargetResource();
+            resourceGatherer.ClearDropOffPoint();
         }
-        if (_buildingConstructor != null) _buildingConstructor.ClearBuildTarget();
-        if (_attacker != null) _attacker.ClearTarget();
-        if (_healer != null) _healer.ClearTargetUnit();
-        if (_animator != null) _animator.SetTrigger("stop");
-        Move(NearestEmptyPosition(_newLocation));
+        if (buildingConstructor != null) buildingConstructor.ClearBuildTarget();
+        if (attacker != null) attacker.ClearTarget();
+        if (healer != null) healer.ClearTargetUnit();
+        if (animator != null) animator.SetTrigger("stop");
+        Move(NearestEmptyPosition(newLocation));
         ClearPatrol();
         HUD_StatusUpdate();
     }
 
-    public void MoveTo(Selectable _selectable)
+    public void MoveTo(Selectable selectable)
     {
-        Move(_selectable.transform.position);
+        Move(selectable.transform.position);
     }
 
-    public void MoveTo(Building _building)
+    public void MoveTo(Building building)
     {
-        Move(_building.transform.position);
+        Move(building.transform.position);
     }
 
-    private void Move(Vector3 _newLocation)
+    private void Move(Vector3 newLocation)
     {
-        if (_navMeshAgent != null)
+        if (navMeshAgent != null)
         {
             
-            _navMeshAgent.destination = GetClosestAvailablePosition(_newLocation);
+            navMeshAgent.destination = GetClosestAvailablePosition(newLocation);
 
-            if (_navMeshAgent.isStopped) _navMeshAgent.isStopped = false;
+            if (navMeshAgent.isStopped) navMeshAgent.isStopped = false;
         }
 
-        _hasStopped = false;
+        hasStopped = false;
     }
 
-    public void SetTarget(CollectableResource _newCollectableResource)
+    public void SetTarget(CollectableResource newCollectableResource)
     {
-        if (_resourceGatherer != null)
+        if (resourceGatherer != null)
         {
-            _resourceGatherer.SetTargetResource(_newCollectableResource);
+            resourceGatherer.SetTargetResource(newCollectableResource);
         }
     }
 
-    public void SetTarget(Selectable _newTarget)
+    public void SetTarget(Selectable newTarget)
     {
-        if (_attacker != null)
+        if (attacker != null)
         {
-            _attacker.SetTarget(_newTarget);
+            attacker.SetTarget(newTarget);
         }
 
         
     }
 
-    public void SetHealTarget(Unit _newTarget)
+    public void SetHealTarget(Unit newTarget)
     {
-        if (_healer != null && PlayerNumber() == _newTarget.PlayerNumber())
+        if (healer != null && PlayerNumber() == newTarget.PlayerNumber())
         {
-            _healer.SetTargetHealUnit(_newTarget);
+            healer.SetTargetHealUnit(newTarget);
         }
     }
 
-    public Animator Animator() { return _animator; }
+    public Animator Animator() { return animator; }
 
     public void StopMoveTo()
     {
-        if (_navMeshAgent != null)
+        if (navMeshAgent != null)
         {
-            _navMeshAgent.isStopped = true;
-            //_navMeshAgent.destination = new Vector3();
+            navMeshAgent.isStopped = true;
+            //navMeshAgent.destination = new Vector3();
         }
     }
 
-    public Transform HandTransform(bool _requestingLeftHand)
+    public Transform HandTransform(bool requestingLeftHand)
     {
-        if (_requestingLeftHand && _leftHand != null) return _leftHand;
-        else if (!_requestingLeftHand && _rightHand != null) return _rightHand;
+        if (requestingLeftHand && leftHand != null) return leftHand;
+        else if (!requestingLeftHand && rightHand != null) return rightHand;
         else return null;
     }
 
-    public EUnitType UnitType() { return _unitType; }
+    public EUnitType UnitType() { return unitType; }
 
-    private Transform FindByName(string _name)
+    private Transform FindByName(string name)
     {
-        Transform _returnTransform = null;
-        Transform[] _children = GetComponentsInChildren<Transform>();
-        foreach (Transform _child in _children)
+        Transform returnTransform = null;
+        Transform[] children = GetComponentsInChildren<Transform>();
+        foreach (Transform child in children)
         {
-            if (_child.name == _name)
+            if (child.name == name)
             {
-                _returnTransform = _child;
+                returnTransform = child;
                 break;
             }
 
         }
-        return _returnTransform;
+        return returnTransform;
     }
 
     public bool IsCarryingResource()
     {
-        if (_resourceGatherer != null)
+        if (resourceGatherer != null)
         {
-            return _resourceGatherer.GatheredResourcesAmount() > 0;
+            return resourceGatherer.GatheredResourcesAmount() > 0;
         }
         else
         {
@@ -265,111 +265,111 @@ public class Unit : Selectable
 
     }
 
-    public void SetResourceDropOffPoint(Building _newDropPoint)
+    public void SetResourceDropOffPoint(Building newDropPoint)
     {
-        if (_resourceGatherer != null)
+        if (resourceGatherer != null)
         {
-            _resourceGatherer.SetTargetDropOffPoint(_newDropPoint);
+            resourceGatherer.SetTargetDropOffPoint(newDropPoint);
         }
     }
 
-    public void Status(out string _status1, out string _status2)
+    public void Status(out string status1, out string status2)
     {
-        _status1 = "";
-        _status2 = "";
+        status1 = "";
+        status2 = "";
 
-        if (_resourceGatherer != null)
+        if (resourceGatherer != null)
         {
-            if (_resourceGatherer.HasResourceTarget())
+            if (resourceGatherer.HasResourceTarget())
             {
-                _status1 = "Gathering resources";
+                status1 = "Gathering resources";
             }
-            else if (_resourceGatherer.HasDropOffTarget())
+            else if (resourceGatherer.HasDropOffTarget())
             {
-                _status1 = "Dropping off resources";
+                status1 = "Dropping off resources";
             }
-            else if (_resourceGatherer.GatheredResourcesAmount() > 0)
+            else if (resourceGatherer.GatheredResourcesAmount() > 0)
             {
-                _status1 = "Carrying resources";
+                status1 = "Carrying resources";
             }
 
-            if (_resourceGatherer.GatheredResourcesAmount() > 0)
+            if (resourceGatherer.GatheredResourcesAmount() > 0)
             {
-                _status2 = _resourceGatherer.GatheredResourcesAmount().ToString() + " " + _resourceGatherer.GatheredResourceType().ToString();
+                status2 = resourceGatherer.GatheredResourcesAmount().ToString() + " " + resourceGatherer.GatheredResourceType().ToString();
             }
         }
         
-        if(_buildingConstructor != null)
+        if(buildingConstructor != null)
         {
-            if (_buildingConstructor.IsConstructingBuilding())
+            if (buildingConstructor.IsConstructingBuilding())
             {
-                _status1 = "Constructing " + _buildingConstructor.CurrentlyBuildingName() + "...";
+                status1 = "Constructing " + buildingConstructor.CurrentlyBuildingName() + "...";
             }
-            else if (_buildingConstructor.HasBuildTarget())
+            else if (buildingConstructor.HasBuildTarget())
             {
-                _status1 = "Moving to construction.";
+                status1 = "Moving to construction.";
             }
         }
         
-        if(_attacker != null)
+        if(attacker != null)
         {
-            if (_attacker.HasTarget())
+            if (attacker.HasTarget())
             {
-                if (_attacker.TargetIsInRange())
+                if (attacker.TargetIsInRange())
                 {
-                    _status1 = "Attacking";
+                    status1 = "Attacking";
                 }
                 else
                 {
-                    _status1 = "Moving to target";
+                    status1 = "Moving to target";
                 }
             }
         }
 
-        if (_status1 == "" && unitStance == EUnitStance.Patrol)
+        if (status1 == "" && unitStance == EUnitStance.Patrol)
         {
-            _status1 = "Patroling";
+            status1 = "Patroling";
         }
-        else if (_status1 == "" && DistanceToNavMeshTarget() > 1)
+        else if (status1 == "" && DistanceToNavMeshTarget() > 1)
         {
-            _status1 = "Moving";
+            status1 = "Moving";
         }
-        else if (_status1 == "")
+        else if (status1 == "")
         {
-            _status1 = "Idle";
+            status1 = "Idle";
         }
     }
 
     private float DistanceToNavMeshTarget()
     {
-        if (_navMeshAgent.destination != null)
+        if (navMeshAgent.destination != null)
         {
-            return Vector3.Distance(_navMeshAgent.destination, transform.position);
+            return Vector3.Distance(navMeshAgent.destination, transform.position);
         }
         else return Mathf.Infinity;
     }
 
     public void TakeAStepBack()
     {
-        Vector3 _newPosition = transform.position + (transform.forward * -1);
-        MoveTo(_newPosition);
+        Vector3 newPosition = transform.position + (transform.forward * -1);
+        MoveTo(newPosition);
     }
 
-    private Vector3 GetClosestAvailablePosition(Vector3 _newPosition)
+    private Vector3 GetClosestAvailablePosition(Vector3 newPosition)
     {
-        Vector3 _position = _newPosition;
+        Vector3 position = newPosition;
         NavMeshHit navMeshHit;
-        if (NavMesh.SamplePosition(_newPosition, out navMeshHit, 5, NavMesh.AllAreas))
+        if (NavMesh.SamplePosition(newPosition, out navMeshHit, 5, NavMesh.AllAreas))
         {
-            _position = navMeshHit.position;
+            position = navMeshHit.position;
         }
 
-        return _position;
+        return position;
     }
 
-    private bool CheckIfNewPositionEmpty(Vector3 _newPosition)
+    private bool CheckIfNewPositionEmpty(Vector3 newPosition)
     {
-        RaycastHit[] hits = Physics.SphereCastAll(_newPosition, 0.5f, Vector3.up, 0.5f, NavMesh.AllAreas);
+        RaycastHit[] hits = Physics.SphereCastAll(newPosition, 0.5f, Vector3.up, 0.5f, NavMesh.AllAreas);
 
         foreach (RaycastHit hit in hits)
         {
@@ -379,9 +379,9 @@ public class Unit : Selectable
         return true;
     }
 
-    private Vector3 NearestEmptyPosition(Vector3 _newPosition)
+    private Vector3 NearestEmptyPosition(Vector3 newPosition)
     {
-        Vector3 position = _newPosition;
+        Vector3 position = newPosition;
         int itereation = 1;
 
         while (!CheckIfNewPositionEmpty(position))
@@ -389,7 +389,7 @@ public class Unit : Selectable
             float randX = UnityEngine.Random.Range(-1.0f * itereation, 1.0f * itereation);
             float randZ = UnityEngine.Random.Range(-1.0f * itereation, 1.0f * itereation);
 
-            position = new Vector3(_newPosition.x + randX, _newPosition.y, _newPosition.z + randZ);
+            position = new Vector3(newPosition.x + randX, newPosition.y, newPosition.z + randZ);
             itereation++;
         }
 
@@ -442,7 +442,7 @@ public class Unit : Selectable
         if (IsSelected()) gameController.HUD_Manager().Actions_HUD().UpdateUnitStances();
     }
 
-    public bool HasStopped() { return _hasStopped; }
+    public bool HasStopped() { return hasStopped; }
 
     public bool NeedsHealing()
     {

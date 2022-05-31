@@ -9,7 +9,7 @@ public class UI_BuildQueItem : MonoBehaviour
 {
     private RawImage _image;
     private Button _button;
-    private UnitProducer _unitProducer;
+    private UnitProducer unitProducer;
     private Unit.EUnitType _unit;
 
     private void Awake()
@@ -25,22 +25,22 @@ public class UI_BuildQueItem : MonoBehaviour
 
     private void OnClick()
     {
-        _unitProducer.RemoveFromQue(_unit);
+        unitProducer.RemoveFromQue(_unit);
 
         if (Input.GetKey(KeyCode.LeftShift))
         {
             for (int i = 0; i < 4; i++)
             {
-                _unitProducer.RemoveFromQue(_unit);
+                unitProducer.RemoveFromQue(_unit);
             }
         }
     }
 
-    public void Set(Unit.EUnitType _newUnit, UnitProducer _newUnitProducer, Texture _icon)
+    public void Set(Unit.EUnitType _newUnit, UnitProducer _newUnitProducer, Texture icon)
     {
-        _unitProducer = _newUnitProducer;
+        unitProducer = _newUnitProducer;
         _unit = _newUnit;
-        _image.texture = _icon;
+        _image.texture = icon;
     }
 }
 // Writen by Lukasz Dziedziczak

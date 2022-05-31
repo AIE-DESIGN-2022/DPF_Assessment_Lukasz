@@ -7,11 +7,11 @@ using UnityEngine.UI;
 
 public class UI_Resources : MonoBehaviour
 {
-    private Faction _faction;
+    private Faction faction;
 
-    private Text _food;
-    private Text _wood;
-    private Text _gold;
+    private Text food;
+    private Text wood;
+    private Text gold;
 
     private void Awake()
     {
@@ -20,28 +20,28 @@ public class UI_Resources : MonoBehaviour
 
     private void SetupTextBoxes()
     {
-        Text[] _textComponents = GetComponentsInChildren<Text>();
-        foreach (Text _text in _textComponents)
+        Text[] textComponents = GetComponentsInChildren<Text>();
+        foreach (Text text in textComponents)
         {
-            if (_text.name == "Food_Text") _food = _text;
-            if (_text.name == "Wood_Text") _wood = _text;
-            if (_text.name == "Gold_Text") _gold = _text;
+            if (text.name == "Foodtext") food = text;
+            if (text.name == "Woodtext") wood = text;
+            if (text.name == "Goldtext") gold = text;
         }
     }
 
     public void SetPlayerFaction(Faction _playerFaction)
     {
-        _faction = _playerFaction;
+        faction = _playerFaction;
         UpdateResources();
     }
 
     public void UpdateResources()
     {
-        if (_faction != null && _food != null && _wood != null && _gold != null)
+        if (faction != null && food != null && wood != null && gold != null)
         {
-            _food.text = _faction.StockpileAmount(CollectableResource.EResourceType.Food).ToString();
-            _wood.text = _faction.StockpileAmount(CollectableResource.EResourceType.Wood).ToString();
-            _gold.text = _faction.StockpileAmount(CollectableResource.EResourceType.Gold).ToString();
+            food.text = faction.StockpileAmount(CollectableResource.EResourceType.Food).ToString();
+            wood.text = faction.StockpileAmount(CollectableResource.EResourceType.Wood).ToString();
+            gold.text = faction.StockpileAmount(CollectableResource.EResourceType.Gold).ToString();
         }
     }
 }

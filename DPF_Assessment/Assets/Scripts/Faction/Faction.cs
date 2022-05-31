@@ -6,16 +6,16 @@ using UnityEngine;
 
 public class Faction : MonoBehaviour
 {
-    [SerializeField] private EFaction _faction;
-    [SerializeField] private int _playerNumber;
+    [SerializeField] private EFaction faction;
+    [SerializeField] private int playerNumber;
     [Header("Resource Stockpile")]
-    [SerializeField] private int _wood;
-    [SerializeField] private int _food;
-    [SerializeField] private int _gold;
+    [SerializeField] private int wood;
+    [SerializeField] private int food;
+    [SerializeField] private int gold;
 
-    private FactionConfig _config;
-    private List<Unit> _units = new List<Unit>();
-    private List<Building> _buildings = new List<Building>();
+    private FactionConfig config;
+    private List<Unit> units = new List<Unit>();
+    private List<Building> buildings = new List<Building>();
     private GameController gameController;
     private bool placingBuilding = false;
     private bool gameStarted = false;
@@ -43,18 +43,18 @@ public class Faction : MonoBehaviour
         Selectable[] children = GetComponentsInChildren<Selectable>();
         foreach (Selectable child in children)
         {
-            child.Setup(_playerNumber, this);
+            child.Setup(playerNumber, this);
             
             Unit unit = child.GetComponent<Unit>();
-            if (unit != null) _units.Add(unit);
+            if (unit != null) units.Add(unit);
             else
             {
                 Building building = child.GetComponent<Building>();
-                if (building != null) _buildings.Add(building);
+                if (building != null) buildings.Add(building);
             }
         }
 
-        if (_units.Count > 0 || _buildings.Count > 0)
+        if (units.Count > 0 || buildings.Count > 0)
         {
             gameStarted = true;
         }
@@ -63,7 +63,7 @@ public class Faction : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (gameStarted && _units.Count == 0 && _buildings.Count == 0)
+        if (gameStarted && units.Count == 0 && buildings.Count == 0)
         {
             gameStarted = false;
             gameController.FactionDefated(this);
@@ -72,60 +72,60 @@ public class Faction : MonoBehaviour
 
     public EFaction FactionType()
     {
-        return _faction;
+        return faction;
     }
 
-    public void SetupFaction(EFaction _new, int _playerNo)
+    public void SetupFaction(EFaction newFaction, int playerNo)
     {
-        _faction = _new;
-        _playerNumber = _playerNo;
+        faction = newFaction;
+        playerNumber = playerNo;
         NameFaction();
         LoadFactionConfig();
     }
 
     private void NameFaction()
     {
-        gameObject.name = "Faction(" + _playerNumber + ")_" + _faction.ToString();
+        gameObject.name = "Faction(" + playerNumber + ")" + faction.ToString();
     }
 
-    public int PlayerNumber() { return _playerNumber; }
+    public int PlayerNumber() { return playerNumber; }
 
-    public Unit SpawnUnit(Unit.EUnitType _newUnitType, Transform _spawnLocation)
+    public Unit SpawnUnit(Unit.EUnitType newUnitType, Transform spawnLocation)
     {
-        Unit _newUnit = Instantiate(_config.GetUnitPrefab(_newUnitType), _spawnLocation.position, _spawnLocation.rotation);
-        _newUnit.Setup(_playerNumber, this);
-        _newUnit.transform.parent = transform;
-        _units.Add(_newUnit);
-        return _newUnit;
+        Unit newUnit = Instantiate(config.GetUnitPrefab(newUnitType), spawnLocation.position, spawnLocation.rotation);
+        newUnit.Setup(playerNumber, this);
+        newUnit.transform.parent = transform;
+        units.Add(newUnit);
+        return newUnit;
     }
 
-    public Building SpawnBuilding(Building.EBuildingType _newType, List<BuildingConstructor> _builders)
+    public Building SpawnBuilding(Building.EBuildingType newType, List<BuildingConstructor> builders)
     {
         if (!placingBuilding)
         {
             placingBuilding = true;
-            Building _newBuilding = Instantiate(_config.GetBuildingPrefab(_newType));
-            _newBuilding.Setup(_playerNumber, this);
-            _newBuilding.transform.parent = transform;
-            _buildings.Add(_newBuilding);
-            _newBuilding.SetBuildState(Building.EBuildState.Placing);
-            _newBuilding.SetConstructionTeam(_builders);
+            Building newBuilding = Instantiate(config.GetBuildingPrefab(newType));
+            newBuilding.Setup(playerNumber, this);
+            newBuilding.transform.parent = transform;
+            buildings.Add(newBuilding);
+            newBuilding.SetBuildState(Building.EBuildState.Placing);
+            newBuilding.SetConstructionTeam(builders);
             gameController.PlayerController().PlayerControl(false);
-            return _newBuilding;
+            return newBuilding;
         }
         else return null;
     }
 
     public Building SpawnFirstBuilding(Vector3 spawnLocartion)
     {
-        Building _newBuilding = Instantiate(_config.GetBuildingPrefab(Building.EBuildingType.TownCenter));
-        _newBuilding.Setup(_playerNumber, this);
-        _newBuilding.transform.parent = transform;
-        _buildings.Add(_newBuilding);
-        _newBuilding.SetBuildState(Building.EBuildState.Complete);
-        _newBuilding.transform.position = spawnLocartion;
+        Building newBuilding = Instantiate(config.GetBuildingPrefab(Building.EBuildingType.TownCenter));
+        newBuilding.Setup(playerNumber, this);
+        newBuilding.transform.parent = transform;
+        buildings.Add(newBuilding);
+        newBuilding.SetBuildState(Building.EBuildState.Complete);
+        newBuilding.transform.position = spawnLocartion;
         gameStarted = true;
-        return _newBuilding;
+        return newBuilding;
     }
 
     public bool CurrentlyPlacingBuilding()
@@ -141,9 +141,9 @@ public class Faction : MonoBehaviour
 
     public FactionConfig Config()
     {
-        if (_config != null)
+        if (config != null)
         {
-            return _config;
+            return config;
         }
         else
         {
@@ -154,76 +154,76 @@ public class Faction : MonoBehaviour
 
     public Building ClosestResourceDropPoint(CollectableResource collectableResource)
     {
-        List<Building> _dropPoints = new List<Building>();
+        List<Building> dropPoints = new List<Building>();
 
-        if (_buildings.Count <= 0)
+        if (buildings.Count <= 0)
         {
             Debug.LogError(gameObject.name + " has no list of buildings.");
             return null;
         }
 
-        foreach (Building building in _buildings)
+        foreach (Building building in buildings)
         {
-            if (building.IsResourceDropPoint() && building.ConstructionComplete()) _dropPoints.Add(building);
+            if (building.IsResourceDropPoint() && building.ConstructionComplete()) dropPoints.Add(building);
         }
 
-        Building _closest = null;
-        float _smallestDistance = Mathf.Infinity;
+        Building closest = null;
+        float smallestDistance = Mathf.Infinity;
 
-        foreach (Building _dropPoint in _dropPoints)
+        foreach (Building dropPoint in dropPoints)
         {
-            float _distance = Vector3.Distance(_dropPoint.transform.position, collectableResource.transform.position);
-            if (_distance < _smallestDistance)
+            float distance = Vector3.Distance(dropPoint.transform.position, collectableResource.transform.position);
+            if (distance < smallestDistance)
             {
-                _smallestDistance = _distance;
-                _closest = _dropPoint;
+                smallestDistance = distance;
+                closest = dropPoint;
             }
         }
 
-        return _closest;
+        return closest;
     }
 
-    public void CancelBuildingPlacement(Building _building)
+    public void CancelBuildingPlacement(Building building)
     {
         placingBuilding = false;
-        _buildings.Remove(_building);
-        AddToStockpileCostOf(_building.BuildingType());
+        buildings.Remove(building);
+        AddToStockpileCostOf(building.BuildingType());
         gameController.PlayerController().PlayerControl(true);
-        Destroy(_building.gameObject);
+        Destroy(building.gameObject);
     }
 
-    public int StockpileAmount(CollectableResource.EResourceType _type)
+    public int StockpileAmount(CollectableResource.EResourceType type)
     {
-        switch(_type)
+        switch(type)
         {
             case CollectableResource.EResourceType.Food:
-                return _food;
+                return food;
 
             case CollectableResource.EResourceType.Wood:
-                return _wood;
+                return wood;
 
             case CollectableResource.EResourceType.Gold:
-                return _gold;
+                return gold;
 
             default:
                 return 0;
         }    
     }
 
-    public void AddToStockpile(CollectableResource.EResourceType _type, int _amount)
+    public void AddToStockpile(CollectableResource.EResourceType type, int amount)
     {
-        switch (_type)
+        switch (type)
         {
             case CollectableResource.EResourceType.Food:
-                _food += _amount;
+                food += amount;
                 break;
 
             case CollectableResource.EResourceType.Wood:
-                _wood += _amount;
+                wood += amount;
                 break;
 
             case CollectableResource.EResourceType.Gold:
-                _gold += _amount;
+                gold += amount;
                 break;
 
             default:
@@ -231,23 +231,23 @@ public class Faction : MonoBehaviour
                 break;
         }
 
-        if (gameController.IsPlayerFaction(_playerNumber)) gameController.HUD_Manager().UpdateResources();
+        if (gameController.IsPlayerFaction(playerNumber)) gameController.HUD_Manager().UpdateResources();
     }
 
-    public void RemoveFromStockpile(CollectableResource.EResourceType _type, int _amount)
+    public void RemoveFromStockpile(CollectableResource.EResourceType type, int amount)
     {
-        switch (_type)
+        switch (type)
         {
             case CollectableResource.EResourceType.Food:
-                _food -= _amount;
+                food -= amount;
                 break;
 
             case CollectableResource.EResourceType.Wood:
-                _wood -= _amount;
+                wood -= amount;
                 break;
 
             case CollectableResource.EResourceType.Gold:
-                _gold -= _amount;
+                gold -= amount;
                 break;
 
             default:
@@ -255,107 +255,107 @@ public class Faction : MonoBehaviour
                 break;
         }
 
-        if (gameController.IsPlayerFaction(_playerNumber)) gameController.HUD_Manager().UpdateResources();
+        if (gameController.IsPlayerFaction(playerNumber)) gameController.HUD_Manager().UpdateResources();
     }
 
 
-    public void SetGameController(GameController _controller)
+    public void SetGameController(GameController controller)
     {
-        gameController =  _controller;
+        gameController =  controller;
     }
 
-    public void SetFactionConfig(FactionConfig _newConfig)
+    public void SetFactionConfig(FactionConfig newConfig)
     {
-        Debug.Log(name + " setting new config as " + _newConfig.ToString());
-        _config = _newConfig;
+        Debug.Log(name + " setting new config as " + newConfig.ToString());
+        config = newConfig;
     }    
 
-    public void Death(Selectable _deadSelectable)
+    public void Death(Selectable deadSelectable)
     {
-        Unit _unit = _deadSelectable.GetComponent<Unit>();
-        if (_unit != null) _units.Remove(_unit);
+        Unit unit = deadSelectable.GetComponent<Unit>();
+        if (unit != null) units.Remove(unit);
         else
         {
-            Building _building = _deadSelectable.GetComponent<Building>();
-            if (_building != null) _buildings.Remove(_building);
+            Building building = deadSelectable.GetComponent<Building>();
+            if (building != null) buildings.Remove(building);
         }
     }
 
-    public bool CanAfford(Unit.EUnitType _newUnit)
+    public bool CanAfford(Unit.EUnitType newUnit)
     {
-        FactionConfig.FactionUnit _unitConfig = _config.UnitConfig(_newUnit);
+        FactionConfig.FactionUnit unitConfig = config.UnitConfig(newUnit);
 
-        return _food >= _unitConfig.foodCost && _wood >= _unitConfig.woodCost && _gold >= _unitConfig.goldCost;
+        return food >= unitConfig.foodCost && wood >= unitConfig.woodCost && gold >= unitConfig.goldCost;
     }
 
-    public bool CanAfford(Building.EBuildingType _newBuilding)
+    public bool CanAfford(Building.EBuildingType newBuilding)
     {
-        FactionConfig.FactionBuilding _buildingConfig = _config.BuildingConfig(_newBuilding);
+        FactionConfig.FactionBuilding buildingConfig = config.BuildingConfig(newBuilding);
 
-        return _food >= _buildingConfig.foodCost && _wood >= _buildingConfig.woodCost && _gold >= _buildingConfig.goldCost;
+        return food >= buildingConfig.foodCost && wood >= buildingConfig.woodCost && gold >= buildingConfig.goldCost;
     }
     
-    public void SubtractFromStockpileCostOf(Unit.EUnitType _newUnit)
+    public void SubtractFromStockpileCostOf(Unit.EUnitType newUnit)
     {
-        FactionConfig.FactionUnit _unitConfig = _config.UnitConfig(_newUnit);
+        FactionConfig.FactionUnit unitConfig = config.UnitConfig(newUnit);
 
-        _food -= _unitConfig.foodCost;
-        _wood -= _unitConfig.woodCost;
-        _gold -= _unitConfig.goldCost;
+        food -= unitConfig.foodCost;
+        wood -= unitConfig.woodCost;
+        gold -= unitConfig.goldCost;
 
-        if (gameController.IsPlayerFaction(_playerNumber)) gameController.HUD_Manager().UpdateResources();
+        if (gameController.IsPlayerFaction(playerNumber)) gameController.HUD_Manager().UpdateResources();
     }
 
-    public void AddToStockpileCostOf(Unit.EUnitType _newUnit)
+    public void AddToStockpileCostOf(Unit.EUnitType newUnit)
     {
-        FactionConfig.FactionUnit _unitConfig = _config.UnitConfig(_newUnit);
+        FactionConfig.FactionUnit unitConfig = config.UnitConfig(newUnit);
 
-        _food += _unitConfig.foodCost;
-        _wood += _unitConfig.woodCost;
-        _gold += _unitConfig.goldCost;
+        food += unitConfig.foodCost;
+        wood += unitConfig.woodCost;
+        gold += unitConfig.goldCost;
 
-        if (gameController.IsPlayerFaction(_playerNumber)) gameController.HUD_Manager().UpdateResources();
+        if (gameController.IsPlayerFaction(playerNumber)) gameController.HUD_Manager().UpdateResources();
     }
 
-    public void SubtractFromStockpileCostOf(Building.EBuildingType _newBuilding)
+    public void SubtractFromStockpileCostOf(Building.EBuildingType newBuilding)
     {
-        FactionConfig.FactionBuilding _buildingConfig = _config.BuildingConfig(_newBuilding);
+        FactionConfig.FactionBuilding buildingConfig = config.BuildingConfig(newBuilding);
 
-        _food -= _buildingConfig.foodCost;
-        _wood -= _buildingConfig.woodCost;
-        _gold -= _buildingConfig.goldCost;
+        food -= buildingConfig.foodCost;
+        wood -= buildingConfig.woodCost;
+        gold -= buildingConfig.goldCost;
 
-        if (gameController.IsPlayerFaction(_playerNumber)) gameController.HUD_Manager().UpdateResources();
+        if (gameController.IsPlayerFaction(playerNumber)) gameController.HUD_Manager().UpdateResources();
     }
 
-    public void AddToStockpileCostOf(Building.EBuildingType _newBuilding)
+    public void AddToStockpileCostOf(Building.EBuildingType newBuilding)
     {
-        FactionConfig.FactionBuilding _buildingConfig = _config.BuildingConfig(_newBuilding);
+        FactionConfig.FactionBuilding buildingConfig = config.BuildingConfig(newBuilding);
 
-        _food += _buildingConfig.foodCost;
-        _wood += _buildingConfig.woodCost;
-        _gold += _buildingConfig.goldCost;
+        food += buildingConfig.foodCost;
+        wood += buildingConfig.woodCost;
+        gold += buildingConfig.goldCost;
 
-        if (gameController.IsPlayerFaction(_playerNumber)) gameController.HUD_Manager().UpdateResources();
+        if (gameController.IsPlayerFaction(playerNumber)) gameController.HUD_Manager().UpdateResources();
     }
 
     private void LoadFactionConfig()
     {
-        FactionConfig[] _loadedConfigs = Resources.LoadAll<FactionConfig>("Factions/");
-        //Debug.Log(_loadedConfigs.Length + " FactoryConfigs loaded for " + name);
-        foreach (var _loadedConfig in _loadedConfigs)
+        FactionConfig[] loadedConfigs = Resources.LoadAll<FactionConfig>("Factions/");
+        //Debug.Log(loadedConfigs.Length + " FactoryConfigs loaded for " + name);
+        foreach (var loadedConfig in loadedConfigs)
         {
-            //Debug.Log("Checking loadedConfig " + _loadedConfig.ToString());
-            if (_loadedConfig.Faction() == _faction)
+            //Debug.Log("Checking loadedConfig " + loadedConfig.ToString());
+            if (loadedConfig.Faction() == faction)
             {
-                //Debug.Log("Found match: loadedConfig " + _loadedConfig.Faction().ToString() + " and " + _faction.ToString());
-                _config = _loadedConfig;
+                //Debug.Log("Found match: loadedConfig " + loadedConfig.Faction().ToString() + " and " + faction.ToString());
+                config = loadedConfig;
             }
 
         }
 
-        if (_config == null) Debug.LogError(name + " could not load FactionConfig.");
-        if (_config.Faction() != _faction) Debug.LogError(name + "has FactionConfig mismatch.");
+        if (config == null) Debug.LogError(name + " could not load FactionConfig.");
+        if (config.Faction() != faction) Debug.LogError(name + "has FactionConfig mismatch.");
         
     }
 }

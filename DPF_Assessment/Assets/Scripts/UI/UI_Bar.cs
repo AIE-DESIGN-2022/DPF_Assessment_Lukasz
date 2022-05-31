@@ -7,13 +7,13 @@ using UnityEngine.UI;
 
 public class UI_Bar : MonoBehaviour
 {
-    private RectTransform _foreground;
-    private RectTransform _background;
-    private UnitProducer _unitProducer;
-    private float _updateFreqency = 0.5f;
-    private float _updateTime = 0;
-    private Health _health;
-    private Building _construction;
+    private RectTransform foreground;
+    private RectTransform background;
+    private UnitProducer unitProducer;
+    private float updateFreqency = 0.5f;
+    private float updateTime = 0;
+    private Health health;
+    private Building construction;
 
     private void Awake()
     {
@@ -22,11 +22,11 @@ public class UI_Bar : MonoBehaviour
 
     private void FindRectTransforms()
     {
-        RectTransform[] _rectTrans = GetComponentsInChildren<RectTransform>();
-        foreach (RectTransform _rectTran in _rectTrans)
+        RectTransform[] rectTrans = GetComponentsInChildren<RectTransform>();
+        foreach (RectTransform rectTran in rectTrans)
         {
-            if (_rectTran.name == "Foreground") _foreground = _rectTran;
-            if (_rectTran.name == "Background") _background = _rectTran;
+            if (rectTran.name == "Foreground") foreground = rectTran;
+            if (rectTran.name == "Background") background = rectTran;
         }
     }
 
@@ -45,54 +45,54 @@ public class UI_Bar : MonoBehaviour
 
     private void ConstructingBuilding()
     {
-        if (_construction != null)
+        if (construction != null)
         {
-            _updateTime += Time.deltaTime;
-            if (_updateTime > _updateFreqency && _construction.BuildState() == Building.EBuildState.Building)
+            updateTime += Time.deltaTime;
+            if (updateTime > updateFreqency && construction.BuildState() == Building.EBuildState.Building)
             {
-                UpdatePercentage(_construction.PercentageComplete());
-                _updateTime = 0;
+                UpdatePercentage(construction.PercentageComplete());
+                updateTime = 0;
             }
         }    
     }
 
     private void ProducingUnit()
     {
-        if (_unitProducer != null)
+        if (unitProducer != null)
         {
-            _updateTime += Time.deltaTime;
-            if (_updateTime > _updateFreqency && _unitProducer.IsCurrentlyProducing())
+            updateTime += Time.deltaTime;
+            if (updateTime > updateFreqency && unitProducer.IsCurrentlyProducing())
             {
-                UpdatePercentage(_unitProducer.PercentageComplete());
-                _updateTime = 0;
+                UpdatePercentage(unitProducer.PercentageComplete());
+                updateTime = 0;
             }
         }
     }
 
-    public void Set(UnitProducer _producer)
+    public void Set(UnitProducer producer)
     {
-        _unitProducer = _producer;
-        _updateTime = Mathf.Infinity;
+        unitProducer = producer;
+        updateTime = Mathf.Infinity;
     }
 
-    public void Set(Health _newHealth)
+    public void Set(Health newHealth)
     {
-        _health = _newHealth;
+        health = newHealth;
         ShowBackground();
         UpdateHealthBar();
     }
 
-    public void Set(Building _newConstruction)
+    public void Set(Building newConstruction)
     {
-        _construction = _newConstruction;
-        _updateTime = Mathf.Infinity;
+        construction = newConstruction;
+        updateTime = Mathf.Infinity;
     }
 
     public void UpdateHealthBar()
     {
-        if (_health != null)
+        if (health != null)
         {
-            UpdatePercentage(_health.HealthPercentage());
+            UpdatePercentage(health.HealthPercentage());
         }
     }
 
@@ -100,32 +100,32 @@ public class UI_Bar : MonoBehaviour
 
     public void Clear()
     {
-        _unitProducer = null;
-        _health = null;
-        _construction = null;
+        unitProducer = null;
+        health = null;
+        construction = null;
         UpdatePercentage(0);
         ShowBackground(false);
     }
 
-    public void UpdatePercentage(float _percentage)
+    public void UpdatePercentage(float percentage)
     {
-        if (_foreground != null)
+        if (foreground != null)
         {
-            _foreground.localScale = new Vector3(_percentage, 1.0f, 1.0f);
+            foreground.localScale = new Vector3(percentage, 1.0f, 1.0f);
         }
     }
 
     private void ShowBackground(bool show = true)
     {
-        if (_background != null)
+        if (background != null)
         {
             if (show)
             {
-                _background.localScale = new Vector3(1.0f, 1.0f, 1.0f);
+                background.localScale = new Vector3(1.0f, 1.0f, 1.0f);
             }
             else
             {
-                _background.localScale = new Vector3(0.0f, 1.0f, 1.0f);
+                background.localScale = new Vector3(0.0f, 1.0f, 1.0f);
             }
         }
     }

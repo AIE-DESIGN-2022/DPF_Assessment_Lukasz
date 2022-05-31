@@ -6,9 +6,9 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "RTS/Faction")]
 public class FactionConfig : ScriptableObject
 {
-    [SerializeField] private Faction.EFaction _faction;
-    [SerializeField] private FactionBuilding[] _buildings;
-    [SerializeField] private FactionUnit[] _units;
+    [SerializeField] private Faction.EFaction faction;
+    [SerializeField] private FactionBuilding[] buildings;
+    [SerializeField] private FactionUnit[] units;
 
 
     [System.Serializable]
@@ -38,160 +38,160 @@ public class FactionConfig : ScriptableObject
 
     public Faction.EFaction Faction()
     {
-        return _faction;
+        return faction;
     }
 
-    public Unit GetUnitPrefab(Unit.EUnitType _newUnitType)
+    public Unit GetUnitPrefab(Unit.EUnitType newUnitType)
     {
-        List<Unit> _possiblePrefabs = new List<Unit>();
+        List<Unit> possiblePrefabs = new List<Unit>();
 
-        foreach (FactionUnit _factionUnit in _units)
+        foreach (FactionUnit factionUnit in units)
         {
-            if (_factionUnit.unitType == _newUnitType)
+            if (factionUnit.unitType == newUnitType)
             {
-                _possiblePrefabs = _factionUnit.unitPrefabVariations;
+                possiblePrefabs = factionUnit.unitPrefabVariations;
                 break;
             }
         }
 
-        if (_possiblePrefabs.Count > 1)
+        if (possiblePrefabs.Count > 1)
         {
-            int _prefabIndex = Random.Range(0, _possiblePrefabs.Count);
-            return _possiblePrefabs[_prefabIndex];
+            int prefabIndex = Random.Range(0, possiblePrefabs.Count);
+            return possiblePrefabs[prefabIndex];
         }
         else
         {
-            return _possiblePrefabs[0];
+            return possiblePrefabs[0];
         }
         
     }
 
-    public Building GetBuildingPrefab(Building.EBuildingType _newBuildingType)
+    public Building GetBuildingPrefab(Building.EBuildingType newBuildingType)
     {
-        foreach (FactionBuilding _factionBuilding in _buildings)
+        foreach (FactionBuilding factionBuilding in buildings)
         {
-            if (_factionBuilding.buildingType == _newBuildingType) return _factionBuilding.buildingPrefab;
+            if (factionBuilding.buildingType == newBuildingType) return factionBuilding.buildingPrefab;
         }
 
         return null;
     }
 
-    public float BuildTime(Unit.EUnitType _newUnitType)
+    public float BuildTime(Unit.EUnitType newUnitType)
     {
-        foreach (FactionUnit _factionUnit in _units)
+        foreach (FactionUnit factionUnit in units)
         {
-            if (_factionUnit.unitType == _newUnitType)
+            if (factionUnit.unitType == newUnitType)
             {
-                return _factionUnit.buildTime;
+                return factionUnit.buildTime;
             }
         }
 
         return 0;
     }
 
-    public List<Unit.EUnitType> BuildableUnits(Building.EBuildingType _buildingType)
+    public List<Unit.EUnitType> BuildableUnits(Building.EBuildingType buildingType)
     {
-        List<Unit.EUnitType> _list = new List<Unit.EUnitType>();
+        List<Unit.EUnitType> list = new List<Unit.EUnitType>();
 
-        if (_units == null || _units.Length == 0)
+        if (units == null || units.Length == 0)
         {
             Debug.LogError(name + " has no list of units.");
             return null;
         }
 
-        foreach (FactionUnit _factionUnit in _units)
+        foreach (FactionUnit factionUnit in units)
         {
-            if (_factionUnit.builtFrom == _buildingType)
+            if (factionUnit.builtFrom == buildingType)
             {
-                _list.Add(_factionUnit.unitType);
+                list.Add(factionUnit.unitType);
             }
         }
 
-        return _list;
+        return list;
     }
 
-    public List<Building.EBuildingType> ConstructableBuildings(Unit.EUnitType _constructor)
+    public List<Building.EBuildingType> ConstructableBuildings(Unit.EUnitType constructor)
     {
-        List<Building.EBuildingType> _list = new List<Building.EBuildingType>();
+        List<Building.EBuildingType> list = new List<Building.EBuildingType>();
 
-        if (_buildings == null || _buildings.Length == 0)
+        if (buildings == null || buildings.Length == 0)
         {
             Debug.LogError(name + " has no listt of buildings.");
             return null;
         }
 
-        foreach (FactionBuilding _factionBuilding in _buildings)
+        foreach (FactionBuilding factionBuilding in buildings)
         {
-            if (_factionBuilding.builtBy == _constructor)
+            if (factionBuilding.builtBy == constructor)
             {
-                _list.Add(_factionBuilding.buildingType);
+                list.Add(factionBuilding.buildingType);
             }
         }
 
-        return _list;
+        return list;
     }
 
-    public FactionBuilding BuildingConfig(Building.EBuildingType _type)
+    public FactionBuilding BuildingConfig(Building.EBuildingType type)
     {
-        foreach (FactionBuilding _building in _buildings)
+        foreach (FactionBuilding building in buildings)
         {
-            if (_building.buildingType == _type) return _building;
+            if (building.buildingType == type) return building;
         }
 
         return null;
     }
 
-    public FactionUnit UnitConfig(Unit.EUnitType _type)
+    public FactionUnit UnitConfig(Unit.EUnitType type)
     {
-        foreach (FactionUnit _unit in _units)
+        foreach (FactionUnit unit in units)
         {
-            if (_unit.unitType == _type) return _unit;
+            if (unit.unitType == type) return unit;
         }
 
         return null;
     }
 
-    public Texture Icon(Building.EBuildingType _type)
+    public Texture Icon(Building.EBuildingType type)
     {
-        foreach (FactionBuilding _building in _buildings)
+        foreach (FactionBuilding building in buildings)
         {
-            if (_building.buildingType == _type) return _building.buildingIcon;
+            if (building.buildingType == type) return building.buildingIcon;
         }
 
         return null;
     }
 
-    public Texture Icon(Unit.EUnitType _type)
+    public Texture Icon(Unit.EUnitType type)
     {
-        foreach (FactionUnit _unit in _units)
+        foreach (FactionUnit unit in units)
         {
-            if (_unit.unitType == _type) return _unit.unitIcon;
+            if (unit.unitType == type) return unit.unitIcon;
         }
 
         return null;
     }
 
-    public string PrefabName(Unit.EUnitType _type)
+    public string PrefabName(Unit.EUnitType type)
     {
-        List<Unit> _possiblePrefabs = new List<Unit>();
+        List<Unit> possiblePrefabs = new List<Unit>();
 
-        foreach (FactionUnit _factionUnit in _units)
+        foreach (FactionUnit factionUnit in units)
         {
-            if (_factionUnit.unitType == _type)
+            if (factionUnit.unitType == type)
             {
-                _possiblePrefabs = _factionUnit.unitPrefabVariations;
+                possiblePrefabs = factionUnit.unitPrefabVariations;
                 break;
             }
         }
 
-        return _possiblePrefabs[0].name;
+        return possiblePrefabs[0].name;
     }
 
-    public string PrefabName(Building.EBuildingType _type)
+    public string PrefabName(Building.EBuildingType type)
     {
-        foreach (FactionBuilding _factionBuilding in _buildings)
+        foreach (FactionBuilding factionBuilding in buildings)
         {
-            if (_factionBuilding.buildingType == _type) return _factionBuilding.buildingPrefab.name;
+            if (factionBuilding.buildingType == type) return factionBuilding.buildingPrefab.name;
         }
 
         return null;

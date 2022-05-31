@@ -6,30 +6,30 @@ using UnityEngine;
 
 public class ResourceGatherer : MonoBehaviour
 {
-    private CollectableResource _targetResource;
-    private CollectableResource _lastTargetResource;
-    private Unit _unit;
-    private int _gatheredAmount = 0;
-    private CollectableResource.EResourceType _gatheringType;
-    private int _gatherRate;
-    private Building _dropOff;
-    private Faction _faction;
-    private bool _isInRange = false;
+    private CollectableResource targetResource;
+    private CollectableResource lastTargetResource;
+    private Unit unit;
+    private int gatheredAmount = 0;
+    private CollectableResource.EResourceType gatheringType;
+    private int gatherRate;
+    private Building dropOff;
+    private Faction faction;
+    private bool isInRange = false;
 
-    /*[SerializeField] private float _gatherRange = 2.0f;*/
-    [SerializeField] private int _maxCarry = 10;
-    [SerializeField] private EquipmentConfig _woodCuttingTool;
-    [SerializeField] private int _woodGatherRate = 1;
-    [SerializeField] private EquipmentConfig _farmingTool;
-    [SerializeField] private int _foodGatherRate = 1;
-    [SerializeField] private EquipmentConfig _miningTool;
-    [SerializeField] private int _goldGatherRate = 1;
+    /*[SerializeField] private float gatherRange = 2.0f;*/
+    [SerializeField] private int maxCarry = 10;
+    [SerializeField] private EquipmentConfig woodCuttingTool;
+    [SerializeField] private int woodGatherRate = 1;
+    [SerializeField] private EquipmentConfig farmingTool;
+    [SerializeField] private int foodGatherRate = 1;
+    [SerializeField] private EquipmentConfig miningTool;
+    [SerializeField] private int goldGatherRate = 1;
 
-    private GameObject _gatheringTool;
+    private GameObject gatheringTool;
 
     private void Awake()
     {
-        _unit = GetComponent<Unit>();
+        unit = GetComponent<Unit>();
     }
 
     private void Update()
@@ -40,152 +40,152 @@ public class ResourceGatherer : MonoBehaviour
 
     private void DropOff()
     {
-        if (_targetResource == null && _dropOff != null)
+        if (targetResource == null && dropOff != null)
         {
-            if (_gatheredAmount > 0)
+            if (gatheredAmount > 0)
             {
-                if (_unit != null && _unit.Animator().GetBool("working")) _unit.Animator().SetBool("working", false);
-                _unit.MoveTo(_dropOff);
+                if (unit != null && unit.Animator().GetBool("working")) unit.Animator().SetBool("working", false);
+                unit.MoveTo(dropOff);
             }
         }
     }
 
     private void Gathering()
     {
-        if (_targetResource == null)
+        if (targetResource == null)
         {
             return;
         }
 
-        if (_isInRange)
+        if (isInRange)
         {
             GatherResource();
         }
         else
         {
-            _unit.MoveTo(_targetResource);
+            unit.MoveTo(targetResource);
         }
     }
 
     private void GatherResource()
     {
-        if (_gatheredAmount >= _maxCarry)
+        if (gatheredAmount >= maxCarry)
         {
             ClearTargetResource(true);
             return;
         }
-        if (!_targetResource.HasResource())
+        if (!targetResource.HasResource())
         {
             ClearTargetResource();
             return;
         }
-        _unit.StopMoveTo();
-        if (_gatheringTool == null) EquipTool();
+        unit.StopMoveTo();
+        if (gatheringTool == null) EquipTool();
 
 
         
-        switch(_targetResource.ResourceType())
+        switch(targetResource.ResourceType())
         {
             case CollectableResource.EResourceType.Wood:
-                _unit.Animator().SetBool("working", true);
+                unit.Animator().SetBool("working", true);
                 break;
 
             case CollectableResource.EResourceType.Food:
-                if (_targetResource.GetComponent<Building>() == null)
+                if (targetResource.GetComponent<Building>() == null)
                 {
-                    _unit.Animator().SetBool("gathering", true);
+                    unit.Animator().SetBool("gathering", true);
                 }
                 else
                 {
-                    _unit.Animator().SetBool("working", true);
+                    unit.Animator().SetBool("working", true);
                 }
                 break;
 
             case CollectableResource.EResourceType.Gold:
-                _unit.Animator().SetBool("mining", true);
+                unit.Animator().SetBool("mining", true);
                 break;
         }
 
-        transform.LookAt(_targetResource.transform);
+        transform.LookAt(targetResource.transform);
     }
 
-    public void SetTargetResource(CollectableResource _newResource, bool isAlreadyAtResource = false)
+    public void SetTargetResource(CollectableResource newResource, bool isAlreadyAtResource = false)
     {
-        _targetResource = _newResource;
-        if (_faction == null) SetFaction();
-        SetTargetDropOffPoint(_faction.ClosestResourceDropPoint(_targetResource));
-        _unit.HUD_StatusUpdate();
-        _isInRange = isAlreadyAtResource;
-        //print(name + " set target= " + _targetResource);
+        targetResource = newResource;
+        if (faction == null) SetFaction();
+        SetTargetDropOffPoint(faction.ClosestResourceDropPoint(targetResource));
+        unit.HUD_StatusUpdate();
+        isInRange = isAlreadyAtResource;
+        //print(name + " set target= " + targetResource);
     }
 
     public void SetTargetDropOffPoint(Building building)
     {
-        _dropOff = building;
-        _unit.HUD_StatusUpdate();
+        dropOff = building;
+        unit.HUD_StatusUpdate();
     }    
 
-    public void ClearTargetResource(bool _rememberForLater = false)
+    public void ClearTargetResource(bool rememberForLater = false)
     {
-        if (_targetResource != null)
+        if (targetResource != null)
         {
-            if (_rememberForLater) _lastTargetResource = _targetResource;
-            _targetResource = null;
+            if (rememberForLater) lastTargetResource = targetResource;
+            targetResource = null;
         }
-        if (_unit != null)
+        if (unit != null)
         {
-            _unit.Animator().SetBool("working", false);
-            _unit.Animator().SetBool("gathering", false);
-            _unit.Animator().SetBool("mining", false);
-            _unit.HUD_StatusUpdate();
+            unit.Animator().SetBool("working", false);
+            unit.Animator().SetBool("gathering", false);
+            unit.Animator().SetBool("mining", false);
+            unit.HUD_StatusUpdate();
         }
         else Debug.LogError(gameObject.name + " Gatherer's unit referance missing.");
 
         UnequipTool();
         
-        _isInRange = false;
+        isInRange = false;
     }
 
     public void ClearDropOffPoint()
     {
-        if (_dropOff != null) _dropOff = null;
-        _unit.HUD_StatusUpdate();
-        _isInRange=false;
+        if (dropOff != null) dropOff = null;
+        unit.HUD_StatusUpdate();
+        isInRange=false;
     }
 
     private bool IsInRange()
     {
-        /*if (_targetResource != null)
+        /*if (targetResource != null)
         {
-            float _distance = Vector3.Distance(transform.position, _targetResource.transform.position);
-            return _distance < _gatherRange;
+            float distance = Vector3.Distance(transform.position, targetResource.transform.position);
+            return distance < gatherRange;
         }
         else return false;*/
 
-        return _isInRange;
+        return isInRange;
     }
 
     private void EquipTool()
     {
-        if (_targetResource != null)
+        if (targetResource != null)
         {
-            CollectableResource.EResourceType _type = _targetResource.ResourceType();
+            CollectableResource.EResourceType type = targetResource.ResourceType();
 
-            switch(_type)
+            switch(type)
             {
                 case CollectableResource.EResourceType.Wood:
-                    if (_woodCuttingTool != null) _gatheringTool = _woodCuttingTool.Spawn(_unit);
-                    _gatherRate = _woodGatherRate;
+                    if (woodCuttingTool != null) gatheringTool = woodCuttingTool.Spawn(unit);
+                    gatherRate = woodGatherRate;
                     break;
 
                 case CollectableResource.EResourceType.Food:
-                    if (_farmingTool != null && _targetResource.GetComponent<Building>() != null) _gatheringTool = _farmingTool.Spawn(_unit);
-                    _gatherRate = _foodGatherRate;
+                    if (farmingTool != null && targetResource.GetComponent<Building>() != null) gatheringTool = farmingTool.Spawn(unit);
+                    gatherRate = foodGatherRate;
                     break;
 
                 case CollectableResource.EResourceType.Gold:
-                    if (_miningTool != null) _gatheringTool = _miningTool.Spawn(_unit);
-                    _gatherRate = _goldGatherRate;
+                    if (miningTool != null) gatheringTool = miningTool.Spawn(unit);
+                    gatherRate = goldGatherRate;
                     break;
             }
         }
@@ -193,87 +193,87 @@ public class ResourceGatherer : MonoBehaviour
 
     private void UnequipTool()
     {
-        if (_gatheringTool != null)
+        if (gatheringTool != null)
         {
-            Destroy(_gatheringTool);
-            _gatheringTool = null;
+            Destroy(gatheringTool);
+            gatheringTool = null;
         }
     }
 
     private void GatherEffect()
     {
-        if (_gatheredAmount >= _maxCarry) return;
+        if (gatheredAmount >= maxCarry) return;
 
-        if (_targetResource.ResourceType() != _gatheringType)
+        if (targetResource.ResourceType() != gatheringType)
         {
-            _gatheringType = _targetResource.ResourceType();
-            _gatheredAmount = 0;
+            gatheringType = targetResource.ResourceType();
+            gatheredAmount = 0;
         }
         
-        if (_gatheredAmount + _gatherRate > _maxCarry)
+        if (gatheredAmount + gatherRate > maxCarry)
         {
-            _gatheredAmount += _targetResource.Gather(_maxCarry - _gatheredAmount);
+            gatheredAmount += targetResource.Gather(maxCarry - gatheredAmount);
             ClearTargetResource();
         }
         else
         {
-            _gatheredAmount += _targetResource.Gather(_gatherRate);
+            gatheredAmount += targetResource.Gather(gatherRate);
         }
 
-        _unit.HUD_StatusUpdate();
+        unit.HUD_StatusUpdate();
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        if (_dropOff == null) return;
+        if (dropOff == null) return;
 
-        if (other.gameObject.GetComponent<Building>() == _dropOff)
+        if (other.gameObject.GetComponent<Building>() == dropOff)
         {
-            _dropOff = null;
+            dropOff = null;
 
-            if (_faction == null) SetFaction();
-            _faction.AddToStockpile(_gatheringType, _gatheredAmount);
-            _gatheredAmount = 0;
-            _unit.StopMoveTo();
-            _unit.HUD_StatusUpdate();
+            if (faction == null) SetFaction();
+            faction.AddToStockpile(gatheringType, gatheredAmount);
+            gatheredAmount = 0;
+            unit.StopMoveTo();
+            unit.HUD_StatusUpdate();
 
-            if (_lastTargetResource != null && _lastTargetResource.HasResource())
+            if (lastTargetResource != null && lastTargetResource.HasResource())
             {
-                SetTargetResource(_lastTargetResource);
-                _isInRange = false;
-                _lastTargetResource = null;
+                SetTargetResource(lastTargetResource);
+                isInRange = false;
+                lastTargetResource = null;
             }
             else
             {
-                _unit.TakeAStepBack();
+                unit.TakeAStepBack();
             }
             
         }
 
-        if (other.gameObject.GetComponent<CollectableResource>() == _targetResource)
+        if (other.gameObject.GetComponent<CollectableResource>() == targetResource)
         {
-            _isInRange = true;
+            isInRange = true;
         }
     }
 
     public int GatheredResourcesAmount()
     {
-        return _gatheredAmount;
+        return gatheredAmount;
     }
 
     public CollectableResource.EResourceType GatheredResourceType()
     {
-        return _gatheringType;
+        return gatheringType;
     }
 
     private void SetFaction()
     {
-        _faction = FindObjectOfType<GameController>().GetFaction(_unit.PlayerNumber());
+        faction = FindObjectOfType<GameController>().GetFaction(unit.PlayerNumber());
     }
 
-    public bool HasResourceTarget() { return _targetResource != null; }
+    public bool HasResourceTarget() { return targetResource != null; }
 
-    public bool HasDropOffTarget() { return _dropOff != null; }
+    public bool HasDropOffTarget() { return dropOff != null; }
 
 }
 // Writen by Lukasz Dziedziczak

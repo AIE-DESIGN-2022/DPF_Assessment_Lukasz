@@ -7,83 +7,83 @@ using UnityEngine.UI;
 
 public class UI_Info : MonoBehaviour
 {
-    private Canvas _canvas;
-    private FactionConfig _config;
-    private RawImage _icon;
+    private Canvas canvas;
+    private FactionConfig config;
+    private RawImage icon;
     private Text _name;
-    private Text _status1;
-    private Text _status2;
-    private Unit _selectedUnit;
-    private Building _selectedBuilding;
-    private UI_Bar _healthBar;
-    private UI_Bar _buildingBar;
-    private RawImage _buildingIcon;
-    private Button _buildingIconButton;
-    private UnitProducer _unitProducer;
-    private UI_BuildQue _buildQueUI;
+    private Text status1;
+    private Text status2;
+    private Unit selectedUnit;
+    private Building selectedBuilding;
+    private UI_Bar healthBar;
+    private UI_Bar buildingBar;
+    private RawImage buildingIcon;
+    private Button buildingIconButton;
+    private UnitProducer unitProducer;
+    private UI_BuildQue buildQueUI;
     //private Building _buildingGettingConstructed; //NOT SURE IF BEING USED
-    private BuildingConstructor _buildingConstructor;
-    private CollectableResource _selectedResource;
+    private BuildingConstructor buildingConstructor;
+    private CollectableResource selectedResource;
 
     private void Awake()
     {
-        _canvas = GetComponentInChildren<Canvas>();
+        canvas = GetComponentInChildren<Canvas>();
         FindImageFields();
         FindTextFields();
         FindStatusBars();
-        _buildQueUI = GetComponentInChildren<UI_BuildQue>();
-        _buildingIconButton = GetComponentInChildren<Button>();
+        buildQueUI = GetComponentInChildren<UI_BuildQue>();
+        buildingIconButton = GetComponentInChildren<Button>();
     }
 
     private void FindImageFields()
     {
-        RawImage[] _imageFields = GetComponentsInChildren<RawImage>();
-        foreach (RawImage _imageField in _imageFields)
+        RawImage[] imageFields = GetComponentsInChildren<RawImage>();
+        foreach (RawImage imageField in imageFields)
         {
-            if (_imageField.name == "Icon") _icon = _imageField;
-            if (_imageField.name == "BuildingIcon") _buildingIcon = _imageField;
+            if (imageField.name == "Icon") icon = imageField;
+            if (imageField.name == "BuildingIcon") buildingIcon = imageField;
         }
         
     }
 
     private void FindStatusBars()
     {
-        UI_Bar[] _bars = GetComponentsInChildren<UI_Bar>();
-        foreach (UI_Bar _bar in _bars)
+        UI_Bar[] bars = GetComponentsInChildren<UI_Bar>();
+        foreach (UI_Bar bar in bars)
         {
-            if (_bar.name == "HealthBar") _healthBar = _bar;
-            if (_bar.name == "BuildingBar") _buildingBar = _bar;
+            if (bar.name == "HealthBar") healthBar = bar;
+            if (bar.name == "BuildingBar") buildingBar = bar;
         }
     }
 
     private void FindTextFields()
     {
-        Text[] _fields = GetComponentsInChildren<Text>();
-        foreach (Text _field in _fields)
+        Text[] fields = GetComponentsInChildren<Text>();
+        foreach (Text field in fields)
         {
-            if (_field.name == "Name") _name = _field;
-            if (_field.name == "Status1") _status1 = _field;
-            if (_field.name == "Status2") _status2 = _field;
+            if (field.name == "Name") _name = field;
+            if (field.name == "Status1") status1 = field;
+            if (field.name == "Status2") status2 = field;
         }
     }
 
     private void Start()
     {
-        _buildingIconButton.onClick.AddListener(CancelBuildItem);
+        buildingIconButton.onClick.AddListener(CancelBuildItem);
         ClearSelection();
     }
 
     private void CancelBuildItem()
     {
-        if (_unitProducer != null)
+        if (unitProducer != null)
         {
-            _unitProducer.CancelBuildItem();
+            unitProducer.CancelBuildItem();
 
             if (Input.GetKey(KeyCode.LeftShift))
             {
                 for (int i = 0; i < 4; i++)
                 {
-                    _unitProducer.RemoveFromQue(_unitProducer.CurrentlyProducing());
+                    unitProducer.RemoveFromQue(unitProducer.CurrentlyProducing());
                 }
             }
         }
@@ -91,63 +91,63 @@ public class UI_Info : MonoBehaviour
 
     public void SetFactionConfig(FactionConfig _newConfig)
     {
-        _config = _newConfig;
+        config = _newConfig;
     }
 
     public void Show(bool isShowing)
     {
-        if (_canvas != null)
+        if (canvas != null)
         {
-            _canvas.enabled = isShowing;
+            canvas.enabled = isShowing;
         }
     }
 
     public void NewSelection(Unit _newSelectedUnit)
     {
         Show(true);
-        _selectedUnit = _newSelectedUnit;
-        _name.text = _selectedUnit.name.Replace("(Clone)", "");
-        /*        if (_config != null)
+        selectedUnit = _newSelectedUnit;
+        _name.text = selectedUnit.name.Replace("(Clone)", "");
+        /*        if (config != null)
                 {
-                    _icon.texture = _config.Icon(_selectedUnit.UnitType());
+                    icon.texture = config.Icon(selectedUnit.UnitType());
                 }
                 else Debug.LogError(name + " is missing FactionConfig.");*/
-        _icon.texture = _selectedUnit.Faction().Config().Icon(_selectedUnit.UnitType());
+        icon.texture = selectedUnit.Faction().Config().Icon(selectedUnit.UnitType());
         UpdateStatus();
 
-        _buildingConstructor = _selectedUnit.GetComponent<BuildingConstructor>();
+        buildingConstructor = selectedUnit.GetComponent<BuildingConstructor>();
         UpdateBuildingStatus();
 
-        _healthBar.Set(_selectedUnit.GetComponent<Health>());
+        healthBar.Set(selectedUnit.GetComponent<Health>());
     }
 
-    public void NewSelection(Building _newSelectedBuilding)
+    public void NewSelection(Building newSelectedBuilding)
     {
         Show(true);
-        _selectedBuilding = _newSelectedBuilding;
-        _name.text = _selectedBuilding.name.Replace("(Clone)", "");
-        /*if (_config != null)
+        selectedBuilding = newSelectedBuilding;
+        _name.text = selectedBuilding.name.Replace("(Clone)", "");
+        /*if (config != null)
         {
-            _icon.texture = _config.Icon(_selectedBuilding.BuildingType());
+            icon.texture = config.Icon(selectedBuilding.BuildingType());
         }
         else Debug.LogError(name + " is missing FactionConfig.");*/
-        _icon.texture = _selectedBuilding.Faction().Config().Icon(_selectedBuilding.BuildingType());
+        icon.texture = selectedBuilding.Faction().Config().Icon(selectedBuilding.BuildingType());
         UpdateStatus();
 
-        _unitProducer = _selectedBuilding.GetComponent<UnitProducer>();
+        unitProducer = selectedBuilding.GetComponent<UnitProducer>();
         UpdateBuildingStatus();
         UpdateBuildQue();
 
-        _healthBar.Set(_selectedBuilding.GetComponent<Health>());
+        healthBar.Set(selectedBuilding.GetComponent<Health>());
 
     }
 
-    public void NewSelection(CollectableResource _newSelectedResource)
+    public void NewSelection(CollectableResource newSelectedResource)
     {
         Show(true);
-        _selectedResource = _newSelectedResource;
-        _name.text = _selectedResource.name;
-        _icon.texture = LoadResourceTexture(_selectedResource);
+        selectedResource = newSelectedResource;
+        _name.text = selectedResource.name;
+        icon.texture = LoadResourceTexture(selectedResource);
         UpdateStatus();
     }
 
@@ -156,17 +156,17 @@ public class UI_Info : MonoBehaviour
         switch(newSelectedResource.ResourceType())
         {
             case CollectableResource.EResourceType.Wood:
-                return (Texture)Resources.Load<Texture>("HUD_Icons/resource_tree");
+                return (Texture)Resources.Load<Texture>("HUDicons/resource_tree");
 
             case CollectableResource.EResourceType.Food:
                 if (newSelectedResource.GetComponent<Building>() == null)
                 {
-                    return (Texture)Resources.Load<Texture>("HUD_Icons/resource_fruitTree");
+                    return (Texture)Resources.Load<Texture>("HUDicons/resource_fruitTree");
                 }
-                else return newSelectedResource.GetComponent<Building>().Faction().Config().Icon(_selectedBuilding.BuildingType());
+                else return newSelectedResource.GetComponent<Building>().Faction().Config().Icon(selectedBuilding.BuildingType());
 
             case CollectableResource.EResourceType.Gold:
-                return (Texture)Resources.Load<Texture>("HUD_Icons/resource_gold");
+                return (Texture)Resources.Load<Texture>("HUDicons/resourcegold");
 
             default:
                 return null;
@@ -175,83 +175,83 @@ public class UI_Info : MonoBehaviour
 
     public void UpdateBuildingStatus()
     {
-        if (_unitProducer != null)
+        if (unitProducer != null)
         {
-            if (_unitProducer.IsCurrentlyProducing())
+            if (unitProducer.IsCurrentlyProducing())
             {
-                if (!_buildingIcon.enabled)
+                if (!buildingIcon.enabled)
                 {
-                    _buildingIcon.enabled = true;
-                    _buildingIcon.texture = _config.Icon(_unitProducer.CurrentlyProducing());
-                    _buildingBar.Set(_unitProducer);
+                    buildingIcon.enabled = true;
+                    buildingIcon.texture = config.Icon(unitProducer.CurrentlyProducing());
+                    buildingBar.Set(unitProducer);
                 }
 
             }
             else
             {
-                if (_buildingIcon.enabled)
+                if (buildingIcon.enabled)
                 {
-                    _buildingIcon.enabled = false;
-                    _buildingIcon.texture = null;
-                    _buildingBar.Clear();
+                    buildingIcon.enabled = false;
+                    buildingIcon.texture = null;
+                    buildingBar.Clear();
                 }
             }
         }
 
-        if (_buildingConstructor != null)
+        if (buildingConstructor != null)
         {
-            if (_buildingConstructor.HasBuildTarget())
+            if (buildingConstructor.HasBuildTarget())
             {
-                _buildingIcon.enabled = true;
-                _buildingIcon.texture = _config.Icon(_buildingConstructor.BuildTarget().BuildingType());
-                _buildingBar.Set(_buildingConstructor.BuildTarget());
+                buildingIcon.enabled = true;
+                buildingIcon.texture = config.Icon(buildingConstructor.BuildTarget().BuildingType());
+                buildingBar.Set(buildingConstructor.BuildTarget());
             }
             else
             {
-                _buildingIcon.enabled = false;
-                _buildingIcon.texture = null;
-                _buildingBar.Clear();
+                buildingIcon.enabled = false;
+                buildingIcon.texture = null;
+                buildingBar.Clear();
             }
         }
     }
 
     public void UpdateBuildQue()
     {
-        if (_unitProducer != null)
+        if (unitProducer != null)
         {
-            if (_unitProducer.BuildQue().Count > 0)
+            if (unitProducer.BuildQue().Count > 0)
             {
-                _buildQueUI.UpdateUIQue(_unitProducer, _config);
+                buildQueUI.UpdateUIQue(unitProducer, config);
             }
             else
             {
-                _buildQueUI.Clear();
+                buildQueUI.Clear();
             }
         }
     }
 
     public void UpdateHealthBar()
     {
-        _healthBar.UpdateHealthBar();
+        healthBar.UpdateHealthBar();
     }
 
     public void ClearSelection()
     {
         Show(false);
-        _selectedBuilding = null;
-        _selectedUnit = null;
+        selectedBuilding = null;
+        selectedUnit = null;
         _name.text = string.Empty;
-        _status1.text = string.Empty;
-        _status2.text = string.Empty;
-        _unitProducer = null;
-        _buildingIcon.enabled = false;
-        _buildingBar.Clear();
-        _buildQueUI.Clear();
-        _healthBar.Clear();
+        status1.text = string.Empty;
+        status2.text = string.Empty;
+        unitProducer = null;
+        buildingIcon.enabled = false;
+        buildingBar.Clear();
+        buildQueUI.Clear();
+        healthBar.Clear();
         //_buildingGettingConstructed = null;
-        _buildingConstructor = null;
-        _selectedResource = null;
-        _icon.texture = null;
+        buildingConstructor = null;
+        selectedResource = null;
+        icon.texture = null;
     }
 
     public void UpdateStatus()
@@ -259,23 +259,23 @@ public class UI_Info : MonoBehaviour
         string _newStatus1 = "";
         string _newStatus2 = "";
 
-        if (_selectedUnit != null)
+        if (selectedUnit != null)
         {
-            _selectedUnit.Status(out _newStatus1, out _newStatus2);
+            selectedUnit.Status(out _newStatus1, out _newStatus2);
         }
 
-        if (_selectedBuilding != null)
+        if (selectedBuilding != null)
         {
-            _selectedBuilding.Status(out _newStatus1, out _newStatus2);
+            selectedBuilding.Status(out _newStatus1, out _newStatus2);
         }
 
-        if (_selectedResource != null)
+        if (selectedResource != null)
         {
-            _selectedResource.Status(out _newStatus1, out _newStatus2);
+            selectedResource.Status(out _newStatus1, out _newStatus2);
         }
 
-        _status1.text = _newStatus1;
-        _status2.text = _newStatus2;
+        status1.text = _newStatus1;
+        status2.text = _newStatus2;
     }
 }
 // Writen by Lukasz Dziedziczak

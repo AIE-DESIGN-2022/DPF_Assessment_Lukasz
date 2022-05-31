@@ -7,20 +7,20 @@ using UnityEngine;
 public class Attacker : MonoBehaviour
 {
     [Tooltip("Weapon used by this unit.")]
-    [SerializeField] private EquipmentConfig _unitWeapon;
+    [SerializeField] private EquipmentConfig unitWeapon;
     [Tooltip("Base level of damage given by this unit upon attack.")]
-    [SerializeField] private float _attackDamage = 10;
+    [SerializeField] private float attackDamage = 10;
     [Tooltip("Time between the start  of each attack in seconds.")]
-    [SerializeField] private float _attackRate = 1;
+    [SerializeField] private float attackRate = 1;
     [Tooltip("How close to target the unit has to be for an attack.")]
-    [SerializeField] private float _attackRange = 1;
+    [SerializeField] private float attackRange = 1;
 
-    private Selectable _target;
-    private float _timeSinceLastAttack = Mathf.Infinity;
-    private Unit _unit;
+    private Selectable target;
+    private float timeSinceLastAttack = Mathf.Infinity;
+    private Unit unit;
     private Building building;
-    private GameObject _weapon;
-    private bool _hasProjectileWeapon;
+    private GameObject weapon;
+    private bool hasProjectileWeapon;
     private float sightTimer = 0;
 
     [Header("Tower Settings")]
@@ -30,14 +30,14 @@ public class Attacker : MonoBehaviour
 
     private void Awake()
     {
-        _unit = GetComponent<Unit>();
+        unit = GetComponent<Unit>();
         building = GetComponent<Building>();
     }
 
     // Start is called before the first frame update
     void Start()
     {
-        if (_unitWeapon != null) Equip(_unitWeapon);
+        if (unitWeapon != null) Equip(unitWeapon);
         if (building != null)
         {
             Transform[] transforms = GetComponentsInChildren<Transform>();
@@ -48,24 +48,24 @@ public class Attacker : MonoBehaviour
         }
     }
 
-    private void Equip(EquipmentConfig _newEquipment)
+    private void Equip(EquipmentConfig newEquipment)
     {
-        if (_unitWeapon != null)
+        if (unitWeapon != null)
         {
             
-            if (_unit != null)
+            if (unit != null)
             {
-                _weapon = _unitWeapon.Spawn(_unit);
-                if (_unitWeapon.AnimatorOverrideController() != null) _unit.Animator().runtimeAnimatorController = _unitWeapon.AnimatorOverrideController();
+                weapon = unitWeapon.Spawn(unit);
+                if (unitWeapon.AnimatorOverrideController() != null) unit.Animator().runtimeAnimatorController = unitWeapon.AnimatorOverrideController();
             }
 
             if (building != null)
             {
-                _weapon = _unitWeapon.Spawn(building);
+                weapon = unitWeapon.Spawn(building);
             }
             
             
-            _hasProjectileWeapon = _unitWeapon.HasProjectile();
+            hasProjectileWeapon = unitWeapon.HasProjectile();
             
         }
     }
@@ -73,40 +73,40 @@ public class Attacker : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        _timeSinceLastAttack += Time.deltaTime;
+        timeSinceLastAttack += Time.deltaTime;
 
-        if (_target != null && _target.IsAlive())
+        if (target != null && target.IsAlive())
         {
             if (TargetIsInRange())
             {
-                if (_unit != null) _unit.StopMoveTo();
+                if (unit != null) unit.StopMoveTo();
                 AttackTarget();
             }
             else
             {
-                if (_unit != null) _unit.MoveTo(_target);
+                if (unit != null) unit.MoveTo(target);
             }
         }
-        else if (_target != null && !_target.IsAlive()) ClearTarget();
+        else if (target != null && !target.IsAlive()) ClearTarget();
 
-        if (_unit != null)
+        if (unit != null)
         {
-            if ((_unit.UnitStance() == Unit.EUnitStance.Offensive && _unit.HasStopped()) || _unit.UnitStance() == Unit.EUnitStance.Patrol)
+            if ((unit.UnitStance() == Unit.EUnitStance.Offensive && unit.HasStopped()) || unit.UnitStance() == Unit.EUnitStance.Patrol)
             {
                 sightTimer += Time.deltaTime;
 
-                if (_target == null && sightTimer > 0.5f)
+                if (target == null && sightTimer > 0.5f)
                 {
                     //print(name + " running aggressive behaviour");
                     sightTimer = 0;
-                    List<Selectable> enemiesInSight = _unit.GetEnemiesInSight();
+                    List<Selectable> enemiesInSight = unit.GetEnemiesInSight();
                     //print(enemiesInSight.Count);
                     if (enemiesInSight.Count == 1) SetTarget(enemiesInSight[0]);
                     if (enemiesInSight.Count > 1)
                     {
                         SetTarget(ClosestTarget(enemiesInSight));
                     }
-                    //print(name + "set target of " + _target);
+                    //print(name + "set target of " + target);
                 }
             }
         }
@@ -117,7 +117,7 @@ public class Attacker : MonoBehaviour
             {
                 sightTimer += Time.deltaTime;
 
-                if (_target == null && sightTimer > 0.5f)
+                if (target == null && sightTimer > 0.5f)
                 {
                     sightTimer = 0;
                     List<Selectable> enemiesInSight = building.GetEnemiesInSight();
@@ -135,19 +135,19 @@ public class Attacker : MonoBehaviour
 
     private void AttackTarget()
     {
-        if (_timeSinceLastAttack > _attackRate)
+        if (timeSinceLastAttack > attackRate)
         {
-            _timeSinceLastAttack = 0;
+            timeSinceLastAttack = 0;
 
-            if (_unit != null)
+            if (unit != null)
             {
-                transform.LookAt(_target.transform);
-                _unit.Animator().SetTrigger("attack");
-                _unit.HUD_StatusUpdate();
+                transform.LookAt(target.transform);
+                unit.Animator().SetTrigger("attack");
+                unit.HUD_StatusUpdate();
             }
              if (building != null)
             {
-                towerSpawn.LookAt(_target.transform);
+                towerSpawn.LookAt(target.transform);
                 AttackEffect();
             }
         }
@@ -155,29 +155,29 @@ public class Attacker : MonoBehaviour
 
     public bool TargetIsInRange()
     {
-        if (_target != null)
+        if (target != null)
         {
             float offset = 0;
-            Building targetBuilding = _target.GetComponent<Building>();
+            Building targetBuilding = target.GetComponent<Building>();
             if (targetBuilding)
             {
                 offset = targetBuilding.RangeOffset();
             }
-            float _distance = Vector3.Distance(transform.position, _target.transform.position);
-            return _distance < _attackRange + offset;
+            float distance = Vector3.Distance(transform.position, target.transform.position);
+            return distance < attackRange + offset;
         }
         else return false;
     }
 
-    public bool HasTarget() { return _target != null; }
+    public bool HasTarget() { return target != null; }
 
-    public void SetTarget(Selectable _newTarget)
+    public void SetTarget(Selectable newTarget)
     {
-        _target = _newTarget;
+        target = newTarget;
 
-        if (_unit != null)
+        if (unit != null)
         {
-            _unit.HUD_StatusUpdate();
+            unit.HUD_StatusUpdate();
         }
         else if (building != null)
         {
@@ -187,12 +187,12 @@ public class Attacker : MonoBehaviour
 
     public void ClearTarget()
     {
-        _target = null;
+        target = null;
 
-        if (_unit != null)
+        if (unit != null)
         {
-            _unit.Animator().SetTrigger("stop");
-            _unit.HUD_StatusUpdate();
+            unit.Animator().SetTrigger("stop");
+            unit.HUD_StatusUpdate();
         }
         else if (building != null)
         {
@@ -203,13 +203,13 @@ public class Attacker : MonoBehaviour
     // Function called by Animation at the point impact on target occurs.
     private void AttackEffect()
     {
-        if (_target != null)
+        if (target != null)
         {
-            if (_hasProjectileWeapon)
+            if (hasProjectileWeapon)
             {
                 Transform spawnLocation;
 
-                if (_unit != null)
+                if (unit != null)
                 {
                     spawnLocation = transform;
                 }
@@ -225,22 +225,22 @@ public class Attacker : MonoBehaviour
                 Vector3 spawnPosition = spawnLocation.position;
                 spawnPosition.y += 1;
                 spawnPosition += spawnLocation.forward;
-                Projectile projectile = Instantiate(_unitWeapon.Projectile(), spawnPosition, spawnLocation.rotation);
+                Projectile projectile = Instantiate(unitWeapon.Projectile(), spawnPosition, spawnLocation.rotation);
 
-                if (_unit != null)
+                if (unit != null)
                 {
-                    projectile.Setup(_unit, _attackDamage);
+                    projectile.Setup(unit, attackDamage);
                 }
                 else if (building != null)
                 {
-                    projectile.Setup(building, _attackDamage);
+                    projectile.Setup(building, attackDamage);
                 }
                 
             }
             else
             {
-                _target.TakeDamage(_attackDamage, _unit);
-                if (!_target.IsAlive()) ClearTarget();
+                target.TakeDamage(attackDamage, unit);
+                if (!target.IsAlive()) ClearTarget();
             }
         }
     }

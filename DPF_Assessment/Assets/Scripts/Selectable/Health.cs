@@ -7,50 +7,50 @@ using UnityEngine;
 public class Health : MonoBehaviour
 {
     [Tooltip("The maximum and starting health of this object.")]
-    [SerializeField] private float _health = 100;
-    [SerializeField] private float _currentHealth;
-    private bool _isAlive = true;
+    [SerializeField] private float health = 100;
+    [SerializeField] private float currentHealth;
+    private bool isAlive = true;
 
     // Start is called before the first frame update
     void Start()
     {
-        _currentHealth = _health;
+        currentHealth = health;
     }
 
-    public void TakeDamage(float _damageAmound)
+    public void TakeDamage(float damageAmound)
     {
-        if (!_isAlive) return;
+        if (!isAlive) return;
 
-        if (_currentHealth - _damageAmound <= 0)
+        if (currentHealth - damageAmound <= 0)
         {
-            _currentHealth = 0;
+            currentHealth = 0;
             Die();
         }
         else
         {
-            _currentHealth -= _damageAmound;
+            currentHealth -= damageAmound;
         }
     }
 
-    public void Heal(float _healAmount)
+    public void Heal(float healAmount)
     {
-        if (!_isAlive) return;
+        if (!isAlive) return;
 
-        if ( _currentHealth + _healAmount >= _health)
+        if ( currentHealth + healAmount >= health)
         {
-            _currentHealth = _health;
+            currentHealth = health;
         }
         else
         {
-            _currentHealth += _healAmount;
+            currentHealth += healAmount;
         }
     }
 
     private void Die()
     {
-        _isAlive = false;
-        Animator _animator = GetComponent<Animator>();
-        if (_animator != null) _animator.SetTrigger("death");
+        isAlive = false;
+        Animator animator = GetComponent<Animator>();
+        if (animator != null) animator.SetTrigger("death");
         else
         {
             Building building = GetComponent<Building>();
@@ -65,13 +65,13 @@ public class Health : MonoBehaviour
 
     public float HealthPercentage()
     {
-        return _currentHealth / _health;
+        return currentHealth / health;
     }
 
-    public bool IsAlive() { return _isAlive; }
+    public bool IsAlive() { return isAlive; }
 
-    public bool IsFull() { return _health == _currentHealth; }
+    public bool IsFull() { return health == currentHealth; }
 
-    public void NewBuilding() { _currentHealth = 1; }
+    public void NewBuilding() { currentHealth = 1; }
 }
 // Writen by Lukasz Dziedziczak

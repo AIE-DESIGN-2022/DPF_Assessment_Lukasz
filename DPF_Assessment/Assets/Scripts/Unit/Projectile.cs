@@ -6,13 +6,13 @@ using UnityEngine;
 
 public class Projectile : MonoBehaviour
 {
-    [SerializeField] private float _speed = 5;
-    [SerializeField] private float _timeToLive = 5;
+    [SerializeField] private float speed = 5;
+    [SerializeField] private float timeToLive = 5;
 
-    private float _lifeTime = 0;
-    private float _damage;
-    private Selectable _owner;
-    private bool _flyingInAir = true;
+    private float lifeTime = 0;
+    private float damage;
+    private Selectable owner;
+    private bool flyingInAir = true;
     private ParticleSystem fire;
     private ParticleSystem explosion;
 
@@ -26,8 +26,8 @@ public class Projectile : MonoBehaviour
         ParticleSystem[] systems = GetComponentsInChildren<ParticleSystem>();
         foreach (ParticleSystem system in systems)
         {
-            if (system.name == "FX_Fireworks_Yellow_Small") explosion = system;
-            if (system.name == "FX_Fire") fire = system;
+            if (system.name == "FXFireworksYellowSmall") explosion = system;
+            if (system.name == "FXFire") fire = system;
         }
     }
 
@@ -40,9 +40,9 @@ public class Projectile : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        _lifeTime += Time.deltaTime;
+        lifeTime += Time.deltaTime;
 
-        if (_lifeTime > _timeToLive)
+        if (lifeTime > timeToLive)
         {
             Destroy(gameObject);
         }
@@ -50,41 +50,41 @@ public class Projectile : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (_flyingInAir) transform.position += transform.forward * Time.deltaTime * _speed;
+        if (flyingInAir) transform.position += transform.forward * Time.deltaTime * speed;
     }
 
 
     private void OnTriggerEnter(Collider other)
     {
-        if (!_flyingInAir) return;
+        if (!flyingInAir) return;
 
         Selectable selectable = other.GetComponent<Selectable>();
-        if (selectable != null && selectable != _owner && selectable.PlayerNumber() != _owner.PlayerNumber())
+        if (selectable != null && selectable != owner && selectable.PlayerNumber() != owner.PlayerNumber())
         {
             Hit(selectable);
         }
 
 
-        /*Unit _unit = other.transform.GetComponent<Unit>();
-        if (_unit != null && _unit != _owner && _unit.PlayerNumber() != _owner.PlayerNumber())
+        /*Unit unit = other.transform.GetComponent<Unit>();
+        if (unit != null && unit != owner && unit.PlayerNumber() != owner.PlayerNumber())
         {
-            Hit(_unit);
+            Hit(unit);
         }
         else
         {
-            Building _building = other.transform.GetComponent<Building>();
-            if (_building != null)
+            Building building = other.transform.GetComponent<Building>();
+            if (building != null)
             {
-                Hit(_building);
+                Hit(building);
             }
         }*/
     }
 
-    private void Hit(Selectable _target)
+    private void Hit(Selectable target)
     {
-        _flyingInAir = false;
-        _target.TakeDamage(_damage, _owner);
-        //transform.parent = _target.transform;
+        flyingInAir = false;
+        target.TakeDamage(damage, owner);
+        //transform.parent = target.transform;
         Destroy(gameObject, 3);
 
         if (fire != null && explosion != null)
@@ -94,10 +94,10 @@ public class Projectile : MonoBehaviour
         }
     }
 
-    public void Setup(Selectable _newOwner, float _newDamage)
+    public void Setup(Selectable newOwner, float newDamage)
     {
-        _owner = _newOwner;
-        _damage = _newDamage;
+        owner = newOwner;
+        damage = newDamage;
     }
 }
 // Writen by Lukasz Dziedziczak

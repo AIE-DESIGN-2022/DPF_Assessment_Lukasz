@@ -5,40 +5,40 @@ using UnityEngine;
 
 public class UI_BuildQue : MonoBehaviour
 {
-    private List<Unit.EUnitType> _buildQue;
-    private UI_BuildQueItem _buildQueItemPrefab;
-    private UnitProducer _buildQueProducer;
-    private FactionConfig _config;
-    private List<UI_BuildQueItem> _queItemList = new List<UI_BuildQueItem>();
+    private List<Unit.EUnitType> buildQue;
+    private UI_BuildQueItem buildQueItemPrefab;
+    private UnitProducer buildQueProducer;
+    private FactionConfig config;
+    private List<UI_BuildQueItem> queItemList = new List<UI_BuildQueItem>();
 
     private void Awake()
     {
-        _buildQueItemPrefab = (UI_BuildQueItem)Resources.Load<UI_BuildQueItem>("HUD_Prefabs/UI_BuildQueItem");
+        buildQueItemPrefab = (UI_BuildQueItem)Resources.Load<UI_BuildQueItem>("HUD_Prefabs/UI_BuildQueItem");
     }
 
     public void UpdateUIQue(UnitProducer _newUnitProducer, FactionConfig _newConfig)
     {
         Clear();
-        _buildQueProducer = _newUnitProducer;
-        _buildQue = _newUnitProducer.BuildQue();
-        _config = _newConfig;
-        foreach (Unit.EUnitType _queItem in _buildQue)
+        buildQueProducer = _newUnitProducer;
+        buildQue = _newUnitProducer.BuildQue();
+        config = _newConfig;
+        foreach (Unit.EUnitType _queItem in buildQue)
         {
-             UI_BuildQueItem _newItem = Instantiate(_buildQueItemPrefab, transform);
-            _queItemList.Add(_newItem);
-            _newItem.Set(_queItem, _buildQueProducer, _config.Icon(_queItem));
+             UI_BuildQueItem _newItem = Instantiate(buildQueItemPrefab, transform);
+            queItemList.Add(_newItem);
+            _newItem.Set(_queItem, buildQueProducer, config.Icon(_queItem));
         }
     }
 
     public void Clear()
     {
-        if (_queItemList.Count > 0)
+        if (queItemList.Count > 0)
         {
-            foreach (UI_BuildQueItem _queItem in _queItemList)
+            foreach (UI_BuildQueItem _queItem in queItemList)
             {
                 Destroy(_queItem.gameObject);
             }
-            _queItemList.Clear();
+            queItemList.Clear();
         }
     }
 }

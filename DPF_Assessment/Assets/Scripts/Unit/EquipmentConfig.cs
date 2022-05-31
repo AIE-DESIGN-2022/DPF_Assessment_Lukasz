@@ -6,19 +6,19 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "RTS/Equipment")]
 public class EquipmentConfig : ScriptableObject
 {
-    [SerializeField] private GameObject _equipmentPrefab;
-    [SerializeField] private bool _heldInLeftHand = false;
-    [SerializeField] private AnimatorOverrideController _animatorOverrideController;
-    [SerializeField] private Projectile _projectilePrefab;
+    [SerializeField] private GameObject equipmentPrefab;
+    [SerializeField] private bool heldInLeftHand = false;
+    [SerializeField] private AnimatorOverrideController animatorOverrideController;
+    [SerializeField] private Projectile projectilePrefab;
 
-    public GameObject Spawn(Unit _unit)
+    public GameObject Spawn(Unit unit)
     {
-        if (_equipmentPrefab != null)
+        if (equipmentPrefab != null)
         {
-            Transform _handTransform = _unit.HandTransform(_heldInLeftHand);
-            GameObject _newObject = Instantiate(_equipmentPrefab, _handTransform.position, _handTransform.rotation);
-            _newObject.transform.parent = _handTransform;
-            return _newObject;
+            Transform handTransform = unit.HandTransform(heldInLeftHand);
+            GameObject newObject = Instantiate(equipmentPrefab, handTransform.position, handTransform.rotation);
+            newObject.transform.parent = handTransform;
+            return newObject;
         }
         else
         {
@@ -29,11 +29,11 @@ public class EquipmentConfig : ScriptableObject
 
     public GameObject Spawn(Building building)
     {
-        if (_equipmentPrefab != null)
+        if (equipmentPrefab != null)
         {
-            GameObject _newObject = Instantiate(_equipmentPrefab, building.transform.position, building.transform.rotation);
-            _newObject.transform.parent = building.transform;
-            return _newObject;
+            GameObject newObject = Instantiate(equipmentPrefab, building.transform.position, building.transform.rotation);
+            newObject.transform.parent = building.transform;
+            return newObject;
         }
         else
         {
@@ -42,25 +42,25 @@ public class EquipmentConfig : ScriptableObject
     }
 
     public bool HeldInLeftHand()
-        { return _heldInLeftHand; }
+        { return heldInLeftHand; }
 
-    public GameObject Prefab() { return _equipmentPrefab; }
+    public GameObject Prefab() { return equipmentPrefab; }
 
     public bool HasProjectile()
     {
-        if (_projectilePrefab == null) return false;
+        if (projectilePrefab == null) return false;
         else return true;
     }
 
     public Projectile Projectile()
     {
-        if (_projectilePrefab != null) return _projectilePrefab;
+        if (projectilePrefab != null) return projectilePrefab;
         else return null;
     }
 
     public AnimatorOverrideController AnimatorOverrideController()
     {
-        if (_animatorOverrideController != null) return _animatorOverrideController;
+        if (animatorOverrideController != null) return animatorOverrideController;
         else return null;
     }
 }

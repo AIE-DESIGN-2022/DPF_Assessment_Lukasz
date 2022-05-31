@@ -6,9 +6,9 @@ using UnityEngine;
 
 public class UI_Action : MonoBehaviour
 {
-    private List<UI_Action_Button> _actionButtons = new List<UI_Action_Button>();
-    private UI_Action_Button _actionButtonPrefab;
-    private Faction _faction;
+    private List<UI_ActionButton> actionButtons = new List<UI_ActionButton>();
+    private UI_ActionButton actionButtonPrefab;
+    private Faction faction;
 
     public enum EButtonType
     {
@@ -23,43 +23,43 @@ public class UI_Action : MonoBehaviour
 
     private void Awake()
     {
-        _actionButtonPrefab = (UI_Action_Button)Resources.Load<UI_Action_Button>("HUD_Prefabs/UI_Action_Button");
+        actionButtonPrefab = (UI_ActionButton)Resources.Load<UI_ActionButton>("HUDPrefabs/UI_ActionButton");
     }
 
     private void Start()
     {
-        if (_actionButtonPrefab == null)
+        if (actionButtonPrefab == null)
         {
             Debug.LogError(name + " is missing ActionButtonPrefab.");
             return;
         }
     }
 
-    public void SetFaction(Faction _newFaction)
+    public void SetFaction(Faction newFaction)
     {
-        _faction = _newFaction;
+        faction = newFaction;
     }
 
-    public void BuildingSelected(Building _selectedBuilding)
+    public void BuildingSelected(Building selectedBuilding)
     {
-        if (_faction.PlayerNumber() != _selectedBuilding.PlayerNumber()) return;
+        if (faction.PlayerNumber() != selectedBuilding.PlayerNumber()) return;
 
         List<Building> selectedBuildings = new List<Building>();
-        selectedBuildings.Add(_selectedBuilding);
+        selectedBuildings.Add(selectedBuilding);
         BuildingsSelected(selectedBuildings);
     }
 
     public void BuildingsSelected(List<Building> selectedBuildings)
     {
-        UnitProducer _unitProducer = selectedBuildings[0].GetComponent<UnitProducer>();
-        if (_unitProducer != null)
+        UnitProducer unitProducer = selectedBuildings[0].GetComponent<UnitProducer>();
+        if (unitProducer != null)
         {
             //print("Action UI sees unitProducer");
-            List<Unit.EUnitType> _buildableUnits = _unitProducer.GetListOfBuildableUnits();
+            List<Unit.EUnitType> buildableUnits = unitProducer.GetListOfBuildableUnits();
 
-            foreach (Unit.EUnitType _buildableUnit in _buildableUnits)
+            foreach (Unit.EUnitType buildableUnit in buildableUnits)
             {
-                BuildButton(_buildableUnit, _unitProducer);
+                BuildButton(buildableUnit, unitProducer);
             }
         }
 
@@ -85,146 +85,146 @@ public class UI_Action : MonoBehaviour
         return false;
     }
 
-    public void UnitSelected(Unit _selectedUnit)
+    public void UnitSelected(Unit selectedUnit)
     {
-        if (_faction.PlayerNumber() != _selectedUnit.PlayerNumber()) return;
+        if (faction.PlayerNumber() != selectedUnit.PlayerNumber()) return;
 
-        List<Unit> _newTeam = new List<Unit>();
-        _newTeam.Add(_selectedUnit);
-        UnitsSelected(_newTeam);
+        List<Unit> newTeam = new List<Unit>();
+        newTeam.Add(selectedUnit);
+        UnitsSelected(newTeam);
     }
 
-    public void UnitsSelected(List<Unit> _selectedUnits)
+    public void UnitsSelected(List<Unit> selectedUnits)
     {
         Clear();
 
         // 1st button
-        if (AnyAreBuildingConstructors(_selectedUnits))
+        if (AnyAreBuildingConstructors(selectedUnits))
         {
-            BuildButton(EButtonType.Build, _selectedUnits);
+            BuildButton(EButtonType.Build, selectedUnits);
         }
         else
         {
-            BuildButton(EButtonType.Blank, _selectedUnits);
+            BuildButton(EButtonType.Blank, selectedUnits);
         }
 
         // 2nd button
-        BuildButton(EButtonType.Blank, _selectedUnits);
+        BuildButton(EButtonType.Blank, selectedUnits);
 
         // 3rd button
-        if (AnyAreAttackers(_selectedUnits))
+        if (AnyAreAttackers(selectedUnits))
         {
-            BuildButton(EButtonType.StancePatrol, _selectedUnits);
+            BuildButton(EButtonType.StancePatrol, selectedUnits);
         }
         else
         {
-            BuildButton(EButtonType.Blank, _selectedUnits);
+            BuildButton(EButtonType.Blank, selectedUnits);
         }
 
         // 4th button
-        if (AnyAreAttackers(_selectedUnits) || AnyAreHealers(_selectedUnits))
+        if (AnyAreAttackers(selectedUnits) || AnyAreHealers(selectedUnits))
         {
-            BuildButton(EButtonType.StancePassive, _selectedUnits);
+            BuildButton(EButtonType.StancePassive, selectedUnits);
         }
         else
         {
-            BuildButton(EButtonType.Blank, _selectedUnits);
+            BuildButton(EButtonType.Blank, selectedUnits);
         }
 
         // 5th button
-        if (AnyAreAttackers(_selectedUnits) || AnyAreHealers(_selectedUnits))
+        if (AnyAreAttackers(selectedUnits) || AnyAreHealers(selectedUnits))
         {
-            BuildButton(EButtonType.StanceDefensive, _selectedUnits);
+            BuildButton(EButtonType.StanceDefensive, selectedUnits);
         }
         else
         {
-            BuildButton(EButtonType.Blank, _selectedUnits);
+            BuildButton(EButtonType.Blank, selectedUnits);
         }
 
         // 6th button
-        if (AnyAreAttackers(_selectedUnits))
+        if (AnyAreAttackers(selectedUnits))
         {
-            BuildButton(EButtonType.StanceOffensive, _selectedUnits);
+            BuildButton(EButtonType.StanceOffensive, selectedUnits);
         }
         else
         {
-            BuildButton(EButtonType.Blank, _selectedUnits);
+            BuildButton(EButtonType.Blank, selectedUnits);
         }
     }
 
-    public void BuildButtonPushed(List<Unit> _selectedUnits)
+    public void BuildButtonPushed(List<Unit> selectedUnits)
     {
         Clear();
-        List<BuildingConstructor> _constructionTeam = new List<BuildingConstructor>();
-        foreach (Unit _unit in _selectedUnits)
+        List<BuildingConstructor> constructionTeam = new List<BuildingConstructor>();
+        foreach (Unit unit in selectedUnits)
         {
-            BuildingConstructor _constructor = _unit.GetComponent<BuildingConstructor>();
-            if (_constructor) _constructionTeam.Add(_constructor);
+            BuildingConstructor constructor = unit.GetComponent<BuildingConstructor>();
+            if (constructor) constructionTeam.Add(constructor);
         }
 
-        List<Building.EBuildingType> _constructableBuildings = _faction.Config().ConstructableBuildings(_selectedUnits[0].UnitType());
+        List<Building.EBuildingType> constructableBuildings = faction.Config().ConstructableBuildings(selectedUnits[0].UnitType());
 
-        BuildButton(EButtonType.Back, _selectedUnits);
+        BuildButton(EButtonType.Back, selectedUnits);
 
         //make buttons for each building.
-        foreach (Building.EBuildingType _buildingType in _constructableBuildings)
+        foreach (Building.EBuildingType buildingType in constructableBuildings)
         {
-            BuildButton(_buildingType, _constructionTeam);
+            BuildButton(buildingType, constructionTeam);
         }
     }
 
     public void Clear()
     {
-        if (_actionButtons.Count > 0)
+        if (actionButtons.Count > 0)
         {
-            foreach (UI_Action_Button _button in _actionButtons)
+            foreach (UI_ActionButton button in actionButtons)
             {
-                Destroy(_button.gameObject);
+                Destroy(button.gameObject);
             }
-            _actionButtons.Clear();
+            actionButtons.Clear();
         }
     }
 
-    public void ActionButton(EButtonType _pushedButton, List<Unit> _units)
+    public void ActionButton(EButtonType pushedButton, List<Unit> units)
     {
-        switch (_pushedButton)
+        switch (pushedButton)
         {
             case EButtonType.Build:
-                BuildButtonPushed(_units);
+                BuildButtonPushed(units);
                 break;
 
             case EButtonType.Back:
-                UnitsSelected(_units);
+                UnitsSelected(units);
                 break;
 
             case EButtonType.StancePassive:
-                ChangeStanceOnUnits(_units, Unit.EUnitStance.Passive);
+                ChangeStanceOnUnits(units, Unit.EUnitStance.Passive);
                 break;
 
             case EButtonType.StanceDefensive:
-                ChangeStanceOnUnits(_units, Unit.EUnitStance.Defensive);
+                ChangeStanceOnUnits(units, Unit.EUnitStance.Defensive);
                 break;
 
             case EButtonType.StanceOffensive:
-                ChangeStanceOnUnits(_units, Unit.EUnitStance.Offensive);
+                ChangeStanceOnUnits(units, Unit.EUnitStance.Offensive);
                 break;
 
             case EButtonType.StancePatrol:
-                ChangeStanceOnUnits(_units, Unit.EUnitStance.Patrol);
+                ChangeStanceOnUnits(units, Unit.EUnitStance.Patrol);
                 break;
         }
     }
 
-    public void ActionButton(EButtonType _pushedButton, List<Building> buildings)
+    public void ActionButton(EButtonType pushedButton, List<Building> buildings)
     {
-        switch (_pushedButton)
+        switch (pushedButton)
         {
             /*case EButtonType.Build:
-                BuildButtonPushed(_units);
+                BuildButtonPushed(units);
                 break;
 
             case EButtonType.Back:
-                UnitsSelected(_units);
+                UnitsSelected(units);
                 break;*/
 
             case EButtonType.StancePassive:
@@ -245,46 +245,46 @@ public class UI_Action : MonoBehaviour
         }
     }
 
-    private bool AnyAreBuildingConstructors(List<Unit> _units)
+    private bool AnyAreBuildingConstructors(List<Unit> units)
     {
-        foreach (Unit _unit in _units)
+        foreach (Unit unit in units)
         {
-            if (_unit.GetComponent<BuildingConstructor>() != null) return true;
+            if (unit.GetComponent<BuildingConstructor>() != null) return true;
         }
         return false;
     }
 
     private bool AnyAreAttackers(List<Unit> units)
     {
-        foreach (Unit _unit in units)
+        foreach (Unit unit in units)
         {
-            if (_unit.GetComponent<Attacker>() != null) return true;
+            if (unit.GetComponent<Attacker>() != null) return true;
         }
         return false;
     }
 
     private bool AnyAreHealers(List<Unit> selectedUnits)
     {
-        foreach (Unit _unit in selectedUnits)
+        foreach (Unit unit in selectedUnits)
         {
-            if (_unit.GetComponent<Healer>() != null) return true;
+            if (unit.GetComponent<Healer>() != null) return true;
         }
         return false;
     }
 
     private void ChangeStanceOnUnits(List<Unit> units, Unit.EUnitStance newStance)
     {
-        foreach (Unit _unit in units)
+        foreach (Unit unit in units)
         {
-            Healer healer = _unit.GetComponent<Healer>();
+            Healer healer = unit.GetComponent<Healer>();
 
             if (healer != null && (newStance == Unit.EUnitStance.Offensive || newStance == Unit.EUnitStance.Patrol))
             {
-                _unit.ChangeUnitStance(Unit.EUnitStance.Defensive);
+                unit.ChangeUnitStance(Unit.EUnitStance.Defensive);
             }
             else
             {
-                _unit.ChangeUnitStance(newStance);
+                unit.ChangeUnitStance(newStance);
             }
         }
         UpdateUnitStances();
@@ -304,64 +304,64 @@ public class UI_Action : MonoBehaviour
         UpdateUnitStances();
     }
 
-    private void BuildButton(EButtonType type, List<Unit> _selectedUnits)
+    private void BuildButton(EButtonType type, List<Unit> selectedUnits)
     {
-        UI_Action_Button _buildButton = Instantiate(_actionButtonPrefab, transform);
-        _buildButton.SetupButton(type, _selectedUnits);
-        _actionButtons.Add(_buildButton);
+        UI_ActionButton buildButton = Instantiate(actionButtonPrefab, transform);
+        buildButton.SetupButton(type, selectedUnits);
+        actionButtons.Add(buildButton);
     }
 
-    private void BuildButton(EButtonType type, List<Building> _selectedBuildings)
+    private void BuildButton(EButtonType type, List<Building> selectedBuildings)
     {
-        UI_Action_Button _buildButton = Instantiate(_actionButtonPrefab, transform);
-        _buildButton.SetupButton(type, _selectedBuildings);
-        _actionButtons.Add(_buildButton);
+        UI_ActionButton buildButton = Instantiate(actionButtonPrefab, transform);
+        buildButton.SetupButton(type, selectedBuildings);
+        actionButtons.Add(buildButton);
     }
 
     private void BuildButton(Unit.EUnitType unitType, UnitProducer unitProducer)
     {
-        UI_Action_Button _newButton = Instantiate(_actionButtonPrefab, transform);
-        _newButton.SetupButton(unitProducer, unitType, _faction.Config().Icon(unitType));
-        _actionButtons.Add(_newButton);
+        UI_ActionButton newButton = Instantiate(actionButtonPrefab, transform);
+        newButton.SetupButton(unitProducer, unitType, faction.Config().Icon(unitType));
+        actionButtons.Add(newButton);
     }
 
-    private void BuildButton(Building.EBuildingType buildingType, List<BuildingConstructor> _constructionTeam)
+    private void BuildButton(Building.EBuildingType buildingType, List<BuildingConstructor> constructionTeam)
     {
-        UI_Action_Button _newButton = Instantiate(_actionButtonPrefab, transform);
-        _newButton.SetupButton(_faction, buildingType, _faction.Config().Icon(buildingType), _constructionTeam);
-        _actionButtons.Add(_newButton);
+        UI_ActionButton newButton = Instantiate(actionButtonPrefab, transform);
+        newButton.SetupButton(faction, buildingType, faction.Config().Icon(buildingType), constructionTeam);
+        actionButtons.Add(newButton);
     }
 
     private void BuildBlankButton(int amount = 1)
     {
         if (amount > 0)
         {
-            List<Unit> _selectedUnits = new List<Unit>();
+            List<Unit> selectedUnits = new List<Unit>();
             for (int i = 0; i < amount; i++)
             {
-                BuildButton(EButtonType.Blank, _selectedUnits);
+                BuildButton(EButtonType.Blank, selectedUnits);
             }
         }
     }
 
     public void UpdateUnitStances()
     {
-        if (_actionButtons.Count > 0)
+        if (actionButtons.Count > 0)
         {
-            foreach (UI_Action_Button action_Button in _actionButtons)
+            foreach (UI_ActionButton actionButton in actionButtons)
             {
-                action_Button.UpdateUnitStance();
+                actionButton.UpdateUnitStance();
             }
         }
     }
 
     public void UpdateCanAffords()
     {
-        if (_actionButtons.Count > 0)
+        if (actionButtons.Count > 0)
         {
-            foreach (UI_Action_Button action_Button in _actionButtons)
+            foreach (UI_ActionButton actionButton in actionButtons)
             {
-                action_Button.UpdateCanAfford();
+                actionButton.UpdateCanAfford();
             }
         }
     }
