@@ -21,7 +21,7 @@ public class Healer : MonoBehaviour
 
     private void Start()
     {
-        unit.Animator().runtimeAnimatorController = healingHands.AnimatorOverrideController();
+        if (unit.Animator() != null && healingHands.AnimatorOverrideController() != null) unit.Animator().runtimeAnimatorController = healingHands.AnimatorOverrideController();
 
         if (unit.UnitStance() == Unit.EUnitStance.Offensive || unit.UnitStance() == Unit.EUnitStance.Patrol)
         {

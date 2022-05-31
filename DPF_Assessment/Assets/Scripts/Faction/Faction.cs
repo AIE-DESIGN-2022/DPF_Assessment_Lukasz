@@ -194,9 +194,9 @@ public class Faction : MonoBehaviour
         Destroy(building.gameObject);
     }
 
-    public int StockpileAmount(CollectableResource.EResourceType type)
+    public int StockpileAmount(CollectableResource.EResourceType resource_type)
     {
-        switch(type)
+        switch(resource_type)
         {
             case CollectableResource.EResourceType.Food:
                 return food;
@@ -208,6 +208,7 @@ public class Faction : MonoBehaviour
                 return gold;
 
             default:
+                Debug.LogError(name + " could not find resource of type: " + resource_type);
                 return 0;
         }    
     }

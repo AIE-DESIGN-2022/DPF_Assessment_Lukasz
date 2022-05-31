@@ -203,22 +203,22 @@ public class UI_Action_Button : MonoBehaviour
         switch (type)
         {
             case UI_Action.EButtonType.Build:
-                return (Texture)Resources.Load<Texture>("HUDicons/Hammer");
+                return (Texture)Resources.Load<Texture>("HUD_Icons/Hammer");
 
             case UI_Action.EButtonType.Back:
-                return (Texture)Resources.Load<Texture>("HUDicons/Back");
+                return (Texture)Resources.Load<Texture>("HUD_Icons/Back");
 
             case UI_Action.EButtonType.StancePassive:
-                return (Texture)Resources.Load<Texture>("HUDicons/Passive");
+                return (Texture)Resources.Load<Texture>("HUD_Icons/Passive");
 
             case UI_Action.EButtonType.StanceDefensive:
-                return (Texture)Resources.Load<Texture>("HUDicons/Defensive");
+                return (Texture)Resources.Load<Texture>("HUD_Icons/Defensive");
 
             case UI_Action.EButtonType.StanceOffensive:
-                return (Texture)Resources.Load<Texture>("HUDicons/Offensive");
+                return (Texture)Resources.Load<Texture>("HUD_Icons/Offensive");
 
             case UI_Action.EButtonType.StancePatrol:
-                return (Texture)Resources.Load<Texture>("HUDicons/Patrol");
+                return (Texture)Resources.Load<Texture>("HUD_Icons/Patrol");
 
             default:
                 return null;

@@ -21,6 +21,8 @@ public class HUD_Manager : MonoBehaviour
 
     public void SetPlayerFaction(Faction playerFaction)
     {
+        if (resourcesUI == null) Debug.LogError(name + " cannot find Resource HUD element.");
+
         if (resourcesUI != null) resourcesUI.SetPlayerFaction(playerFaction);
         if (actionsUI != null) actionsUI.SetFaction(playerFaction);
         config = playerFaction.Config();

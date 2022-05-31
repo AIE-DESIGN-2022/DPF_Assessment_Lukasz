@@ -158,6 +158,7 @@ public class FactionConfig : ScriptableObject
             if (building.buildingType == type) return building.buildingIcon;
         }
 
+        Debug.LogError(name + " could not find " + type + " Icon");
         return null;
     }
 

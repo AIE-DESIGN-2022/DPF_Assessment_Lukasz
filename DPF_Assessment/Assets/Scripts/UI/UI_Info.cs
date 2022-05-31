@@ -43,7 +43,10 @@ public class UI_Info : MonoBehaviour
             if (imageField.name == "Icon") icon = imageField;
             if (imageField.name == "BuildingIcon") buildingIcon = imageField;
         }
-        
+
+        if (icon == null) Debug.LogError(name + " could not find Icon image field.");
+        if (buildingIcon == null) Debug.LogError(name + " could not find Building Icon image field.");
+
     }
 
     private void FindStatusBars()
@@ -102,16 +105,11 @@ public class UI_Info : MonoBehaviour
         }
     }
 
-    public void NewSelection(Unit _newSelectedUnit)
+    public void NewSelection(Unit newSelectedUnit)
     {
         Show(true);
-        selectedUnit = _newSelectedUnit;
+        selectedUnit = newSelectedUnit;
         _name.text = selectedUnit.name.Replace("(Clone)", "");
-        /*        if (config != null)
-                {
-                    icon.texture = config.Icon(selectedUnit.UnitType());
-                }
-                else Debug.LogError(name + " is missing FactionConfig.");*/
         icon.texture = selectedUnit.Faction().Config().Icon(selectedUnit.UnitType());
         UpdateStatus();
 
@@ -126,11 +124,6 @@ public class UI_Info : MonoBehaviour
         Show(true);
         selectedBuilding = newSelectedBuilding;
         _name.text = selectedBuilding.name.Replace("(Clone)", "");
-        /*if (config != null)
-        {
-            icon.texture = config.Icon(selectedBuilding.BuildingType());
-        }
-        else Debug.LogError(name + " is missing FactionConfig.");*/
         icon.texture = selectedBuilding.Faction().Config().Icon(selectedBuilding.BuildingType());
         UpdateStatus();
 
@@ -156,17 +149,17 @@ public class UI_Info : MonoBehaviour
         switch(newSelectedResource.ResourceType())
         {
             case CollectableResource.EResourceType.Wood:
-                return (Texture)Resources.Load<Texture>("HUDicons/resource_tree");
+                return (Texture)Resources.Load<Texture>("HUD_Icons/resource_tree");
 
             case CollectableResource.EResourceType.Food:
                 if (newSelectedResource.GetComponent<Building>() == null)
                 {
-                    return (Texture)Resources.Load<Texture>("HUDicons/resource_fruitTree");
+                    return (Texture)Resources.Load<Texture>("HUD_Icons/resource_fruitTree");
                 }
                 else return newSelectedResource.GetComponent<Building>().Faction().Config().Icon(selectedBuilding.BuildingType());
 
             case CollectableResource.EResourceType.Gold:
-                return (Texture)Resources.Load<Texture>("HUDicons/resourcegold");
+                return (Texture)Resources.Load<Texture>("HUD_Icons/resource_gold");
 
             default:
                 return null;

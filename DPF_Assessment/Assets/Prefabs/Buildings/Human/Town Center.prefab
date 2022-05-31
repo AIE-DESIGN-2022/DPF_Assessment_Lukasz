@@ -211,10 +211,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 118301c27348cdc4fa2e06e20e3a7a80, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _owningPlayerNumber: 0
-  _buildingType: 0
-  _resourceDropPoint: 1
-  collisions: []
+  owningPlayerNumber: 0
+  flashing: 0
+  flashingSpeed: 0.5
+  sightDistance: 15
+  buildingType: 0
+  resourceDropPoint: 0
+  rangeOffset: 3
 --- !u!114 &7737253614315927734
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -239,7 +242,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f66f63c1725b5c5478a7d5741f6645ee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _health: 1000
+  health: 1000
+  currentHealth: 0
 --- !u!208 &3611899582028842790
 NavMeshObstacle:
   m_ObjectHideFlags: 0

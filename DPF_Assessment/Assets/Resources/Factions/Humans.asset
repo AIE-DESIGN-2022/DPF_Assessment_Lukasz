@@ -19,35 +19,35 @@ MonoBehaviour:
     foodCost: 0
     woodCost: 50
     goldCost: 0
-    buildingIcon: {fileID: 0}
+    buildingIcon: {fileID: 2800000, guid: 542e7be7e4d427740b5a3315e349e4c2, type: 3}
     buildingPrefab: {fileID: 1180573847072710891, guid: 38c1c0777ae0bf144b40f20dd9ad3711, type: 3}
   - buildingType: 1
     builtBy: 0
     foodCost: 0
     woodCost: 150
     goldCost: 0
-    buildingIcon: {fileID: 0}
+    buildingIcon: {fileID: 2800000, guid: 8252b3bf753301d44ac863aed1b52111, type: 3}
     buildingPrefab: {fileID: 1180573847072710891, guid: 52004217fb8b6b84bbc4d563bc045af7, type: 3}
   - buildingType: 2
     builtBy: 0
     foodCost: 0
     woodCost: 150
     goldCost: 100
-    buildingIcon: {fileID: 0}
+    buildingIcon: {fileID: 2800000, guid: 1a1c8b4fbb86c984ca39d8c5ae03e3e8, type: 3}
     buildingPrefab: {fileID: 1180573847072710891, guid: 406033c66820b3f4095edca476a6ff68, type: 3}
   - buildingType: 4
     builtBy: 0
     foodCost: 0
     woodCost: 100
     goldCost: 0
-    buildingIcon: {fileID: 0}
+    buildingIcon: {fileID: 2800000, guid: 23ae60ce24563c446b56004158fef32f, type: 3}
     buildingPrefab: {fileID: 1180573847072710891, guid: 62d4fc3f3b5e12445b72115ad12efa06, type: 3}
   - buildingType: 0
     builtBy: 0
     foodCost: 0
     woodCost: 500
     goldCost: 0
-    buildingIcon: {fileID: 0}
+    buildingIcon: {fileID: 2800000, guid: b8ef4175bb4df5141a2d7a6dea568d2a, type: 3}
     buildingPrefab: {fileID: 1180573847072710891, guid: f14b0a0ee80f92e4a8e448841a21ce0a, type: 3}
   units:
   - unitType: 0

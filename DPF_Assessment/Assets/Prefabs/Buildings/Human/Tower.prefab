@@ -223,11 +223,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 118301c27348cdc4fa2e06e20e3a7a80, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _owningPlayerNumber: 0
+  owningPlayerNumber: 0
   flashing: 0
   flashingSpeed: 0.5
-  _buildingType: 4
-  _resourceDropPoint: 0
+  sightDistance: 15
+  buildingType: 4
+  resourceDropPoint: 0
   rangeOffset: 3
 --- !u!114 &7737253614315927734
 MonoBehaviour:
@@ -253,8 +254,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f66f63c1725b5c5478a7d5741f6645ee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _health: 1000
-  _currentHealth: 0
+  health: 300
+  currentHealth: 0
 --- !u!208 &3611899582028842790
 NavMeshObstacle:
   m_ObjectHideFlags: 0
@@ -299,10 +300,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 535332f0fbd536347a723ea59995d7c4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _unitWeapon: {fileID: 11400000, guid: 4e80b7c3808eaf24cb6ef4f83b65023c, type: 2}
-  _attackDamage: 10
-  _attackRate: 3
-  _attackRange: 10
+  unitWeapon: {fileID: 0}
+  attackDamage: 10
+  attackRate: 1
+  attackRange: 1
+  towerStance: 1
 --- !u!1001 &4465205140379482619
 PrefabInstance:
   m_ObjectHideFlags: 0
