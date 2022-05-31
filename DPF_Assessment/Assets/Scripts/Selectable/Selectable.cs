@@ -18,6 +18,8 @@ public class Selectable : MonoBehaviour
     [SerializeField, Range(0f, 3f)] private float flashingSpeed = 0.5f;
     private float flashingTimer = 0f;
 
+    [SerializeField] protected float sightDistance = 15;
+
     protected void Awake()
     {
         _selectionIndicator = GetComponentInChildren<SpriteRenderer>();
@@ -74,7 +76,7 @@ public class Selectable : MonoBehaviour
 
     public Faction Faction() { return _owningFaction; }
 
-    public void TakeDamage(float _damageAmound, Unit attacker)
+    public void TakeDamage(float _damageAmound, Selectable attacker)
     {
         if (_health != null)
         {
@@ -174,6 +176,22 @@ public class Selectable : MonoBehaviour
     public void SetFlashing(bool isFlashing)
     {
         flashing = isFlashing;
+    }
+
+    public List<Selectable> GetEnemiesInSight()
+    {
+        List<Selectable> list = new List<Selectable>();
+        RaycastHit[] hits = Physics.SphereCastAll(transform.position, sightDistance, Vector3.up);
+        foreach (RaycastHit hit in hits)
+        {
+            Unit unit = hit.transform.GetComponent<Unit>();
+            Building building = hit.transform.GetComponent<Building>();
+
+            if (unit != null && unit.PlayerNumber() != PlayerNumber()) list.Add(unit);
+            if (building != null && building.PlayerNumber() != PlayerNumber()) list.Add(building);
+        }
+
+        return list;
     }
 
 }

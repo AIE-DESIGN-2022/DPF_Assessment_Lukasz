@@ -11,7 +11,7 @@ public class Projectile : MonoBehaviour
 
     private float _lifeTime = 0;
     private float _damage;
-    private Unit _owner;
+    private Selectable _owner;
     private bool _flyingInAir = true;
     private ParticleSystem fire;
     private ParticleSystem explosion;
@@ -58,7 +58,14 @@ public class Projectile : MonoBehaviour
     {
         if (!_flyingInAir) return;
 
-        Unit _unit = other.transform.GetComponent<Unit>();
+        Selectable selectable = other.GetComponent<Selectable>();
+        if (selectable != null && selectable != _owner && selectable.PlayerNumber() != _owner.PlayerNumber())
+        {
+            Hit(selectable);
+        }
+
+
+        /*Unit _unit = other.transform.GetComponent<Unit>();
         if (_unit != null && _unit != _owner && _unit.PlayerNumber() != _owner.PlayerNumber())
         {
             Hit(_unit);
@@ -70,7 +77,7 @@ public class Projectile : MonoBehaviour
             {
                 Hit(_building);
             }
-        }
+        }*/
     }
 
     private void Hit(Selectable _target)
@@ -87,7 +94,7 @@ public class Projectile : MonoBehaviour
         }
     }
 
-    public void Setup(Unit _newOwner, float _newDamage)
+    public void Setup(Selectable _newOwner, float _newDamage)
     {
         _owner = _newOwner;
         _damage = _newDamage;

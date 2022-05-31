@@ -23,7 +23,6 @@ public class Unit : Selectable
 
     [Header("Behaviour")]
     [SerializeField] private EUnitStance unitStance = EUnitStance.Passive;
-    [SerializeField] private float sightDistance = 15;
 
     private bool selectingPatrolPoint = false;
     private Vector3 patrolStartPoint;
@@ -408,22 +407,6 @@ public class Unit : Selectable
     }
 
     public EUnitStance UnitStance() {  return unitStance; }
-
-    public List<Selectable> GetEnemiesInSight()
-    {
-        List<Selectable> list = new List<Selectable>();
-        RaycastHit[] hits = Physics.SphereCastAll(transform.position, sightDistance, Vector3.up);
-        foreach (RaycastHit hit in hits)
-        {
-            Unit unit = hit.transform.GetComponent<Unit>();
-            Building building = hit.transform.GetComponent<Building>();
-
-            if (unit != null && unit.PlayerNumber() != PlayerNumber()) list.Add(unit);
-            if (building != null && building.PlayerNumber() != PlayerNumber()) list.Add(building);
-        }
-
-        return list;
-    }
 
     public List<Unit> GetFrendlyUnitsInSight()
     {

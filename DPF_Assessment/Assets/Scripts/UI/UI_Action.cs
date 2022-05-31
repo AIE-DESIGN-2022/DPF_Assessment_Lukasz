@@ -44,7 +44,14 @@ public class UI_Action : MonoBehaviour
     {
         if (_faction.PlayerNumber() != _selectedBuilding.PlayerNumber()) return;
 
-        UnitProducer _unitProducer = _selectedBuilding.GetComponent<UnitProducer>();
+        List<Building> selectedBuildings = new List<Building>();
+        selectedBuildings.Add(_selectedBuilding);
+        BuildingsSelected(selectedBuildings);
+    }
+
+    public void BuildingsSelected(List<Building> selectedBuildings)
+    {
+        UnitProducer _unitProducer = selectedBuildings[0].GetComponent<UnitProducer>();
         if (_unitProducer != null)
         {
             //print("Action UI sees unitProducer");
@@ -55,6 +62,27 @@ public class UI_Action : MonoBehaviour
                 BuildButton(_buildableUnit, _unitProducer);
             }
         }
+
+        if (AnyAreTowers(selectedBuildings))
+        {
+            BuildBlankButton(3);
+
+            // 4th button
+            BuildButton(EButtonType.StancePassive, selectedBuildings);
+
+            // 5th button
+            BuildButton(EButtonType.StanceDefensive, selectedBuildings);
+        }
+    }
+
+    private static bool AnyAreTowers(List<Building> buildings)
+    {
+        foreach (Building building in buildings)
+        {
+            if (building.BuildingType() == Building.EBuildingType.Tower) return true;
+        }
+
+        return false;
     }
 
     public void UnitSelected(Unit _selectedUnit)
@@ -187,6 +215,36 @@ public class UI_Action : MonoBehaviour
         }
     }
 
+    public void ActionButton(EButtonType _pushedButton, List<Building> buildings)
+    {
+        switch (_pushedButton)
+        {
+            /*case EButtonType.Build:
+                BuildButtonPushed(_units);
+                break;
+
+            case EButtonType.Back:
+                UnitsSelected(_units);
+                break;*/
+
+            case EButtonType.StancePassive:
+                ChangeStanceOnTowers(buildings, Unit.EUnitStance.Passive);
+                break;
+
+            case EButtonType.StanceDefensive:
+                ChangeStanceOnTowers(buildings, Unit.EUnitStance.Defensive);
+                break;
+
+            case EButtonType.StanceOffensive:
+                ChangeStanceOnTowers(buildings, Unit.EUnitStance.Offensive);
+                break;
+
+            case EButtonType.StancePatrol:
+                ChangeStanceOnTowers(buildings, Unit.EUnitStance.Patrol);
+                break;
+        }
+    }
+
     private bool AnyAreBuildingConstructors(List<Unit> _units)
     {
         foreach (Unit _unit in _units)
@@ -232,10 +290,31 @@ public class UI_Action : MonoBehaviour
         UpdateUnitStances();
     }
 
+    private void ChangeStanceOnTowers(List<Building> buildings, Unit.EUnitStance newStance)
+    {
+        foreach (Building building in buildings)
+        {
+            Attacker attacker = building.GetComponent<Attacker>();
+
+            if (attacker != null && building.BuildingType() == Building.EBuildingType.Tower)
+            {
+                attacker.ChangeTowerStance(newStance);
+            }
+        }
+        UpdateUnitStances();
+    }
+
     private void BuildButton(EButtonType type, List<Unit> _selectedUnits)
     {
         UI_Action_Button _buildButton = Instantiate(_actionButtonPrefab, transform);
         _buildButton.SetupButton(type, _selectedUnits);
+        _actionButtons.Add(_buildButton);
+    }
+
+    private void BuildButton(EButtonType type, List<Building> _selectedBuildings)
+    {
+        UI_Action_Button _buildButton = Instantiate(_actionButtonPrefab, transform);
+        _buildButton.SetupButton(type, _selectedBuildings);
         _actionButtons.Add(_buildButton);
     }
 
@@ -251,6 +330,18 @@ public class UI_Action : MonoBehaviour
         UI_Action_Button _newButton = Instantiate(_actionButtonPrefab, transform);
         _newButton.SetupButton(_faction, buildingType, _faction.Config().Icon(buildingType), _constructionTeam);
         _actionButtons.Add(_newButton);
+    }
+
+    private void BuildBlankButton(int amount = 1)
+    {
+        if (amount > 0)
+        {
+            List<Unit> _selectedUnits = new List<Unit>();
+            for (int i = 0; i < amount; i++)
+            {
+                BuildButton(EButtonType.Blank, _selectedUnits);
+            }
+        }
     }
 
     public void UpdateUnitStances()

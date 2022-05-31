@@ -224,8 +224,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _owningPlayerNumber: 0
+  flashing: 0
+  flashingSpeed: 0.5
   _buildingType: 4
   _resourceDropPoint: 0
+  rangeOffset: 3
 --- !u!114 &7737253614315927734
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -251,6 +254,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _health: 1000
+  _currentHealth: 0
 --- !u!208 &3611899582028842790
 NavMeshObstacle:
   m_ObjectHideFlags: 0
@@ -295,7 +299,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 535332f0fbd536347a723ea59995d7c4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _unitWeapon: {fileID: 0}
+  _unitWeapon: {fileID: 11400000, guid: 4e80b7c3808eaf24cb6ef4f83b65023c, type: 2}
   _attackDamage: 10
   _attackRate: 3
   _attackRange: 10

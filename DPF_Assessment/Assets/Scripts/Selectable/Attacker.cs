@@ -23,6 +23,11 @@ public class Attacker : MonoBehaviour
     private bool _hasProjectileWeapon;
     private float sightTimer = 0;
 
+    [Header("Tower Settings")]
+    [SerializeField] private Unit.EUnitStance towerStance = Unit.EUnitStance.Defensive;
+
+    private Transform towerSpawn;
+
     private void Awake()
     {
         _unit = GetComponent<Unit>();
@@ -33,15 +38,35 @@ public class Attacker : MonoBehaviour
     void Start()
     {
         if (_unitWeapon != null) Equip(_unitWeapon);
+        if (building != null)
+        {
+            Transform[] transforms = GetComponentsInChildren<Transform>();
+            foreach (Transform t in transforms)
+            {
+                if (t.name == "TowerSpawn") towerSpawn = t;
+            }
+        }
     }
 
     private void Equip(EquipmentConfig _newEquipment)
     {
-        if (_unitWeapon != null && _unit != null)
+        if (_unitWeapon != null)
         {
-            _weapon = _unitWeapon.Spawn(_unit);
+            
+            if (_unit != null)
+            {
+                _weapon = _unitWeapon.Spawn(_unit);
+                if (_unitWeapon.AnimatorOverrideController() != null) _unit.Animator().runtimeAnimatorController = _unitWeapon.AnimatorOverrideController();
+            }
+
+            if (building != null)
+            {
+                _weapon = _unitWeapon.Spawn(building);
+            }
+            
+            
             _hasProjectileWeapon = _unitWeapon.HasProjectile();
-            if (_unitWeapon.AnimatorOverrideController() != null) _unit.Animator().runtimeAnimatorController = _unitWeapon.AnimatorOverrideController();
+            
         }
     }
 
@@ -54,12 +79,12 @@ public class Attacker : MonoBehaviour
         {
             if (TargetIsInRange())
             {
-                _unit.StopMoveTo();
+                if (_unit != null) _unit.StopMoveTo();
                 AttackTarget();
             }
             else
             {
-                _unit.MoveTo(_target);
+                if (_unit != null) _unit.MoveTo(_target);
             }
         }
         else if (_target != null && !_target.IsAlive()) ClearTarget();
@@ -86,6 +111,25 @@ public class Attacker : MonoBehaviour
             }
         }
 
+        if (building != null)
+        {
+            if (towerStance == Unit.EUnitStance.Defensive)
+            {
+                sightTimer += Time.deltaTime;
+
+                if (_target == null && sightTimer > 0.5f)
+                {
+                    sightTimer = 0;
+                    List<Selectable> enemiesInSight = building.GetEnemiesInSight();
+                    if (enemiesInSight.Count == 1) SetTarget(enemiesInSight[0]);
+                    if (enemiesInSight.Count > 1)
+                    {
+                        SetTarget(ClosestTarget(enemiesInSight));
+                    }
+                }
+            }
+        }
+
         
     }
 
@@ -93,10 +137,19 @@ public class Attacker : MonoBehaviour
     {
         if (_timeSinceLastAttack > _attackRate)
         {
-            transform.LookAt(_target.transform);
-            _unit.Animator().SetTrigger("attack");
             _timeSinceLastAttack = 0;
-            _unit.HUD_StatusUpdate();
+
+            if (_unit != null)
+            {
+                transform.LookAt(_target.transform);
+                _unit.Animator().SetTrigger("attack");
+                _unit.HUD_StatusUpdate();
+            }
+             if (building != null)
+            {
+                towerSpawn.LookAt(_target.transform);
+                AttackEffect();
+            }
         }
     }
 
@@ -121,14 +174,30 @@ public class Attacker : MonoBehaviour
     public void SetTarget(Selectable _newTarget)
     {
         _target = _newTarget;
-        _unit.HUD_StatusUpdate();
+
+        if (_unit != null)
+        {
+            _unit.HUD_StatusUpdate();
+        }
+        else if (building != null)
+        {
+            building.HUD_StatusUpdate();
+        }
     }
 
     public void ClearTarget()
     {
         _target = null;
-        _unit.Animator().SetTrigger("stop");
-        _unit.HUD_StatusUpdate();
+
+        if (_unit != null)
+        {
+            _unit.Animator().SetTrigger("stop");
+            _unit.HUD_StatusUpdate();
+        }
+        else if (building != null)
+        {
+            building.HUD_StatusUpdate();
+        } 
     }
 
     // Function called by Animation at the point impact on target occurs.
@@ -138,11 +207,35 @@ public class Attacker : MonoBehaviour
         {
             if (_hasProjectileWeapon)
             {
-                Vector3 spawnLocation = transform.position;
-                spawnLocation.y += 1;
-                spawnLocation += transform.forward;
-                Projectile projectile = Instantiate(_unitWeapon.Projectile(), spawnLocation, transform.rotation);
-                projectile.Setup(_unit, _attackDamage);
+                Transform spawnLocation;
+
+                if (_unit != null)
+                {
+                    spawnLocation = transform;
+                }
+                else if (building != null)
+                {
+                    spawnLocation = towerSpawn;
+                }
+                else
+                {
+                    spawnLocation = null;
+                }
+
+                Vector3 spawnPosition = spawnLocation.position;
+                spawnPosition.y += 1;
+                spawnPosition += spawnLocation.forward;
+                Projectile projectile = Instantiate(_unitWeapon.Projectile(), spawnPosition, spawnLocation.rotation);
+
+                if (_unit != null)
+                {
+                    projectile.Setup(_unit, _attackDamage);
+                }
+                else if (building != null)
+                {
+                    projectile.Setup(building, _attackDamage);
+                }
+                
             }
             else
             {
@@ -168,6 +261,16 @@ public class Attacker : MonoBehaviour
         }
 
         return closest;
+    }
+
+    public void ChangeTowerStance(Unit.EUnitStance newStance)
+    {
+        towerStance = newStance;
+    }
+
+    public Unit.EUnitStance TowerStance()
+    {
+        return towerStance;
     }
 }
 // Writen by Lukasz Dziedziczak

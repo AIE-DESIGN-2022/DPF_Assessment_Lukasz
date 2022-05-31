@@ -14,6 +14,7 @@ public class UI_Action_Button : MonoBehaviour
     private Button _button;
     private List<BuildingConstructor> _constructionTeam;
     private List<Unit> _selectedUnits = new List<Unit>();
+    private List<Building> selectedBuildings = new List<Building> ();
     private UI_Action.EButtonType _buttonType;
     private Image background;
     private bool flashing = false;
@@ -73,6 +74,24 @@ public class UI_Action_Button : MonoBehaviour
         
     }
 
+    public void SetupButton(UI_Action.EButtonType _newButtonType, List<Building> _newSelection)
+    {
+        _buttonType = _newButtonType;
+        selectedBuildings = _newSelection;
+
+        if (_newButtonType != UI_Action.EButtonType.Blank)
+        {
+            _button.GetComponent<RawImage>().texture = Load_hudIcon(_buttonType);
+            SetActiveStance();
+        }
+        else
+        {
+            _button.GetComponent<RawImage>().color = Color.clear;
+            SetBackgroundActive(false);
+        }
+
+    }
+
     public void UpdateUnitStance()
     {
         SetActiveStance();
@@ -117,11 +136,19 @@ public class UI_Action_Button : MonoBehaviour
         {
             foreach (Unit unit in _selectedUnits)
             {
-                //print(name + " checking " + unit.name + " with " + unit.UnitStance().ToString());
                 if (unit.UnitStance() == unitStance) haveFoundWithStance = true;
             }
         }
-        //if (haveFoundWithStance) print("have found unit with stance " + unitStance);
+
+        else if (selectedBuildings.Count > 0)
+        {
+            foreach (Building building in selectedBuildings)
+            {
+                Attacker tower = building.GetComponent<Attacker>();
+                if (tower != null && tower.TowerStance() == unitStance) haveFoundWithStance=true;
+            }
+        }
+
         return haveFoundWithStance;
     }
 
@@ -162,6 +189,11 @@ public class UI_Action_Button : MonoBehaviour
         else if (_selectedUnits.Count > 0)
         {
             FindObjectOfType<GameController>().HUD_Manager().Actions_HUD().ActionButton(_buttonType, _selectedUnits);
+        }
+
+        else if (selectedBuildings.Count > 0)
+        {
+            FindObjectOfType<GameController>().HUD_Manager().Actions_HUD().ActionButton(_buttonType, selectedBuildings);
         }
 
     }

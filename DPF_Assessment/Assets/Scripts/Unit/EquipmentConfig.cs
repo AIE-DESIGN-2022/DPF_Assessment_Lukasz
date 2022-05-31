@@ -27,6 +27,20 @@ public class EquipmentConfig : ScriptableObject
         
     }
 
+    public GameObject Spawn(Building building)
+    {
+        if (_equipmentPrefab != null)
+        {
+            GameObject _newObject = Instantiate(_equipmentPrefab, building.transform.position, building.transform.rotation);
+            _newObject.transform.parent = building.transform;
+            return _newObject;
+        }
+        else
+        {
+            return null;
+        }
+    }
+
     public bool HeldInLeftHand()
         { return _heldInLeftHand; }
 

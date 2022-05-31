@@ -82,6 +82,36 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!1 &6192778082647831438
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 511423197562035125}
+  m_Layer: 0
+  m_Name: TowerSpawn
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &511423197562035125
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6192778082647831438}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 2, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1711498797100917276}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &6325790681338197043
 GameObject:
   m_ObjectHideFlags: 0
@@ -119,6 +149,7 @@ Transform:
   - {fileID: 7865993885333173752}
   - {fileID: 2727127488454933997}
   - {fileID: 4977742484724755030}
+  - {fileID: 511423197562035125}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -148,8 +179,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _owningPlayerNumber: 0
+  flashing: 0
+  flashingSpeed: 0.5
+  sightDistance: 15
   _buildingType: 4
   _resourceDropPoint: 0
+  rangeOffset: 3
 --- !u!114 &7737253614315927734
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -220,10 +255,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 535332f0fbd536347a723ea59995d7c4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _unitWeapon: {fileID: 0}
+  _unitWeapon: {fileID: 11400000, guid: 4e80b7c3808eaf24cb6ef4f83b65023c, type: 2}
   _attackDamage: 10
   _attackRate: 3
   _attackRange: 10
+  towerStance: 1
 --- !u!1001 &4973327324861683208
 PrefabInstance:
   m_ObjectHideFlags: 0
