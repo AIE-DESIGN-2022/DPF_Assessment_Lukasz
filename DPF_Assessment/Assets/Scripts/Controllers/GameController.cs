@@ -81,6 +81,24 @@ public class GameController : MonoBehaviour
         _playerController.SetHUD_Manager(_hudManager);
     }
 
+    internal void FactionDefated(Faction faction)
+    {
+        if (faction.PlayerNumber() != _playerNumber)
+        {
+            _factions.Remove(faction);
+            Destroy(faction.gameObject);
+
+            if (_factions.Count == 1)
+            {
+                print("player wins");
+            }
+        }
+        else if (faction.PlayerNumber() == _playerNumber)
+        {
+            // lose state
+        }
+    }
+
     private void SetupGame()
     {
         BuildListOfFactions();

@@ -54,7 +54,12 @@ public class Health : MonoBehaviour
         else
         {
             Building building = GetComponent<Building>();
-            building.SetBuildState(Building.EBuildState.Destroyed);
+
+            if (building != null)
+            {
+                building.SetBuildState(Building.EBuildState.Destroyed);
+
+            }
         }
     }
 

@@ -18,6 +18,7 @@ public class Faction : MonoBehaviour
     private List<Building> _buildings = new List<Building>();
     private GameController _gameController;
     private bool placingBuilding = false;
+    private bool gameStarted = false;
 
     public enum EFaction
     {
@@ -52,11 +53,21 @@ public class Faction : MonoBehaviour
                 if (building != null) _buildings.Add(building);
             }
         }
+
+        if (_units.Count > 0 || _buildings.Count > 0)
+        {
+            gameStarted = true;
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (gameStarted && _units.Count == 0 && _buildings.Count == 0)
+        {
+            gameStarted = false;
+            _gameController.FactionDefated(this);
+        }
     }
 
     public EFaction FactionType()
@@ -113,16 +124,20 @@ public class Faction : MonoBehaviour
         _buildings.Add(_newBuilding);
         _newBuilding.SetBuildState(Building.EBuildState.Complete);
         _newBuilding.transform.position = spawnLocartion;
+        gameStarted = true;
         return _newBuilding;
     }
 
     public bool CurrentlyPlacingBuilding()
     {
-        _gameController.PlayerController().PlayerControl(true);
         return placingBuilding;
     }
 
-    public void FinishBuildingPlacement() { placingBuilding = false; }
+    public void FinishBuildingPlacement() 
+    {
+        _gameController.PlayerController().PlayerControl(true);
+        placingBuilding = false; 
+    }
 
     public FactionConfig Config()
     {

@@ -189,6 +189,7 @@ public class Building : Selectable
                 GetComponent<NavMeshObstacle>().enabled = false;
                 EnableRenderersAndColliders(false);
                 Rubble();
+                FindObjectOfType<GameController>().GetFaction(PlayerNumber()).Death(this);
                 break;
         }
     }
