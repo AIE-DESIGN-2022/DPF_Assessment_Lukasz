@@ -42,6 +42,8 @@ public class Faction : MonoBehaviour
 
     private void SetupChildren()
     {
+        if (buildings.Count > 0 || units.Count > 0) return;
+
         Selectable[] children = GetComponentsInChildren<Selectable>();
         foreach (Selectable child in children)
         {
@@ -65,8 +67,19 @@ public class Faction : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        //print(name + " has " + units.Count + " Units, and " + buildings.Count + " buildings.");
+        /*if (playerNumber == 2)
+        {
+            foreach (Building building in buildings)
+            {
+                print(name + " has a " + building.name);
+            }
+        }*/
+        
+
         if (gameStarted && units.Count == 0 && buildings.Count == 0)
         {
+            print("faction End");
             gameStarted = false;
             gameController.FactionDefated(this);
         }
