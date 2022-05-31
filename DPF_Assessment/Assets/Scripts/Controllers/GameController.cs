@@ -12,6 +12,7 @@ public class GameController : MonoBehaviour
     private PlayerController _playerController;
     private GameCameraController _cameraController;
     private UI_Menu pauseMenu;
+    private Transform mapTransform;
 
     [Header("New Game")]
     [SerializeField] private bool isNewGame = false;
@@ -181,6 +182,20 @@ public class GameController : MonoBehaviour
         faction.AddToStockpile(CollectableResource.EResourceType.Wood, startingWood);
         faction.AddToStockpile(CollectableResource.EResourceType.Food, startingFood);
         faction.AddToStockpile(CollectableResource.EResourceType.Gold, startingGold);
+    }
+
+    public Transform GetMapTransform()
+    {
+        if (mapTransform == null)
+        {
+            Transform[] transforms = FindObjectsOfType<Transform>();
+            foreach (Transform t in transforms)
+            {
+                if (t.gameObject.name == "Map") mapTransform = t;
+            }
+        }
+
+        return mapTransform;
     }
 }
 // Writen by Lukasz Dziedziczak

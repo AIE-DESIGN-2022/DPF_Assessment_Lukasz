@@ -20,6 +20,7 @@ public class Building : Selectable
     private List<BuildingConstructor> _constructionTeam;
     private GameObject _construction;
     private GameObject rubble;
+    private List<GameObject> intersectingRubble = new List<GameObject>();
 
     public enum EBuildingType
     {
@@ -102,6 +103,16 @@ public class Building : Selectable
                     _health.NewBuilding();
                     _gameController.PlayerController().PlayerControl(true);
                     _owningFaction.FinishBuildingPlacement();
+
+                    // remove any interesting rubble
+                    if (intersectingRubble.Count > 0)
+                    {
+                        foreach (GameObject rubble in intersectingRubble)
+                        {
+                            Destroy(rubble.gameObject);
+                        }
+                        intersectingRubble.Clear();
+                    }
 
                     // based on selected units who can construct buildings, give begin actul construction order
                     foreach (BuildingConstructor _constructor in _constructionTeam)
@@ -190,6 +201,7 @@ public class Building : Selectable
                 EnableRenderersAndColliders(false);
                 Rubble();
                 FindObjectOfType<GameController>().GetFaction(PlayerNumber()).Death(this);
+                Destroy(gameObject);
                 break;
         }
     }
@@ -211,16 +223,32 @@ public class Building : Selectable
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.name == "Terrain") return;
+        if ((_buildState != EBuildState.Placing && _buildState != EBuildState.PlacingBad) || other.name == "Terrain") return;
 
-        _numberOfCollisions++;
+        if (other.name == "Rubble")
+        {
+            intersectingRubble.Add(other.gameObject);
+        }
+        else
+        {
+            _numberOfCollisions++;
+        }
+        
     }
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.name == "Terrain") return;
+        if ((_buildState != EBuildState.Placing && _buildState != EBuildState.PlacingBad) || other.name == "Terrain") return;
 
-        _numberOfCollisions--;
+        if (other.name == "Rubble")
+        {
+            intersectingRubble.Remove(other.gameObject);
+        }
+        else
+        {
+            _numberOfCollisions--;
+        }
+        
     }
 
     public EBuildState BuildState() { return _buildState; }
@@ -285,7 +313,8 @@ public class Building : Selectable
             GameObject rubblePrefab = (GameObject)Resources.Load<GameObject>("Prefabs/Rubble");
             if (rubblePrefab == null) Debug.LogError(name + " unable to load Rubble prefab.");
             rubble = Instantiate(rubblePrefab, transform.position, transform.rotation);
-            rubble.transform.parent = transform;
+            rubble.transform.parent = _gameController.GetMapTransform();
+            rubble.name = "Rubble";
             if (_buildingType != EBuildingType.Tower)
             {
                 /*rubble.transform.localScale = Vector3.one * 1.5f;*/
