@@ -64,6 +64,7 @@ public class Unit : Selectable
     {
         base.Start();
         if (navMeshAgent != null) navMeshAgent.updateRotation = false;
+        if (animator != null && animator.runtimeAnimatorController == null) Debug.LogError(name + " missing runtime Animator Controller");
         
     }
 

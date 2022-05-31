@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class UI_ActionButton : MonoBehaviour
+public class UI_Action_Button : MonoBehaviour
 {
     private UnitProducer unitProducer;
     private Unit.EUnitType buildableUnit;

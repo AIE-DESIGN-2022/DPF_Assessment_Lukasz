@@ -619,8 +619,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f66f63c1725b5c5478a7d5741f6645ee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _health: 1000
-  _currentHealth: 0
+  health: 100
+  currentHealth: 0
 --- !u!54 &869662931
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -855,8 +855,28 @@ PrefabInstance:
       value: Faction(2)_Goblin
       objectReference: {fileID: 0}
     - target: {fileID: 7160699469891053079, guid: 3dc66ffdd5bb67746858e53492fc766c, type: 3}
+      propertyPath: food
+      value: 1000
+      objectReference: {fileID: 0}
+    - target: {fileID: 7160699469891053079, guid: 3dc66ffdd5bb67746858e53492fc766c, type: 3}
+      propertyPath: gold
+      value: 1000
+      objectReference: {fileID: 0}
+    - target: {fileID: 7160699469891053079, guid: 3dc66ffdd5bb67746858e53492fc766c, type: 3}
+      propertyPath: wood
+      value: 1000
+      objectReference: {fileID: 0}
+    - target: {fileID: 7160699469891053079, guid: 3dc66ffdd5bb67746858e53492fc766c, type: 3}
+      propertyPath: faction
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7160699469891053079, guid: 3dc66ffdd5bb67746858e53492fc766c, type: 3}
       propertyPath: _faction
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7160699469891053079, guid: 3dc66ffdd5bb67746858e53492fc766c, type: 3}
+      propertyPath: playerNumber
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 7160699469891053079, guid: 3dc66ffdd5bb67746858e53492fc766c, type: 3}
       propertyPath: _playerNumber
@@ -1169,6 +1189,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1275361682}
     m_Modifications:
+    - target: {fileID: 2210010318463215739, guid: f1f9b38630a6aa348868c59a6cf46d1b, type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5981330187123386376, guid: f1f9b38630a6aa348868c59a6cf46d1b, type: 3}
       propertyPath: healRate
       value: 20
@@ -1225,7 +1249,8 @@ PrefabInstance:
       propertyPath: m_Name
       value: Healer
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 7745439767001862209, guid: f1f9b38630a6aa348868c59a6cf46d1b, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: f1f9b38630a6aa348868c59a6cf46d1b, type: 3}
 --- !u!1001 &5232000877002428480
 PrefabInstance:
@@ -1348,6 +1373,18 @@ PrefabInstance:
       value: Faction(1)_Human
       objectReference: {fileID: 0}
     - target: {fileID: 7160699469891053079, guid: 3dc66ffdd5bb67746858e53492fc766c, type: 3}
+      propertyPath: food
+      value: 1000
+      objectReference: {fileID: 0}
+    - target: {fileID: 7160699469891053079, guid: 3dc66ffdd5bb67746858e53492fc766c, type: 3}
+      propertyPath: gold
+      value: 1000
+      objectReference: {fileID: 0}
+    - target: {fileID: 7160699469891053079, guid: 3dc66ffdd5bb67746858e53492fc766c, type: 3}
+      propertyPath: wood
+      value: 1000
+      objectReference: {fileID: 0}
+    - target: {fileID: 7160699469891053079, guid: 3dc66ffdd5bb67746858e53492fc766c, type: 3}
       propertyPath: _food
       value: 1000
       objectReference: {fileID: 0}
@@ -1358,6 +1395,10 @@ PrefabInstance:
     - target: {fileID: 7160699469891053079, guid: 3dc66ffdd5bb67746858e53492fc766c, type: 3}
       propertyPath: _wood
       value: 1000
+      objectReference: {fileID: 0}
+    - target: {fileID: 7160699469891053079, guid: 3dc66ffdd5bb67746858e53492fc766c, type: 3}
+      propertyPath: playerNumber
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7160699469891053079, guid: 3dc66ffdd5bb67746858e53492fc766c, type: 3}
       propertyPath: _playerNumber

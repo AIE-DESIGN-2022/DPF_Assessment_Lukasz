@@ -135,12 +135,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9edc562fbbac8f54b87dc19dd68b9a67, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _owningPlayerNumber: 0
-  _leftHand: {fileID: 0}
-  _rightHand: {fileID: 0}
-  _unitType: 0
-  unitStance: 2
+  owningPlayerNumber: 0
+  flashing: 0
+  flashingSpeed: 0.5
   sightDistance: 12
+  leftHand: {fileID: 0}
+  rightHand: {fileID: 0}
+  unitType: 0
+  unitStance: 2
 --- !u!136 &1496767705
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -208,13 +210,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1e84dc7e3e8b4af47b530b781408c2e7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _maxCarry: 10
-  _woodCuttingTool: {fileID: 11400000, guid: 5c81ba8a793b19a41b9e59c2d5a3dcc0, type: 2}
-  _woodGatherRate: 1
-  _farmingTool: {fileID: 11400000, guid: 1aa05341961b9ac4ca74ca27f2abaf46, type: 2}
-  _foodGatherRate: 1
-  _miningTool: {fileID: 11400000, guid: b35bdcd060d06f84982be1c9b47e25ef, type: 2}
-  _goldGatherRate: 1
+  maxCarry: 10
+  woodCuttingTool: {fileID: 11400000, guid: 5c81ba8a793b19a41b9e59c2d5a3dcc0, type: 2}
+  woodGatherRate: 1
+  farmingTool: {fileID: 11400000, guid: 1aa05341961b9ac4ca74ca27f2abaf46, type: 2}
+  foodGatherRate: 1
+  miningTool: {fileID: 11400000, guid: 5c81ba8a793b19a41b9e59c2d5a3dcc0, type: 2}
+  goldGatherRate: 1
 --- !u!114 &8899325240604807200
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -227,8 +229,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f66f63c1725b5c5478a7d5741f6645ee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _health: 100
-  _currentHealth: 0
+  health: 100
+  currentHealth: 0
 --- !u!54 &217577045858491165
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -257,8 +259,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 518c6f5b6d724ec43a8691a166bb7722, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _constructionTool: {fileID: 11400000, guid: e0536122beb3bf04b9c2cacf177e4be5, type: 2}
-  _buildRate: 100
+  constructionTool: {fileID: 11400000, guid: e0536122beb3bf04b9c2cacf177e4be5, type: 2}
+  buildRate: 100
 --- !u!1001 &1187043573979131050
 PrefabInstance:
   m_ObjectHideFlags: 0

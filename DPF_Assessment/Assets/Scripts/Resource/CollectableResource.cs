@@ -8,15 +8,15 @@ using UnityEngine.AI;
 [RequireComponent(typeof(NavMeshObstacle))]
 public class CollectableResource : Selectable
 {
-    [SerializeField] private EResourceType _resourceType;
-    [SerializeField] private int _amount;
+    [SerializeField] private EResourceType resourceType;
+    [SerializeField] private int amount;
 
-    private int _currentAmount;
+    private int currentAmount;
 
     private new void Start()
     {
         base.Start();
-        _currentAmount = _amount;
+        currentAmount = amount;
         GetComponent<NavMeshObstacle>().carving = true;
     }
 
@@ -27,29 +27,29 @@ public class CollectableResource : Selectable
         Gold
     }
 
-    public EResourceType ResourceType() { return _resourceType; }
+    public EResourceType ResourceType() { return resourceType; }
 
-    public int Gather(int _gatheringAmount)
+    public int Gather(int gatheringAmount)
     {
-        int _returnAmount = 0;
-        if (_currentAmount - _gatheringAmount > 0)
+        int returnAmount = 0;
+        if (currentAmount - gatheringAmount > 0)
         {
-            _returnAmount = _gatheringAmount;
-            _currentAmount -= _gatheringAmount;
+            returnAmount = gatheringAmount;
+            currentAmount -= gatheringAmount;
         }
         else
         {
-            _returnAmount = _currentAmount;
-            _currentAmount = 0;
+            returnAmount = currentAmount;
+            currentAmount = 0;
             ResourceDepleted();
         }
         HUD_StatusUpdate();
-        return _returnAmount;
+        return returnAmount;
     }
 
     private void ResourceDepleted()
     {
-        if (_resourceType == EResourceType.Wood)
+        if (resourceType == EResourceType.Wood)
         {
             MeshRenderer mr = GetComponentInChildren<MeshRenderer>();
             Destroy(mr.gameObject);
@@ -61,9 +61,9 @@ public class CollectableResource : Selectable
 
     }
 
-    public bool HasResource() { return _currentAmount > 0; }
+    public bool HasResource() { return currentAmount > 0; }
 
-    public int Amount() { return _amount; }
+    public int Amount() { return amount; }
 
     public void Status(out string newStatus1, out string newStatus2)
     {
@@ -72,7 +72,7 @@ public class CollectableResource : Selectable
 
         if (HasResource())
         {
-            newStatus1 =  _currentAmount.ToString() + " " + _resourceType.ToString();
+            newStatus1 =  currentAmount.ToString() + " " + resourceType.ToString();
         }
         else
         {

@@ -12,48 +12,48 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4fb8759c0a421254c964441fd98d61c0, type: 3}
   m_Name: Goblin
   m_EditorClassIdentifier: 
-  _faction: 1
-  _buildings:
+  faction: 1
+  buildings:
   - buildingType: 3
     builtBy: 0
     foodCost: 0
-    woodCost: 0
+    woodCost: 50
     goldCost: 0
     buildingIcon: {fileID: 2800000, guid: 542e7be7e4d427740b5a3315e349e4c2, type: 3}
     buildingPrefab: {fileID: 1180573847072710891, guid: 7e91c9cee9beb1344acd652ec464f0f0, type: 3}
   - buildingType: 1
     builtBy: 0
     foodCost: 0
-    woodCost: 0
+    woodCost: 150
     goldCost: 0
     buildingIcon: {fileID: 2800000, guid: c6b40826137463449937a648500fc423, type: 3}
     buildingPrefab: {fileID: 1180573847072710891, guid: 9634f9bcc1dfa6140bc0a2625534a45c, type: 3}
   - buildingType: 2
     builtBy: 0
     foodCost: 0
-    woodCost: 0
-    goldCost: 0
+    woodCost: 150
+    goldCost: 100
     buildingIcon: {fileID: 2800000, guid: 43d142046a9a6b34cb56b8a54bbac84f, type: 3}
     buildingPrefab: {fileID: 1180573847072710891, guid: 708e0333152041e45b4554fb2169d641, type: 3}
   - buildingType: 4
     builtBy: 0
     foodCost: 0
-    woodCost: 0
+    woodCost: 100
     goldCost: 0
     buildingIcon: {fileID: 2800000, guid: a36abc4a02b12414a8179830db285405, type: 3}
     buildingPrefab: {fileID: 1180573847072710891, guid: 646b5b8c5147f6b40a9689548fadd10c, type: 3}
   - buildingType: 0
     builtBy: 0
     foodCost: 0
-    woodCost: 0
+    woodCost: 500
     goldCost: 0
     buildingIcon: {fileID: 2800000, guid: da2460889eb6b8947b265867ac0c668f, type: 3}
     buildingPrefab: {fileID: 1180573847072710891, guid: f24fa5e5c018709449622daaf582225c, type: 3}
-  _units:
+  units:
   - unitType: 0
     builtFrom: 0
-    buildTime: 0
-    foodCost: 0
+    buildTime: 10
+    foodCost: 50
     woodCost: 0
     goldCost: 0
     unitIcon: {fileID: 2800000, guid: 430933c49a10e8e43bbcff51db2b2e57, type: 3}
@@ -62,8 +62,8 @@ MonoBehaviour:
     - {fileID: 8418730917576266227, guid: a9eb7766ed1916647a6e7820c3b2bb30, type: 3}
   - unitType: 1
     builtFrom: 1
-    buildTime: 0
-    foodCost: 0
+    buildTime: 15
+    foodCost: 100
     woodCost: 0
     goldCost: 0
     unitIcon: {fileID: 2800000, guid: 3c4f89a95ab853f409a9284edb28b1f9, type: 3}
@@ -71,28 +71,28 @@ MonoBehaviour:
     - {fileID: 8418730917576266227, guid: 50ea675e450a47a4581431bfa39c3c89, type: 3}
   - unitType: 2
     builtFrom: 1
-    buildTime: 0
-    foodCost: 0
-    woodCost: 0
+    buildTime: 15
+    foodCost: 100
+    woodCost: 20
     goldCost: 0
     unitIcon: {fileID: 2800000, guid: b56a3f7cf717b8d4fa035c258517decc, type: 3}
     unitPrefabVariations:
     - {fileID: 8418730917576266227, guid: fc2e8fcf05d492046a3a0dc95855fc53, type: 3}
   - unitType: 3
     builtFrom: 2
-    buildTime: 0
-    foodCost: 0
+    buildTime: 20
+    foodCost: 50
     woodCost: 0
-    goldCost: 0
+    goldCost: 100
     unitIcon: {fileID: 2800000, guid: 3d19079cd8f91de43abc438c34274fb6, type: 3}
     unitPrefabVariations:
     - {fileID: 8418730917576266227, guid: bf41592ddc403bf46bcf92719abdc5e9, type: 3}
   - unitType: 4
     builtFrom: 2
-    buildTime: 0
-    foodCost: 0
+    buildTime: 30
+    foodCost: 50
     woodCost: 0
-    goldCost: 0
+    goldCost: 200
     unitIcon: {fileID: 2800000, guid: b5846d8d4a28d1c4da1b4c88bf034ac6, type: 3}
     unitPrefabVariations:
     - {fileID: 8418730917576266227, guid: 46ac071fcfde0d8488743dd01229e6b9, type: 3}

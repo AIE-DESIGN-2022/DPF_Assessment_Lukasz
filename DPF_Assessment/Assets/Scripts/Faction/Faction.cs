@@ -36,6 +36,8 @@ public class Faction : MonoBehaviour
     {
         NameFaction();
         SetupChildren();
+
+        if (config == null) Debug.LogError(name + " missing config.");
     }
 
     private void SetupChildren()

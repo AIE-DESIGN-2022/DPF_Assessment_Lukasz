@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameController : MonoBehaviour
 {
@@ -82,7 +83,7 @@ public class GameController : MonoBehaviour
         playerController.SetHUD_Manager(hud_Manager);
     }
 
-    internal void FactionDefated(Faction faction)
+    public void FactionDefated(Faction faction)
     {
         if (faction.PlayerNumber() != playerNumber)
         {
@@ -91,14 +92,20 @@ public class GameController : MonoBehaviour
 
             if (factions.Count == 1)
             {
-                print("player wins");
+                EndGame(true);
             }
         }
         else if (faction.PlayerNumber() == playerNumber)
         {
-            // lose state
+            EndGame(false);
         }
     }
+
+    private void EndGame(bool playerWon)
+    {
+        SceneManager.LoadScene("EndScreen");
+    }
+
 
     private void SetupGame()
     {
@@ -117,6 +124,8 @@ public class GameController : MonoBehaviour
             faction.SetGameController(this);
 
         }
+
+        if (factions.Count == 0 && !isNewGame) Debug.LogError(name + " found no factions at game start.");
     }
 
     // Update is called once per frame
@@ -145,7 +154,7 @@ public class GameController : MonoBehaviour
                 }
             }
 
-            Debug.LogError("GameController canot not find faction with PlayerNumber =" + playerNumber);
+            Debug.LogError("GameController canot not find faction with PlayerNumber = " + playerNumber);
             return null;
         }
         else

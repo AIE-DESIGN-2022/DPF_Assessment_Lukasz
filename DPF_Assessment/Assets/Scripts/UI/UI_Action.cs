@@ -6,8 +6,8 @@ using UnityEngine;
 
 public class UI_Action : MonoBehaviour
 {
-    private List<UI_ActionButton> actionButtons = new List<UI_ActionButton>();
-    private UI_ActionButton actionButtonPrefab;
+    private List<UI_Action_Button> actionButtons = new List<UI_Action_Button>();
+    private UI_Action_Button actionButtonPrefab;
     private Faction faction;
 
     public enum EButtonType
@@ -23,7 +23,7 @@ public class UI_Action : MonoBehaviour
 
     private void Awake()
     {
-        actionButtonPrefab = (UI_ActionButton)Resources.Load<UI_ActionButton>("HUDPrefabs/UI_ActionButton");
+        actionButtonPrefab = (UI_Action_Button)Resources.Load<UI_Action_Button>("HUD_Prefabs/UI_Action_Button");
     }
 
     private void Start()
@@ -177,7 +177,7 @@ public class UI_Action : MonoBehaviour
     {
         if (actionButtons.Count > 0)
         {
-            foreach (UI_ActionButton button in actionButtons)
+            foreach (UI_Action_Button button in actionButtons)
             {
                 Destroy(button.gameObject);
             }
@@ -306,28 +306,28 @@ public class UI_Action : MonoBehaviour
 
     private void BuildButton(EButtonType type, List<Unit> selectedUnits)
     {
-        UI_ActionButton buildButton = Instantiate(actionButtonPrefab, transform);
+        UI_Action_Button buildButton = Instantiate(actionButtonPrefab, transform);
         buildButton.SetupButton(type, selectedUnits);
         actionButtons.Add(buildButton);
     }
 
     private void BuildButton(EButtonType type, List<Building> selectedBuildings)
     {
-        UI_ActionButton buildButton = Instantiate(actionButtonPrefab, transform);
+        UI_Action_Button buildButton = Instantiate(actionButtonPrefab, transform);
         buildButton.SetupButton(type, selectedBuildings);
         actionButtons.Add(buildButton);
     }
 
     private void BuildButton(Unit.EUnitType unitType, UnitProducer unitProducer)
     {
-        UI_ActionButton newButton = Instantiate(actionButtonPrefab, transform);
+        UI_Action_Button newButton = Instantiate(actionButtonPrefab, transform);
         newButton.SetupButton(unitProducer, unitType, faction.Config().Icon(unitType));
         actionButtons.Add(newButton);
     }
 
     private void BuildButton(Building.EBuildingType buildingType, List<BuildingConstructor> constructionTeam)
     {
-        UI_ActionButton newButton = Instantiate(actionButtonPrefab, transform);
+        UI_Action_Button newButton = Instantiate(actionButtonPrefab, transform);
         newButton.SetupButton(faction, buildingType, faction.Config().Icon(buildingType), constructionTeam);
         actionButtons.Add(newButton);
     }
@@ -348,7 +348,7 @@ public class UI_Action : MonoBehaviour
     {
         if (actionButtons.Count > 0)
         {
-            foreach (UI_ActionButton actionButton in actionButtons)
+            foreach (UI_Action_Button actionButton in actionButtons)
             {
                 actionButton.UpdateUnitStance();
             }
@@ -359,7 +359,7 @@ public class UI_Action : MonoBehaviour
     {
         if (actionButtons.Count > 0)
         {
-            foreach (UI_ActionButton actionButton in actionButtons)
+            foreach (UI_Action_Button actionButton in actionButtons)
             {
                 actionButton.UpdateCanAfford();
             }

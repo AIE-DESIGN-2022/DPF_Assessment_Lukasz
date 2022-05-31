@@ -134,14 +134,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9edc562fbbac8f54b87dc19dd68b9a67, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _owningPlayerNumber: 0
+  owningPlayerNumber: 0
   flashing: 0
   flashingSpeed: 0.5
-  _leftHand: {fileID: 0}
-  _rightHand: {fileID: 0}
-  _unitType: 4
-  unitStance: 2
   sightDistance: 12
+  leftHand: {fileID: 0}
+  rightHand: {fileID: 0}
+  unitType: 0
+  unitStance: 2
 --- !u!136 &1496767705
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -209,8 +209,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f66f63c1725b5c5478a7d5741f6645ee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _health: 100
-  _currentHealth: 0
+  health: 100
+  currentHealth: 0
 --- !u!54 &2838729425064204258
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -336,7 +336,8 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 95011576809172800, guid: 122a6f75e59a53040800bfc5e259b0b4, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 122a6f75e59a53040800bfc5e259b0b4, type: 3}
 --- !u!4 &7655171018953375355 stripped
 Transform:
