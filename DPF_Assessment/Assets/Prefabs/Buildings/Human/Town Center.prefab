@@ -216,7 +216,7 @@ MonoBehaviour:
   flashingSpeed: 0.5
   sightDistance: 15
   buildingType: 0
-  resourceDropPoint: 0
+  resourceDropPoint: 1
   rangeOffset: 3
 --- !u!114 &7737253614315927734
 MonoBehaviour:

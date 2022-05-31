@@ -8,16 +8,41 @@ using UnityEngine.AI;
 [RequireComponent(typeof(NavMeshObstacle))]
 public class CollectableResource : Selectable
 {
+    [Header("Collectable Resource")]
     [SerializeField] private EResourceType resourceType;
-    [SerializeField] private int amount;
+    [SerializeField] private int amount = 100;
 
     private int currentAmount;
+    private List<MeshRenderer> corn = new List<MeshRenderer>();
+
+    private new void Awake()
+    {
+        base.Awake();
+        FindFarmCorn();
+    }
+
+    private void FindFarmCorn()
+    {
+        if (resourceType == EResourceType.Food)
+        {
+            MeshRenderer[] meshes = GetComponentsInChildren<MeshRenderer>();
+            foreach (MeshRenderer mesh in meshes)
+            {
+                if (mesh.name == "Corn")
+                {
+                    corn.Add(mesh);
+                }
+            }
+        }
+    }
 
     private new void Start()
     {
         base.Start();
         currentAmount = amount;
         GetComponent<NavMeshObstacle>().carving = true;
+
+        if (amount < 1) Debug.LogError(name + " has no resource amount.");
     }
 
     public enum EResourceType
@@ -57,6 +82,16 @@ public class CollectableResource : Selectable
             GameObject treeStump = Instantiate(treeStumpPrefab, transform.position, transform.rotation);
             treeStump.transform.parent = transform;
         }
+        else if (resourceType == EResourceType.Food)
+        {
+            Building farm = GetComponent<Building>();
+            if (farm != null)
+            {
+                farm.GetComponent<Health>().NewBuilding();
+                farm.SetBuildState(Building.EBuildState.Building);
+                farm.FarmRebuild();
+            }
+        }
         else Destroy(gameObject);
 
     }
@@ -78,6 +113,32 @@ public class CollectableResource : Selectable
         {
             newStatus1 = "Depleted";
         }
+    }
+
+    public void ShowFarmCorn(bool isShowing)
+    {
+        if (corn.Count > 0)
+        {
+            foreach (MeshRenderer mesh in corn)
+            {
+                mesh.enabled = isShowing;
+            }
+        }
+
+        if (isShowing)
+        {
+            currentAmount = amount;
+        }
+    }
+
+    public bool IsAFarm()
+    {
+        bool isAFarm = false;
+        Building building = GetComponent<Building>();
+
+        if (building != null && building.BuildingType() == Building.EBuildingType.Farm) isAFarm = true;
+
+        return isAFarm;
     }
 }
 // Writen by Lukasz Dziedziczak

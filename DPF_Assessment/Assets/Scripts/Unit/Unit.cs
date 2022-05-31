@@ -56,8 +56,8 @@ public class Unit : Selectable
         attacker = GetComponent<Attacker>();
         buildingConstructor = GetComponent<BuildingConstructor>();
         healer = GetComponent<Healer>();
-        if (leftHand == null) leftHand = FindByName("handl");
-        if (rightHand == null) rightHand = FindByName("handr");
+        if (leftHand == null) leftHand = FindByName("hand_l");
+        if (rightHand == null) rightHand = FindByName("hand_r");
     }
 
     private new void Start()
@@ -65,7 +65,10 @@ public class Unit : Selectable
         base.Start();
         if (navMeshAgent != null) navMeshAgent.updateRotation = false;
         if (animator != null && animator.runtimeAnimatorController == null) Debug.LogError(name + " missing runtime Animator Controller");
-        
+
+        if (leftHand == null) Debug.LogError(name + " missing left hand transform.");
+        if (rightHand == null) Debug.LogError(name + " missing right hand transform.");
+
     }
 
     private new void Update()

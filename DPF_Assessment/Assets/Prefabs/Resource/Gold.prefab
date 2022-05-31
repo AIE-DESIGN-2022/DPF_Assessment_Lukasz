@@ -130,9 +130,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2c8e181dcdcc7e44aa45f08b882dac8e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _owningPlayerNumber: 0
-  _resourceType: 2
-  _amount: 500
+  owningPlayerNumber: 0
+  flashing: 0
+  flashingSpeed: 0.5
+  sightDistance: 15
+  resourceType: 2
+  amount: 500
 --- !u!54 &1086134341
 Rigidbody:
   m_ObjectHideFlags: 0

@@ -70,6 +70,19 @@ public class BuildingConstructor : MonoBehaviour
 
     private void ConstructBuilding()
     {
+        if (currentBuildTarget.IsFarmRebuild())
+        {
+            if (unit.Faction().CanAfford(Building.EBuildingType.Farm))
+            {
+                unit.Faction().SubtractFromStockpileCostOf(Building.EBuildingType.Farm);
+                currentBuildTarget.FarmRebuild(false);
+            }
+            else
+            {
+                ClearBuildTarget();
+            }
+        }
+
         if (unit != null && unit.Animator() != null & !unit.Animator().GetBool("building"))
         {
             unit.Animator().SetBool("building", true);

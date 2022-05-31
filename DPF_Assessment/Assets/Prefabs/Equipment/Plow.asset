@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f2023c0d49fae8d40acbceed05adab1e, type: 3}
   m_Name: Plow
   m_EditorClassIdentifier: 
-  _equipmentPrefab: {fileID: 3088846351085646221, guid: 715f130433d32b24f8826d72f06416fc, type: 3}
-  _heldInLeftHand: 0
-  _animatorOverrideController: {fileID: 0}
-  _projectilePrefab: {fileID: 0}
+  equipmentPrefab: {fileID: 3088846351085646221, guid: 715f130433d32b24f8826d72f06416fc, type: 3}
+  heldInLeftHand: 0
+  animatorOverrideController: {fileID: 0}
+  projectilePrefab: {fileID: 0}

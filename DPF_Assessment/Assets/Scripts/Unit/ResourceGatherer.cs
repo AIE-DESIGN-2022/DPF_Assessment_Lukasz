@@ -114,6 +114,7 @@ public class ResourceGatherer : MonoBehaviour
         targetResource = newResource;
         if (faction == null) SetFaction();
         SetTargetDropOffPoint(faction.ClosestResourceDropPoint(targetResource));
+        if (dropOff == null) Debug.LogError(name + " has no drop off point.");
         unit.HUD_StatusUpdate();
         isInRange = isAlreadyAtResource;
         //print(name + " set target= " + targetResource);
@@ -242,6 +243,17 @@ public class ResourceGatherer : MonoBehaviour
                 SetTargetResource(lastTargetResource);
                 isInRange = false;
                 lastTargetResource = null;
+            }
+            else if (lastTargetResource != null && !lastTargetResource.HasResource() && lastTargetResource.IsAFarm())
+            {
+                BuildingConstructor buildingConstructor = GetComponent<BuildingConstructor>();
+                Building farm = lastTargetResource.GetComponent<Building>();
+
+                if (buildingConstructor != null && farm != null)
+                {
+                    buildingConstructor.SetBuildTarget(farm);
+                    lastTargetResource = null;
+                }
             }
             else
             {

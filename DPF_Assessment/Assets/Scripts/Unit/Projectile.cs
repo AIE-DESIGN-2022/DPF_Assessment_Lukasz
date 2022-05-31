@@ -26,8 +26,8 @@ public class Projectile : MonoBehaviour
         ParticleSystem[] systems = GetComponentsInChildren<ParticleSystem>();
         foreach (ParticleSystem system in systems)
         {
-            if (system.name == "FXFireworksYellowSmall") explosion = system;
-            if (system.name == "FXFire") fire = system;
+            if (system.name == "FX_Fireworks_Yellow_Small") explosion = system;
+            if (system.name == "FX_Fire") fire = system;
         }
     }
 

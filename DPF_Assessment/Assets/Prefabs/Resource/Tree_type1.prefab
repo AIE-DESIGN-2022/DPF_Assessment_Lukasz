@@ -174,11 +174,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2c8e181dcdcc7e44aa45f08b882dac8e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _owningPlayerNumber: 0
+  owningPlayerNumber: 0
   flashing: 0
   flashingSpeed: 0.5
-  _resourceType: 0
-  _amount: 200
+  sightDistance: 15
+  resourceType: 0
+  amount: 200
 --- !u!1001 &5249149261481364552
 PrefabInstance:
   m_ObjectHideFlags: 0

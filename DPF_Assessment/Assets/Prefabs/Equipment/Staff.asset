@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f2023c0d49fae8d40acbceed05adab1e, type: 3}
   m_Name: Staff
   m_EditorClassIdentifier: 
-  _equipmentPrefab: {fileID: 1290391322787354896, guid: 096d39d11254a0b4596f80be9c58c3fe, type: 3}
-  _heldInLeftHand: 0
-  _animatorOverrideController: {fileID: 22100000, guid: cf5187eb35995014baf70b62c4130211, type: 2}
-  _projectilePrefab: {fileID: 553949100943014779, guid: f19886cfb23a05040b36e72390f4db02, type: 3}
+  equipmentPrefab: {fileID: 1290391322787354896, guid: 096d39d11254a0b4596f80be9c58c3fe, type: 3}
+  heldInLeftHand: 0
+  animatorOverrideController: {fileID: 22100000, guid: cf5187eb35995014baf70b62c4130211, type: 2}
+  projectilePrefab: {fileID: 553949100943014779, guid: f19886cfb23a05040b36e72390f4db02, type: 3}

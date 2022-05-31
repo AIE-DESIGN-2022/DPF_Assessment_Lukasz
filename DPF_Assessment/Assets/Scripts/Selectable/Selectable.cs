@@ -30,10 +30,11 @@ public class Selectable : MonoBehaviour
     // Start is called before the first frame update
     protected void Start()
     {
+        if (selectionIndicator == null) Debug.Log(name + " is missing Selection Indicator");
+
         Selected(false);
         RigidbodySetup();
         ColliderSetup();
-        if (selectionIndicator == null) Debug.Log("Selection Indicator Missing");
     }
 
     protected void Update()

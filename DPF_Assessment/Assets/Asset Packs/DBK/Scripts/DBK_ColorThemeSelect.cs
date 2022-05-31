@@ -12,7 +12,7 @@ public class DBK_ColorThemeSelect : MonoBehaviour {
     public int iOrnamentTheme = 1;
 
     private MaterialPropertyBlock propertyBlock;
-    private Renderer rendererr;
+    private Renderer renderer_r;
     private int ornamentRow;
     private int ornamentColumn;
 
@@ -26,11 +26,11 @@ public class DBK_ColorThemeSelect : MonoBehaviour {
         if (propertyBlock == null)
             propertyBlock = new MaterialPropertyBlock();
 
-        rendererr = GetComponentInChildren<Renderer>();
-        propertyBlock.SetInt("Color", iColorTheme);
-        propertyBlock.SetInt("WallpaperNumber", ReturnOrnamentRow(iOrnamentTheme));
-        propertyBlock.SetInt("WallpaperRow", ReturnOrnamentColumn(iOrnamentTheme));
-        rendererr.SetPropertyBlock(propertyBlock);
+        renderer_r = GetComponentInChildren<Renderer>();
+        propertyBlock.SetInt("_Color", iColorTheme);
+        propertyBlock.SetInt("_WallpaperNumber", ReturnOrnamentRow(iOrnamentTheme));
+        propertyBlock.SetInt("_WallpaperRow", ReturnOrnamentColumn(iOrnamentTheme));
+        renderer_r.SetPropertyBlock(propertyBlock);
     }
 
     void OnValidate()

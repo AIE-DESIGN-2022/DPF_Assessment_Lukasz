@@ -542,11 +542,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6842617767896643849, guid: 1ea37eef814277f4f8d96f5c83a930c4, type: 3}
       propertyPath: startingFood
-      value: 100
+      value: 10000
+      objectReference: {fileID: 0}
+    - target: {fileID: 6842617767896643849, guid: 1ea37eef814277f4f8d96f5c83a930c4, type: 3}
+      propertyPath: startingGold
+      value: 10000
       objectReference: {fileID: 0}
     - target: {fileID: 6842617767896643849, guid: 1ea37eef814277f4f8d96f5c83a930c4, type: 3}
       propertyPath: startingWood
-      value: 100
+      value: 10000
       objectReference: {fileID: 0}
     - target: {fileID: 6842617767896643849, guid: 1ea37eef814277f4f8d96f5c83a930c4, type: 3}
       propertyPath: numberOfPlayers

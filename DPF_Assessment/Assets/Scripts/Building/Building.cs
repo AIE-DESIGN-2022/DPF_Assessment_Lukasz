@@ -21,6 +21,7 @@ public class Building : Selectable
     private GameObject construction;
     private GameObject rubble;
     private List<GameObject> intersectingRubble = new List<GameObject>();
+    private bool farmRebuild = false;
 
     public enum EBuildingType
     {
@@ -184,16 +185,13 @@ public class Building : Selectable
 
             case EBuildState.Building:
                 GetComponent<NavMeshObstacle>().enabled = true;
-                //SetMaterialsColour(new Color(0, 0, 1, 0.5f));
-                EnableRenderersAndColliders(false);
+                SetMaterialsColour(Color.white);
                 ConstructionSite();
                 break;
 
             case EBuildState.Complete:
                 GetComponent<NavMeshObstacle>().enabled = true;
                 ConstructionSite(false);
-                EnableRenderersAndColliders();
-                SetMaterialsColour(Color.white);
                 break;
 
             case EBuildState.Destroyed:
@@ -281,26 +279,38 @@ public class Building : Selectable
 
     private void ConstructionSite(bool enabled = true)
     {
-        if (enabled)
+        if (buildingType == EBuildingType.Farm)
         {
-            GameObject constructionPrefab = (GameObject)Resources.Load<GameObject>("Prefabs/ConstructionSite");
-            if (constructionPrefab == null) Debug.LogError(name + " unable to load ConstructionSite prefab.");
-            construction = Instantiate(constructionPrefab, transform.position, transform.rotation);
-            construction.transform.parent = transform;
-            if (buildingType != EBuildingType.Tower)
+            CollectableResource farm = GetComponent<CollectableResource>();
+            if (farm != null)
             {
-                construction.transform.localScale = Vector3.one * 1.5f;
+                farm.ShowFarmCorn(!enabled);
             }
-            else
-            {
-                construction.transform.localScale = Vector3.one * 0.5f;
-            }
-            
         }
         else
         {
-            Destroy(construction.gameObject);
-            construction = null;
+            EnableRenderersAndColliders(!enabled);
+            if (enabled)
+            {
+                GameObject constructionPrefab = (GameObject)Resources.Load<GameObject>("Prefabs/ConstructionSite");
+                if (constructionPrefab == null) Debug.LogError(name + " unable to load ConstructionSite prefab.");
+                construction = Instantiate(constructionPrefab, transform.position, transform.rotation);
+                construction.transform.parent = transform;
+                if (buildingType != EBuildingType.Tower)
+                {
+                    construction.transform.localScale = Vector3.one * 1.5f;
+                }
+                else
+                {
+                    construction.transform.localScale = Vector3.one * 0.5f;
+                }
+
+            }
+            else
+            {
+                Destroy(construction.gameObject);
+                construction = null;
+            }
         }
     }
 
@@ -332,6 +342,15 @@ public class Building : Selectable
         }
     }
 
+    public bool IsFarmRebuild()
+    {
+        if (buildingType == EBuildingType.Farm) return farmRebuild;
+        else return false;
+    }
 
+    public void FarmRebuild(bool rebuildingFarm = true)
+    {
+        farmRebuild = rebuildingFarm;
+    }
 }
 // Writen by Lukasz Dziedziczak
