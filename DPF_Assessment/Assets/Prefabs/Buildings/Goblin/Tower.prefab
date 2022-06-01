@@ -255,10 +255,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 535332f0fbd536347a723ea59995d7c4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  unitWeapon: {fileID: 0}
+  unitWeapon: {fileID: 11400000, guid: 4e80b7c3808eaf24cb6ef4f83b65023c, type: 2}
   attackDamage: 10
   attackRate: 1
-  attackRange: 1
+  attackRange: 10
   towerStance: 1
 --- !u!1001 &4973327324861683208
 PrefabInstance:
