@@ -61,6 +61,11 @@ public class Health : MonoBehaviour
 
             }
         }
+
+        if (GetComponent<Selectable>().IsSelected())
+        {
+            FindObjectOfType<PlayerController>().SelectedUnitDied(GetComponent<Selectable>());
+        }
     }
 
     public float HealthPercentage()
@@ -73,5 +78,10 @@ public class Health : MonoBehaviour
     public bool IsFull() { return health == currentHealth; }
 
     public void NewBuilding() { currentHealth = 1; }
+
+    public void Kill()
+    {
+        TakeDamage(currentHealth);
+    }
 }
 // Writen by Lukasz Dziedziczak

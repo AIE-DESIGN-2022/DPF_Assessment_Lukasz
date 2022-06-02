@@ -6,7 +6,7 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    private List<Selectable> currentSelection;
+    [SerializeField] private List<Selectable> currentSelection;
     private int playerNumber = 1;
     private HUD_Manager HUD_Manager;
     private GameCameraController cameraController;
@@ -16,12 +16,55 @@ public class PlayerController : MonoBehaviour
     private Vector2 selectionPoint2;
     private LayerMask terrainMask;
 
+    // Cursors
+    private ECursorMode cursorMode = ECursorMode.Normal;
+    private Texture2D cursor;
+    private Texture2D cursorActive;
+    private Texture2D cursorMove;
+    private Texture2D cursorMoveActive;
+    private Texture2D cursorAttack;
+    private Texture2D cursorAttackActive;
+    private Texture2D cursorWorker;
+    private Texture2D cursorWorkerActive;
+
+    private List<GameObject> selectionCircles = new List<GameObject>();
+    private GameObject selectionCirclePrefab;
+    private float selectionCircleRate = 0.05f;
+    private float selectionCircleTimer = 0;
+
+    public enum ECursorMode
+    {
+        Normal,
+        Move,
+        Attack,
+        Worker,
+        Heal
+    }
+
 
     private void Awake()
     {
         cameraController = FindObjectOfType<GameCameraController>();
         selectionBox = FindSelectionBox();
         terrainMask |= (1 << LayerMask.NameToLayer("Terrain"));
+        LoadCursors();
+        selectionCirclePrefab = (GameObject)Resources.Load("Prefabs/selectionCircle");
+    }
+
+    private void LoadCursors()
+    {
+        Texture2D[] loadedCursors = Resources.LoadAll<Texture2D>("Cursors/");
+        foreach (var loadedCursor in loadedCursors)
+        {
+            if (loadedCursor.name == "G_Cursor_Basic2") cursor = loadedCursor;
+            if (loadedCursor.name == "Cursor_Basic2") cursorActive = loadedCursor;
+            if (loadedCursor.name == "G_Cursor_Move1") cursorMove = loadedCursor;
+            if (loadedCursor.name == "Cursor_Move1") cursorMoveActive = loadedCursor;
+            if (loadedCursor.name == "G_Cursor_Attack") cursorAttack = loadedCursor;
+            if (loadedCursor.name == "Cursor_Attack") cursorAttackActive = loadedCursor;
+            if (loadedCursor.name == "G_Cursor_Production") cursorWorker = loadedCursor;
+            if (loadedCursor.name == "Cursor_Production") cursorWorkerActive = loadedCursor;
+        }
     }
 
     private RectTransform FindSelectionBox()
@@ -41,6 +84,118 @@ public class PlayerController : MonoBehaviour
     {
         currentSelection = new List<Selectable>();
         selectionBox.gameObject.SetActive(false);
+
+
+        SetCursor(ECursorMode.Normal);
+    }
+
+    private void SetCursor(ECursorMode newCursorMode, bool isActive = false)
+    {
+        if(newCursorMode != cursorMode) cursorMode = newCursorMode;
+
+        Vector2 cursorOffSet = new Vector2();
+
+        switch (cursorMode)
+        {
+            case ECursorMode.Normal:
+                cursorOffSet = new Vector2(cursor.width / 3, 0);
+                if (isActive)
+                {
+                    if (cursorActive != null) Cursor.SetCursor(cursorActive, cursorOffSet, CursorMode.Auto);
+                }
+                else
+                {
+                    
+                    if (cursor != null) Cursor.SetCursor(cursor, cursorOffSet, CursorMode.Auto);
+                }
+                break;
+
+            case ECursorMode.Move:
+                cursorOffSet = new Vector2(cursorMove.width / 2, cursorMove.height /2);
+                if (isActive)
+                {
+                    if (cursorMoveActive != null) Cursor.SetCursor(cursorMoveActive, cursorOffSet, CursorMode.Auto);
+                }
+                else
+                {
+
+                    if (cursorMove != null) Cursor.SetCursor(cursorMove, cursorOffSet, CursorMode.Auto);
+                }
+                break;
+
+            case ECursorMode.Attack:
+                cursorOffSet = new Vector2(cursorAttack.width / 3, 0);
+                if (isActive)
+                {
+                    if (cursorAttackActive != null) Cursor.SetCursor(cursorAttackActive, cursorOffSet, CursorMode.Auto);
+                }
+                else
+                {
+
+                    if (cursorAttack != null) Cursor.SetCursor(cursorAttack, cursorOffSet, CursorMode.Auto);
+                }
+                break;
+
+            case ECursorMode.Worker:
+                cursorOffSet = new Vector2(cursorWorker.width / 3, 0);
+                if (isActive)
+                {
+                    if (cursorWorkerActive != null) Cursor.SetCursor(cursorWorkerActive, cursorOffSet, CursorMode.Auto);
+                }
+                else
+                {
+
+                    if (cursorWorker != null) Cursor.SetCursor(cursorWorker, cursorOffSet, CursorMode.Auto);
+                }
+                break;
+
+            default:
+                Debug.LogError(name + " - Cursor Mode not found.");
+                break;
+
+        }
+
+        
+    }
+
+    private void SetCursorActive(bool isActive)
+    {
+        SetCursor(cursorMode, isActive);
+    }
+
+    private bool SelectionHasWorkers()
+    {
+        foreach (Selectable selectable in currentSelection)
+        {
+            Unit unit = selectable.GetComponent<Unit>();
+            if (unit != null && unit.UnitType() == Unit.EUnitType.Worker) return true;
+        }
+
+        return false;
+    }
+
+    private bool SelectionHasUnits()
+    {
+        if (currentSelection.Count > 0)
+        {
+            foreach (Selectable selectable in currentSelection)
+            {
+                Unit unit = selectable.GetComponent<Unit>();
+                if (unit != null) return true;
+            }
+        }
+        return false;
+    }
+
+    private bool SelectionHasAttackers()
+    {
+        foreach (Selectable selectable in currentSelection)
+        {
+            Attacker attacker = selectable.GetComponent<Attacker>();
+            if (attacker != null) return true;
+        }
+
+        return false;
     }
 
     // Update is called once per frame
@@ -48,15 +203,44 @@ public class PlayerController : MonoBehaviour
     {
         if (!playerControlOnline) return;
 
-        if (Input.GetMouseButtonDown(0)) HandleLeftClick();
+        UpdateCursor();
 
-        if (Input.GetMouseButton(0)) HandleLeftMouseDown();
+        if (Input.GetMouseButtonDown(0)) HandleLeftMouseDown();
+
+        if (Input.GetMouseButton(0)) HandleLeftMouse();
 
         if (Input.GetMouseButtonUp(0)) HandleLeftMouseUp();
 
         if (Input.GetMouseButtonDown(1)) HandleRightClick();
 
+        if (Input.GetMouseButton(0) || Input.GetMouseButton(1)) SetCursorActive(true);
+        else SetCursorActive(false);
+
         if (Input.GetKeyDown(KeyCode.Escape)) HandleEscapePushed();
+
+        if (Input.GetKeyDown(KeyCode.Delete)) KillSelectedUnits();
+
+        SelectionCircleLogic();
+    }
+
+    private void UpdateCursor()
+    {
+        if (Input.GetMouseButton(0)) return;
+
+        if (cameraController.MouseIsInPlayArea())
+        {
+            if (SelectionHasUnits())
+            {
+                if (SelectionHasAttackers() && IsEnemy(SelectableUnderMouse())) SetCursor(ECursorMode.Attack);
+                else if (SelectionHasWorkers() && (IsCollectableResource(SelectableUnderMouse()) || IsPlayersInteractableBuilding(SelectableUnderMouse()))) SetCursor(ECursorMode.Worker);
+                else SetCursor(ECursorMode.Move);
+            }
+            else SetCursor(ECursorMode.Normal);
+        }
+        else
+        {
+            SetCursor(ECursorMode.Normal);
+        }
     }
 
     private void HandleEscapePushed()
@@ -64,27 +248,13 @@ public class PlayerController : MonoBehaviour
         FindObjectOfType<GameController>().PauseMenu().ToggleShowing();
     }
 
-    private void HandleLeftClick()
+    private void HandleLeftMouseDown()
     {
         if (!cameraController.MouseIsInPlayArea()) return;
-        if (!Input.GetKey(KeyCode.LeftShift)) ClearSelection();
 
-        RaycastHit hit = UnderMouse();
-        Selectable selectable = hit.transform.GetComponent<Selectable>();
-        if (selectable != null && selectable.PlayerNumber() == playerNumber)
-        {
-            AddToSelection(selectable);
-        }
+        SetCursorActive(true);
 
-        if (selectable != null && currentSelection.Count == 0)
-        {
-            AddToSelection(selectable);
-        }
-
-        if (selectable == null) // if no selectable object was hit with mouse click
-        {
-            selectionPoint1 = Input.mousePosition;
-        }
+        selectionPoint1 = Input.mousePosition;
     }
 
     private void AddToSelection(Selectable selectable)
@@ -106,7 +276,7 @@ public class PlayerController : MonoBehaviour
         HUD_Manager.NewSelection(currentSelection);
     }
 
-    private void HandleLeftMouseDown()
+    private void HandleLeftMouse()
     {
         if (selectionPoint1 == new Vector2()) return;
         selectionPoint2 = Input.mousePosition;
@@ -127,10 +297,20 @@ public class PlayerController : MonoBehaviour
             selectionBox.gameObject.SetActive(false);
             cameraController.allowMovement = true;
         }
+
+        /*if (selectionBox.gameObject.activeInHierarchy && !cameraController.MouseIsInPlayArea())
+        {
+            AddToSelection(PlayersUnits(InSelectionBox()));
+
+            selectionBox.gameObject.SetActive(false);
+            cameraController.allowMovement = true;
+        }*/
     }
 
     private void HandleLeftMouseUp()
     {
+        SetCursorActive(false);
+
         if (selectionBox.gameObject.activeInHierarchy && cameraController.MouseIsInPlayArea())
         {
             AddToSelection(PlayersUnits(InSelectionBox()));
@@ -138,6 +318,23 @@ public class PlayerController : MonoBehaviour
             selectionBox.gameObject.SetActive(false);
             cameraController.allowMovement = true;
         }
+        else
+        {
+            if (!Input.GetKey(KeyCode.LeftShift)) ClearSelection();
+
+            Selectable selectable = SelectableUnderMouse();
+
+            if (selectable != null && selectable.PlayerNumber() == playerNumber)
+            {
+                AddToSelection(selectable);
+            }
+
+            if (selectable != null && currentSelection.Count == 0)
+            {
+                AddToSelection(selectable);
+            }
+        }
+
         selectionPoint1 = new Vector2();
         selectionPoint2 = new Vector2();
     }
@@ -260,6 +457,8 @@ public class PlayerController : MonoBehaviour
                 }
             }
         }
+
+        building.ConfirmOrder();
     }
 
     private RaycastHit UnderMouse()
@@ -269,6 +468,56 @@ public class PlayerController : MonoBehaviour
         Physics.Raycast(ray, out hit);
 
         return hit;
+    }
+
+    private Selectable SelectableUnderMouse()
+    {
+        RaycastHit hit = UnderMouse();
+        Selectable selectable = hit.transform.GetComponent<Selectable>();
+        return selectable;
+    }
+
+    private bool IsEnemy(Selectable selectableUnderMouse)
+    {
+        if (selectableUnderMouse == null) return false;
+
+        Unit unit = selectableUnderMouse.GetComponent<Unit>();
+        if (unit != null)
+        {
+            if (unit.PlayerNumber() != playerNumber) return true;
+        }
+        else
+        {
+            Building building = selectableUnderMouse.GetComponent<Building>();
+            if (building != null && building.PlayerNumber() != playerNumber) return true;
+        }
+
+        return false;
+    }
+
+    private bool IsCollectableResource(Selectable selectableUnderMouse)
+    {
+        if (selectableUnderMouse == null) return false;
+
+        CollectableResource collectableResource = selectableUnderMouse.GetComponent<CollectableResource>();
+        if (collectableResource != null) return true;
+
+        return false;
+    }
+
+    private bool IsPlayersInteractableBuilding(Selectable selectableUnderMouse)
+    {
+        if (selectableUnderMouse == null) return false;
+
+        Building building = selectableUnderMouse.GetComponent<Building>();
+
+        if (building != null && building.PlayerNumber() == playerNumber)
+        {
+            if (building.BuildState() == Building.EBuildState.Building) return true;
+            if (building.BuildState() == Building.EBuildState.Complete && !building.GetComponent<Health>().IsFull()) return true;
+        }
+
+        return false;
     }
 
     public Vector3 LocationUnderMouse()
@@ -294,6 +543,8 @@ public class PlayerController : MonoBehaviour
         }
         currentSelection.Clear();
         HUD_Manager.ClearSelection();
+
+        SetCursor(ECursorMode.Normal);
     }
 
     private void GiveMoveOrder(Vector3 newLocation)
@@ -311,6 +562,7 @@ public class PlayerController : MonoBehaviour
             MoveInFormation(newLocation);
         }
 
+        SpawnSelectionCircle(newLocation);
 
         /*foreach (Selectable selectable in currentSelection)
         {
@@ -324,46 +576,66 @@ public class PlayerController : MonoBehaviour
 
     private void GiveAttackOrder(Selectable newTarget)
     {
+        bool hasGivenOrder = false;
+
         foreach (Selectable selectable in currentSelection)
         {
             Unit unit = selectable.GetComponent<Unit>();
             if (unit != null && unit.PlayerNumber() == playerNumber && unit.UnitType() != Unit.EUnitType.Worker)
             {
                 unit.SetTarget(newTarget);
+                hasGivenOrder = true;
             }
             else
             {
                 Building building = selectable.GetComponent<Building>();
                 if (building != null)
                 {
-
+                    Attacker attacker = building.GetComponent<Attacker>();
+                    if (attacker != null)
+                    {
+                        attacker.SetTarget(newTarget);
+                        hasGivenOrder = true;
+                    }
                 }
             }
         }
+
+        if (hasGivenOrder) newTarget.ConfirmAttack();
     }
 
     private void GiveUnitHealOrder(Unit unit)
     {
+        bool hasGivenOrder = false;
+
         foreach (Selectable selectable in currentSelection)
         {
             Healer selectedHealer = selectable.GetComponent<Healer>();
             if (selectedHealer != null)
             {
                 selectedHealer.SetTargetHealUnit(unit);
+                hasGivenOrder = true;
             }
-        }    
+        }
+
+        if (hasGivenOrder) unit.ConfirmOrder();
     }
 
     private void GiveCollectResourceOrder(CollectableResource newResource)
     {
+        bool hasGivenOrder = false;
+
         foreach (Selectable selectable in currentSelection)
         {
             Unit unit = selectable.GetComponent<Unit>();
             if (unit != null && unit.UnitType() == Unit.EUnitType.Worker)
             {
                 unit.SetTarget(newResource);
+                hasGivenOrder = true;
             }
         }
+
+        if (hasGivenOrder) newResource.ConfirmOrder();
     }
 
     public void SetHUD_Manager(HUD_Manager newManager)
@@ -401,5 +673,75 @@ public class PlayerController : MonoBehaviour
     }
 
     public bool NothingSelected() { return currentSelection.Count == 0; }
+
+    private void KillSelectedUnits()
+    {
+        if (currentSelection.Count > 0)
+        {
+            Selectable[] selectables = currentSelection.ToArray();
+            foreach (Selectable selectable in selectables)
+            {
+                if (selectable != null && selectable.PlayerNumber() == playerNumber)
+                {
+                    Health health = selectable.GetComponent<Health>();
+                    if(health != null && health.IsAlive())
+                    {
+                        selectable.GetComponent<Health>().Kill();
+                        currentSelection.Remove(selectable);
+                    }
+                }
+            }
+
+            ClearSelection();
+        }
+    }
+
+    public void SelectedUnitDied(Selectable selectable)
+    {
+        if (currentSelection.Contains(selectable))
+        {
+            currentSelection.Remove(selectable);
+        }
+        selectable.Selected(false);
+
+        HUD_Manager.NewSelection(currentSelection);
+    }
+
+    private void SpawnSelectionCircle(Vector3 location)
+    {
+        if (selectionCirclePrefab != null)
+        {
+            Vector3 offset = new Vector3(0, 0.05f, 0);
+            Quaternion rotation = Quaternion.Euler(90 , 0, 0);
+            GameObject selectionCircle = Instantiate(selectionCirclePrefab, location + offset, rotation);
+            selectionCircles.Add(selectionCircle);
+        }
+    }
+
+    private void SelectionCircleLogic()
+    {
+        if (selectionCircles.Count > 0)
+        {
+            selectionCircleTimer += Time.deltaTime;
+
+            if (selectionCircleTimer > selectionCircleRate)
+            {
+                selectionCircleTimer = 0;
+
+                GameObject[] selectionCirclesArray = selectionCircles.ToArray();
+
+                foreach (GameObject selectionCircle in selectionCirclesArray)
+                {
+                    selectionCircle.transform.localScale -= selectionCircle.transform.localScale * 0.1f;
+
+                    if (selectionCircle.transform.localScale.x <= 0.1f)
+                    {
+                        selectionCircles.Remove(selectionCircle);
+                        Destroy(selectionCircle);
+                    }
+                }
+            }
+        }
+    }
 }
 // Writen by Lukasz Dziedziczak

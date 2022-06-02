@@ -7,6 +7,7 @@ using UnityEngine;
 public class Selectable : MonoBehaviour
 {
     private SpriteRenderer selectionIndicator;
+    private Color selectionColor;
 
     [Tooltip("The player number whom owns this unit. 0 = none")]
     [SerializeField, Range(0,4)] private int owningPlayerNumber = 0;
@@ -15,8 +16,10 @@ public class Selectable : MonoBehaviour
     protected GameController gameController;
 
     [SerializeField] protected bool flashing = false;
-    [SerializeField, Range(0f, 3f)] private float flashingSpeed = 0.5f;
+    private float flashingSpeed = 0.1f;
     private float flashingTimer = 0f;
+    private float flashFor = 2;
+    private float flashForTimer = 0;
 
     [SerializeField] protected float sightDistance = 15;
 
@@ -25,6 +28,7 @@ public class Selectable : MonoBehaviour
         selectionIndicator = GetComponentInChildren<SpriteRenderer>();
         health = GetComponent<Health>();
         gameController = FindObjectOfType<GameController>();
+        selectionColor = selectionIndicator.color;
     }
 
     // Start is called before the first frame update
@@ -157,6 +161,7 @@ public class Selectable : MonoBehaviour
         if (flashing)
         {
             flashingTimer += Time.deltaTime;
+            flashForTimer += Time.deltaTime;
 
             if (flashingTimer > flashingSpeed)
             {
@@ -171,12 +176,27 @@ public class Selectable : MonoBehaviour
 
                 flashingTimer = 0;
             }
+
+            if (flashFor != 0 && flashForTimer > flashFor)
+            {
+                SetFlashing(false);
+                flashForTimer = 0;
+                flashFor = 0;
+                selectionIndicator.color = selectionColor;
+                Selected(false);
+            }
         }
     }
 
     public void SetFlashing(bool isFlashing)
     {
         flashing = isFlashing;
+    }
+
+    public void StartFlashingFor(float seconds)
+    {
+        flashFor = seconds;
+        SetFlashing(true);
     }
 
     public List<Selectable> GetEnemiesInSight()
@@ -194,6 +214,18 @@ public class Selectable : MonoBehaviour
 
         return list;
     }
+
+    public void ConfirmOrder()
+    {
+        StartFlashingFor(1);
+    }
+
+    public void ConfirmAttack()
+    {
+        selectionIndicator.color = Color.red;
+        ConfirmOrder();
+    }
+
 
 }
 // Writen by Lukasz Dziedziczak
