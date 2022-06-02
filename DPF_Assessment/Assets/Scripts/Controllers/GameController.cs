@@ -15,6 +15,8 @@ public class GameController : MonoBehaviour
     private UI_Menu pauseMenu;
     private Transform mapTransform;
 
+    public GameObject gameObject;
+
     [Header("New Game")]
     [SerializeField] private bool isNewGame = false;
     [SerializeField] List<Faction.EFaction> listOfPlayers;
@@ -56,6 +58,8 @@ public class GameController : MonoBehaviour
     {
         if (isNewGame) SetupNewGame();
         else SetupGame();
+
+        print(gameObject);
     }
 
     private void SetupNewGame()

@@ -253,8 +253,6 @@ public class PlayerController : MonoBehaviour
     {
         if (!cameraController.MouseIsInPlayArea()) return;
 
-        SetCursorActive(true);
-
         selectionPoint1 = Input.mousePosition;
     }
 
@@ -310,7 +308,6 @@ public class PlayerController : MonoBehaviour
 
     private void HandleLeftMouseUp()
     {
-        SetCursorActive(false);
 
         if (selectionBox.gameObject.activeInHierarchy && cameraController.MouseIsInPlayArea())
         {
@@ -319,7 +316,7 @@ public class PlayerController : MonoBehaviour
             selectionBox.gameObject.SetActive(false);
             cameraController.allowMovement = true;
         }
-        else
+        else if (cameraController.MouseIsInPlayArea())
         {
             if (!Input.GetKey(KeyCode.LeftShift)) ClearSelection();
 
