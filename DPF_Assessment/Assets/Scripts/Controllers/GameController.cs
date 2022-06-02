@@ -22,6 +22,8 @@ public class GameController : MonoBehaviour
     [SerializeField] int startingWood = 0;
     [SerializeField] int startingGold = 0;
 
+    public int treeCount = 0;
+
     private void Awake()
     {
         hud_Manager = GetComponentInChildren<HUD_Manager>();
@@ -205,6 +207,11 @@ public class GameController : MonoBehaviour
         }
 
         return mapTransform;
+    }
+
+    public void CountTree()
+    {
+        treeCount++;
     }
 }
 // Writen by Lukasz Dziedziczak

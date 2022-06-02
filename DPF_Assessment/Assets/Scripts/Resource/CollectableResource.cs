@@ -43,6 +43,9 @@ public class CollectableResource : Selectable
         GetComponent<NavMeshObstacle>().carving = true;
 
         if (amount < 1) Debug.LogError(name + " has no resource amount.");
+
+        if (resourceType == EResourceType.Wood) gameController.treeCount++;
+
     }
 
     public enum EResourceType
