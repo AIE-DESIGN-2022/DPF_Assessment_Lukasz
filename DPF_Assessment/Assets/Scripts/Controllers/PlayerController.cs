@@ -231,7 +231,8 @@ public class PlayerController : MonoBehaviour
         {
             if (SelectionHasUnits())
             {
-                if (SelectionHasAttackers() && IsEnemy(SelectableUnderMouse())) SetCursor(ECursorMode.Attack);
+                if (IsPlayersSelectable(SelectableUnderMouse())) SetCursor(ECursorMode.Normal);
+                else if (SelectionHasAttackers() && IsEnemy(SelectableUnderMouse())) SetCursor(ECursorMode.Attack);
                 else if (SelectionHasWorkers() && (IsCollectableResource(SelectableUnderMouse()) || IsPlayersInteractableBuilding(SelectableUnderMouse()))) SetCursor(ECursorMode.Worker);
                 else SetCursor(ECursorMode.Move);
             }
@@ -434,6 +435,8 @@ public class PlayerController : MonoBehaviour
 
     private void GiveUnitToBuildingOrder(Building building)
     {
+        bool orderGiven = false;
+
         if (building.IsResourceDropPoint())
         {
             foreach (Selectable selectable in currentSelection)
@@ -442,6 +445,7 @@ public class PlayerController : MonoBehaviour
                 if (unit != null && unit.IsCarryingResource())
                 {
                     unit.SetResourceDropOffPoint(building);
+                    orderGiven = true;
                 }
             }
         }
@@ -454,11 +458,12 @@ public class PlayerController : MonoBehaviour
                 if (constructor != null)
                 {
                     constructor.SetBuildTarget(building);
+                    orderGiven = true;
                 }
             }
         }
 
-        building.ConfirmOrder();
+        if (orderGiven) building.ConfirmOrder();
     }
 
     private RaycastHit UnderMouse()
@@ -520,6 +525,15 @@ public class PlayerController : MonoBehaviour
         return false;
     }
 
+    private bool IsPlayersSelectable(Selectable selectableUnderMouse)
+    {
+        if (selectableUnderMouse == null) return false;
+
+        if (selectableUnderMouse.PlayerNumber() == playerNumber) return true;
+
+        return false;
+    }
+
     public Vector3 LocationUnderMouse()
     {
         return UnderMouse().point;
@@ -549,20 +563,24 @@ public class PlayerController : MonoBehaviour
 
     private void GiveMoveOrder(Vector3 newLocation)
     {
+        bool hasGivenOrder = false;
+
         if (currentSelection.Count == 1)
         {
             Unit unit = currentSelection[0].GetComponent<Unit>();
             if (unit != null && unit.PlayerNumber() == playerNumber)
             {
                 unit.MoveTo(newLocation);
+                hasGivenOrder = true;
             }
         }
         else
         {
             MoveInFormation(newLocation);
+            hasGivenOrder = true;
         }
 
-        SpawnSelectionCircle(newLocation);
+        if (hasGivenOrder) SpawnSelectionCircle(newLocation);
 
         /*foreach (Selectable selectable in currentSelection)
         {
