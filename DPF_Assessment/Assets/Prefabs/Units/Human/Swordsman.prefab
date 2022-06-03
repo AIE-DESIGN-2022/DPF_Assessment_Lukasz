@@ -136,7 +136,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   owningPlayerNumber: 0
   flashing: 0
-  flashingSpeed: 0.5
   sightDistance: 12
   leftHand: {fileID: 0}
   rightHand: {fileID: 0}
@@ -212,7 +211,7 @@ MonoBehaviour:
   unitWeapon: {fileID: 11400000, guid: 2a74aa01d76942e4d802d52f31a8eddd, type: 2}
   attackDamage: 10
   attackRate: 1
-  attackRange: 1
+  attackRange: 2
   towerStance: 1
 --- !u!114 &2180560696749430641
 MonoBehaviour:
