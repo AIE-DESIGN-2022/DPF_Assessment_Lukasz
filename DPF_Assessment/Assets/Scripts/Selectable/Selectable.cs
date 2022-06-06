@@ -9,7 +9,7 @@ public class Selectable : MonoBehaviour
 {
     private SpriteRenderer selectionIndicator;
     private Color selectionColor;
-    private MeshRenderer minimapIndicator;
+    private MinimapIndicator minimapIndicator;
 
     [Tooltip("The player number whom owns this unit. 0 = none")]
     [SerializeField, Range(0,4)] private int owningPlayerNumber = 0;
@@ -31,7 +31,7 @@ public class Selectable : MonoBehaviour
         health = GetComponent<Health>();
         gameController = FindObjectOfType<GameController>();
         selectionColor = selectionIndicator.color;
-        MinimapIndicator();
+        minimapIndicator = GetComponentInChildren<MinimapIndicator>();
     }
 
     // Start is called before the first frame update
@@ -43,17 +43,6 @@ public class Selectable : MonoBehaviour
         RigidbodySetup();
         ColliderSetup();
         
-    }
-
-    private void MinimapIndicator()
-    {
-        MeshRenderer[] meshes = GetComponentsInChildren<MeshRenderer>();
-        foreach (MeshRenderer mesh in meshes)
-        {
-            if (mesh.name == "MinimapIndicator") minimapIndicator = mesh;
-        }
-
-        //if (minimapIndicator == null) Debug.LogError(name + " did not find miniMap indicator.");
     }
 
     protected void Update()
@@ -95,12 +84,14 @@ public class Selectable : MonoBehaviour
         {
             if (gameController.IsPlayerFaction(PlayerNumber()))
             {
-                minimapIndicator.material.color = gameController.PlayerController().PlayerColor();
+                minimapIndicator.SetColor(gameController.PlayerController().PlayerColor());
             }
             else
             {
-                minimapIndicator.material.color = Color.red;
+                minimapIndicator.SetColor(Color.red);
             }
+
+            minimapIndicator.SetSize();
         }
         else
         {

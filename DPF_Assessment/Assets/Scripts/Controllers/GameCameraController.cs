@@ -321,10 +321,16 @@ public class GameCameraController : MonoBehaviour
                 minimapcameraLines.SetPosition(index, linePositions[index]);
             }
 
-            float width = terrainZ/100 * 2;
+            float width = MapSize()/ 100 * 2;
             minimapcameraLines.startWidth = width;
             minimapcameraLines.endWidth = width;
         }
+    }
+
+    public float MapSize()
+    {
+        float mapSize = (terrainX + terrainZ) / 2;
+        return mapSize;
     }
 }
 // Writen by Lukasz Dziedziczak
