@@ -205,7 +205,7 @@ public class ResourceGatherer : MonoBehaviour
     {
         if (gatheredAmount >= maxCarry) return;
 
-        if (targetResource.ResourceType() != gatheringType)
+        if (targetResource != null &&  targetResource.ResourceType() != gatheringType)
         {
             gatheringType = targetResource.ResourceType();
             gatheredAmount = 0;

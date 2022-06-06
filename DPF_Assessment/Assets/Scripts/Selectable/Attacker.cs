@@ -128,6 +128,11 @@ public class Attacker : MonoBehaviour
                     }
                 }
             }
+
+            if (target != null && !TargetIsInSight())
+            {
+                ClearTarget();
+            }
         }
 
         
@@ -165,6 +170,16 @@ public class Attacker : MonoBehaviour
             }
             float distance = Vector3.Distance(transform.position, target.transform.position);
             return distance < attackRange + offset;
+        }
+        else return false;
+    }
+
+    private bool TargetIsInSight()
+    {
+        if (target != null)
+        {
+            float distance = Vector3.Distance(transform.position, target.transform.position);
+            return distance < building.SightDistance();
         }
         else return false;
     }

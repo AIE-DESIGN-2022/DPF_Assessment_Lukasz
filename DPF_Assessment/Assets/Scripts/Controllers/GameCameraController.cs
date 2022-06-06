@@ -37,11 +37,16 @@ public class GameCameraController : MonoBehaviour
     private float bottomScreenOffSet = 0;
     private float mousePosX;
     private GameController gameController;
+    private LineRenderer minimapcameraLines;
+    private LayerMask terrainMask;
+
 
     void Awake()
     {
         _camera = GetComponentInChildren<Camera>();
         gameController = FindObjectOfType<GameController>();
+        minimapcameraLines = FindObjectOfType<LineRenderer>();
+        terrainMask |= (1 << LayerMask.NameToLayer("Terrain"));
     }
 
     void Start()
@@ -56,13 +61,13 @@ public class GameCameraController : MonoBehaviour
         if (bottomHUDSection != null) bottomScreenOffSet = bottomHUDSection.rect.height / Screen.height;
 
         if (_camera == null) Debug.LogError("Camera not found");
+
+        DrawMinimapCameraLines();
     }
 
     private void InitilizeTerrainData()
     {
-        Terrain terrain;
-        var getTerrain = GameObject.Find("Terrain");
-        terrain = getTerrain.GetComponent<Terrain>();
+        Terrain terrain = FindObjectOfType<Terrain>();        
 
         terrainX = terrain.terrainData.size.x;
         terrainZ = terrain.terrainData.size.z;
@@ -75,9 +80,9 @@ public class GameCameraController : MonoBehaviour
         PanByArrowKey();
         PanByRightClick();
 
-        if (Input.GetMouseButtonDown(2)) allowMovement = false;
+        /*if (Input.GetMouseButtonDown(2)) allowMovement = false;
         if (Input.GetMouseButton(2)) CameraRotation();
-        if (Input.GetMouseButtonUp(2)) allowMovement = true;
+        if (Input.GetMouseButtonUp(2)) allowMovement = true;*/
     }
 
     private void PanByRightClick()
@@ -88,9 +93,11 @@ public class GameCameraController : MonoBehaviour
             float MouseY = Input.GetAxis("Mouse Y") * -1;
 
             Vector3 step = new Vector3(MouseX, 0, MouseY);
-            if (step.magnitude > 0)
+            Vector3 newPosition = transform.position + step;
+            if (step.magnitude > 0 && IsInsideTerrain(newPosition))
             {
-                transform.position += step;
+                transform.position = newPosition;
+                DrawMinimapCameraLines();
             }
         }
     }
@@ -103,9 +110,12 @@ public class GameCameraController : MonoBehaviour
         if (Input.GetKey(KeyCode.LeftArrow)) step.x -= scrollSpeed * Time.deltaTime;
         if (Input.GetKey(KeyCode.RightArrow)) step.x += scrollSpeed * Time.deltaTime;
 
-        if (step.magnitude > 0)
+        Vector3 newPosition = transform.position + step * 5;
+
+        if (step.magnitude > 0 && IsInsideTerrain(newPosition))
         {
-            transform.position += step * 5;
+            transform.position = newPosition;
+            DrawMinimapCameraLines();
         }
     }
 
@@ -131,6 +141,7 @@ public class GameCameraController : MonoBehaviour
                 currentDistanceToGround = newDistanceToGround;
                 currentCameraAngle = NewCameraAngle(newDistanceToGround);
                 ResetCameraPosition();
+                DrawMinimapCameraLines();
             }
         }  
     }
@@ -203,6 +214,7 @@ public class GameCameraController : MonoBehaviour
         if (newPosition != new Vector3() && IsInsideTerrain(newPosition) && timeInScrollSpace > timeBeforeScrollStart)
         {
             transform.position = newPosition;
+            DrawMinimapCameraLines();
         }
 
     }
@@ -237,7 +249,7 @@ public class GameCameraController : MonoBehaviour
             float distanceToGroundAsPercentage = (newDistanceToGround - minDistanceToGround) / range;
             newCameraAngle = (cameraAngle/100) * (distanceToGroundAsPercentage * 100);
         }
-
+        //print(newCameraAngle);
         return newCameraAngle;
     }
 
@@ -254,7 +266,7 @@ public class GameCameraController : MonoBehaviour
         else
         {
             if (newPos.x > 0 && newPos.x < terrainX) xOk = true;
-            if (newPos.z > 0 && newPos.x < terrainZ) zOk = true;
+            if (newPos.z > 0 && newPos.z < terrainZ) zOk = true;
         }
         return xOk && zOk;
     }
@@ -280,5 +292,39 @@ public class GameCameraController : MonoBehaviour
     }
 
     public Camera Camera() { return _camera; }
+
+    private void DrawMinimapCameraLines()
+    {
+        List<Vector3> screenPositions = new List<Vector3>();
+        screenPositions.Add(new Vector3(0, 0, 0));
+        screenPositions.Add(new Vector3(Screen.width, 0, 0));
+        screenPositions.Add(new Vector3(Screen.width, Screen.height, 0));
+        screenPositions.Add(new Vector3(0, Screen.height, 0));
+
+        List<Vector3> linePositions = new List<Vector3>();
+
+        foreach (Vector3 screenPosition in screenPositions)
+        {
+            Ray ray = _camera.ScreenPointToRay(screenPosition);
+            RaycastHit hit;
+            Physics.Raycast(ray, out hit, 500, terrainMask);
+            Vector3 mapPos = new Vector3(hit.point.x, transform.position.y + 5, hit.point.z);
+            linePositions.Add(mapPos);
+        }
+
+        
+
+        if (minimapcameraLines != null)
+        {
+            for (int index = 0; index < linePositions.Count; index++)
+            {
+                minimapcameraLines.SetPosition(index, linePositions[index]);
+            }
+
+            float width = terrainZ/100 * 2;
+            minimapcameraLines.startWidth = width;
+            minimapcameraLines.endWidth = width;
+        }
+    }
 }
 // Writen by Lukasz Dziedziczak

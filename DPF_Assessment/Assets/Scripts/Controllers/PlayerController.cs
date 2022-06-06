@@ -6,6 +6,7 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
+    [SerializeField] Color playerColor;
     [SerializeField] private List<Selectable> currentSelection;
     private int playerNumber = 1;
     private HUD_Manager HUD_Manager;
@@ -468,15 +469,18 @@ public class PlayerController : MonoBehaviour
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
         Physics.Raycast(ray, out hit);
-
         return hit;
     }
 
     private Selectable SelectableUnderMouse()
     {
         RaycastHit hit = UnderMouse();
-        Selectable selectable = hit.transform.GetComponent<Selectable>();
-        return selectable;
+        if (hit.transform != null)
+        {
+            Selectable selectable = hit.transform.GetComponent<Selectable>();
+            return selectable;
+        }
+        else return null;
     }
 
     private bool IsEnemy(Selectable selectableUnderMouse)
@@ -757,6 +761,11 @@ public class PlayerController : MonoBehaviour
                 }
             }
         }
+    }
+
+    public Color PlayerColor()
+    {
+        return playerColor;
     }
 }
 // Writen by Lukasz Dziedziczak

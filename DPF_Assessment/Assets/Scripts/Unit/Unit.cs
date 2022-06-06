@@ -157,6 +157,13 @@ public class Unit : Selectable
     public void MoveTo(Vector3 newLocation)
     {
         //Debug.Log(name + "Recieved MoveTo order");
+        ClearPreviousActions();
+        Move(NearestEmptyPosition(newLocation));
+        HUD_StatusUpdate();
+    }
+
+    private void ClearPreviousActions()
+    {
         if (resourceGatherer != null)
         {
             resourceGatherer.ClearTargetResource();
@@ -166,9 +173,7 @@ public class Unit : Selectable
         if (attacker != null) attacker.ClearTarget();
         if (healer != null) healer.ClearTargetUnit();
         if (animator != null) animator.SetTrigger("stop");
-        Move(NearestEmptyPosition(newLocation));
         ClearPatrol();
-        HUD_StatusUpdate();
     }
 
     public void MoveTo(Selectable selectable)
@@ -196,6 +201,7 @@ public class Unit : Selectable
 
     public void SetTarget(CollectableResource newCollectableResource)
     {
+        ClearPreviousActions();
         if (resourceGatherer != null)
         {
             resourceGatherer.SetTargetResource(newCollectableResource);
@@ -204,6 +210,7 @@ public class Unit : Selectable
 
     public void SetTarget(Selectable newTarget)
     {
+        ClearPreviousActions();
         if (attacker != null)
         {
             attacker.SetTarget(newTarget);
@@ -214,6 +221,7 @@ public class Unit : Selectable
 
     public void SetHealTarget(Unit newTarget)
     {
+        ClearPreviousActions();
         if (healer != null && PlayerNumber() == newTarget.PlayerNumber())
         {
             healer.SetTargetHealUnit(newTarget);

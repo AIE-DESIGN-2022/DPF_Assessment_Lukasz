@@ -52,7 +52,7 @@ public class UI_Action : MonoBehaviour
     public void BuildingsSelected(List<Building> selectedBuildings)
     {
         UnitProducer unitProducer = selectedBuildings[0].GetComponent<UnitProducer>();
-        if (unitProducer != null)
+        if (unitProducer != null && selectedBuildings[0].BuildState() == Building.EBuildState.Complete)
         {
             //print("Action UI sees unitProducer");
             List<Unit.EUnitType> buildableUnits = unitProducer.GetListOfBuildableUnits();

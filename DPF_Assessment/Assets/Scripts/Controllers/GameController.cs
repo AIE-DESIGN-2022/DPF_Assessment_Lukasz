@@ -168,6 +168,11 @@ public class GameController : MonoBehaviour
         
     }
 
+    public bool IsPlayerNumber(int aPlayerNumber)
+    {
+        return aPlayerNumber == playerNumber;
+    }
+
     public Faction GetPlayerFaction()
     {
         return GetFaction(playerNumber);
