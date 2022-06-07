@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7865993885333173752}
   - component: {fileID: 3205042099595955716}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: selectionSquare
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -91,7 +91,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 511423197562035125}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: TowerSpawn
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -128,7 +128,7 @@ GameObject:
   - component: {fileID: 3611899582028842790}
   - component: {fileID: 1181928318766410712}
   - component: {fileID: 1924691727442656202}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Tower
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -271,6 +271,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: SM_Bld_Viking_Tower_01
       objectReference: {fileID: 0}
+    - target: {fileID: 1946330524238642, guid: 708de9c6731241d4aae7c626e6c9310a, type: 3}
+      propertyPath: m_Layer
+      value: 9
+      objectReference: {fileID: 0}
     - target: {fileID: 4697871995403358, guid: 708de9c6731241d4aae7c626e6c9310a, type: 3}
       propertyPath: m_RootOrder
       value: 2
@@ -393,6 +397,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: MinimapIndicator
       objectReference: {fileID: 0}
+    - target: {fileID: 8956592297507718774, guid: 50f24eec5cfcab74a9b97578858a8ce2, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 50f24eec5cfcab74a9b97578858a8ce2, type: 3}
 --- !u!4 &88712229937849636 stripped
@@ -407,6 +415,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1711498797100917276}
     m_Modifications:
+    - target: {fileID: 464624599196494381, guid: 6b21e3bcb18927740b332cebd080f45f, type: 3}
+      propertyPath: m_Layer
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 3316934303798314787, guid: 6b21e3bcb18927740b332cebd080f45f, type: 3}
+      propertyPath: m_Layer
+      value: 9
+      objectReference: {fileID: 0}
     - target: {fileID: 4880089932623121292, guid: 6b21e3bcb18927740b332cebd080f45f, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -494,6 +510,10 @@ PrefabInstance:
     - target: {fileID: 6912716872966408885, guid: 6b21e3bcb18927740b332cebd080f45f, type: 3}
       propertyPath: m_Name
       value: HealthBar
+      objectReference: {fileID: 0}
+    - target: {fileID: 6912716872966408885, guid: 6b21e3bcb18927740b332cebd080f45f, type: 3}
+      propertyPath: m_Layer
+      value: 9
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6b21e3bcb18927740b332cebd080f45f, type: 3}

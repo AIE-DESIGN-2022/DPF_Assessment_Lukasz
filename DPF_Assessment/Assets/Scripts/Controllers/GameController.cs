@@ -12,6 +12,7 @@ public class GameController : MonoBehaviour
     private HUD_Manager hud_Manager;
     private PlayerController playerController;
     private GameCameraController cameraController;
+    private FogOfWarController fogOfWarController;
     private UI_Menu pauseMenu;
     private Transform mapTransform;
 
@@ -29,6 +30,7 @@ public class GameController : MonoBehaviour
         hud_Manager = GetComponentInChildren<HUD_Manager>();
         playerController = GetComponentInChildren<PlayerController>();
         cameraController = GetComponentInChildren<GameCameraController>();
+        fogOfWarController = GetComponentInChildren<FogOfWarController>();
         FindMenus();
     }
 
@@ -79,7 +81,9 @@ public class GameController : MonoBehaviour
             if (i == 0)
             {
                 hud_Manager.SetPlayerFaction(newFaction);
+                cameraController.SetPlayerFaction(newFaction);
                 cameraController.MoveTo(spawnPoints[i].GroundCoordinates());
+                fogOfWarController.SetPlayerFaction(newFaction);
             }
         }
         playerController.SetHUD_Manager(hud_Manager);
@@ -113,7 +117,9 @@ public class GameController : MonoBehaviour
     {
         BuildListOfFactions();
         hud_Manager.SetPlayerFaction(GetPlayerFaction());
+        cameraController.SetPlayerFaction(GetPlayerFaction());
         playerController.SetHUD_Manager(hud_Manager);
+        fogOfWarController.SetPlayerFaction(GetPlayerFaction());
     }
 
     private void BuildListOfFactions()

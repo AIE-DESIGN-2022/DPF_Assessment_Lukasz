@@ -40,6 +40,8 @@ public class GameCameraController : MonoBehaviour
     private LineRenderer minimapcameraLines;
     private LayerMask terrainMask;
 
+    private Faction playerFaction;
+
 
     void Awake()
     {
@@ -337,6 +339,46 @@ public class GameCameraController : MonoBehaviour
     {
         transform.position = newPosition;
         DrawMinimapCameraLines();
+    }
+
+    public void SetPlayerFaction(Faction newFaction)
+    {
+        playerFaction = newFaction;
+    }
+
+    public List<Selectable> SelectablesOnScreen(List<Selectable> selectables)
+    {
+        List<Selectable> list = new List<Selectable>();
+
+        foreach (Selectable selectable in selectables)
+        {
+            Vector3 screenPosition = _camera.WorldToScreenPoint(selectable.transform.position);
+
+            if (screenPosition.x > 0 && screenPosition.x < Screen.width && screenPosition.y > 0 && screenPosition.y < Screen.height)
+            {
+                list.Add(selectable);
+            }
+        }
+
+
+        return list;
+    }
+
+    public List<Selectable> PlayersSelectablesOnScreen()
+    {
+        List<Selectable> list = new List<Selectable>();
+
+        if (playerFaction != null)
+        {
+            list = SelectablesOnScreen(playerFaction.Selectables());
+        }
+
+        return list;
+    }
+
+    public float CameraHeight()
+    {
+        return _camera.transform.position.y;
     }
 }
 // Writen by Lukasz Dziedziczak

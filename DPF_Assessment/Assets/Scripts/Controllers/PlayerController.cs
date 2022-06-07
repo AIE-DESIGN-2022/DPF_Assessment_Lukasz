@@ -16,6 +16,7 @@ public class PlayerController : MonoBehaviour
     private Vector2 selectionPoint1;
     private Vector2 selectionPoint2;
     private LayerMask terrainMask;
+    private LayerMask selectableMask;
 
     // Cursors
     private ECursorMode cursorMode = ECursorMode.Normal;
@@ -48,6 +49,8 @@ public class PlayerController : MonoBehaviour
         cameraController = FindObjectOfType<GameCameraController>();
         selectionBox = FindSelectionBox();
         terrainMask |= (1 << LayerMask.NameToLayer("Terrain"));
+        selectableMask |= (1 << LayerMask.NameToLayer("Terrain"));
+        selectableMask |= (1 << LayerMask.NameToLayer("Selectable"));
         LoadCursors();
         selectionCirclePrefab = (GameObject)Resources.Load("Prefabs/selectionCircle");
     }
@@ -470,7 +473,7 @@ public class PlayerController : MonoBehaviour
     {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
-        Physics.Raycast(ray, out hit);
+        Physics.Raycast(ray, out hit, 500, selectableMask);
         return hit;
     }
 

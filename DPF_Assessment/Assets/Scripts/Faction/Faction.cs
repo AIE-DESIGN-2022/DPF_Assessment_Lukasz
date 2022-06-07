@@ -374,5 +374,22 @@ public class Faction : MonoBehaviour
         if (config.Faction() != faction) Debug.LogError(name + "has FactionConfig mismatch.");
         
     }
+
+    public List<Selectable> Selectables()
+    {
+        List<Selectable> list = new List<Selectable>();
+
+        foreach (Unit unit in units)
+        {
+            list.Add(unit);
+        }
+
+        foreach (Building building in buildings)
+        {
+            list.Add(building);
+        }
+
+        return list;
+    }
 }
 // Writen by Lukasz Dziedziczak
