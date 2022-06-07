@@ -22,12 +22,13 @@ public class UI_Menu : MonoBehaviour
 
     private UI_Menu singePlayerMenu;
     private UI_Menu mainMenu;
+    private UI_Loading sceneLoading;
 
 
     private void Awake()
     {
         gameController = FindObjectOfType<GameController>();
-
+        sceneLoading = FindObjectOfType<UI_Loading>();
         FindButtons();
         LoadOtherMenus();
     }
@@ -122,12 +123,16 @@ public class UI_Menu : MonoBehaviour
 
     private void NewCampaignClicked()
     {
-        SceneManager.LoadScene("SampleScene");
+        //SceneManager.LoadScene("SampleScene");
+        ToggleShowing();
+        sceneLoading.LoadScene((int)SceneIndex.SAMPLE_SCENE);
     }
 
     private void NewSkirmishClicked()
     {
-        SceneManager.LoadScene("SkirmishMap");
+        //SceneManager.LoadScene("SkirmishMap");
+        ToggleShowing();
+        sceneLoading.LoadScene((int)SceneIndex.SKIRMISH_MAP);
     }
 
     // Update is called once per frame

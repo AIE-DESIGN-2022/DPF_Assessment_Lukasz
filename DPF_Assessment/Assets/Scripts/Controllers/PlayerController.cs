@@ -312,6 +312,8 @@ public class PlayerController : MonoBehaviour
 
         if (selectionBox.gameObject.activeInHierarchy && cameraController.MouseIsInPlayArea())
         {
+            if (!Input.GetKey(KeyCode.LeftShift)) ClearSelection();
+
             AddToSelection(PlayersUnits(InSelectionBox()));
 
             selectionBox.gameObject.SetActive(false);
