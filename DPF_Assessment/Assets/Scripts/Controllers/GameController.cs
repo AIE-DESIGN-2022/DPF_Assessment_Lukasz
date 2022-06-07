@@ -79,7 +79,7 @@ public class GameController : MonoBehaviour
             if (i == 0)
             {
                 hud_Manager.SetPlayerFaction(newFaction);
-                cameraController.transform.position = spawnPoints[i].GroundCoordinates();
+                cameraController.MoveTo(spawnPoints[i].GroundCoordinates());
             }
         }
         playerController.SetHUD_Manager(hud_Manager);

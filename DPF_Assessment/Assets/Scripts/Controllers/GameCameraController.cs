@@ -332,5 +332,11 @@ public class GameCameraController : MonoBehaviour
         float mapSize = (terrainX + terrainZ) / 2;
         return mapSize;
     }
+
+    public void MoveTo(Vector3 newPosition)
+    {
+        transform.position = newPosition;
+        DrawMinimapCameraLines();
+    }
 }
 // Writen by Lukasz Dziedziczak
