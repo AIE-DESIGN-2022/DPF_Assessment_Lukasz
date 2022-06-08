@@ -3,9 +3,10 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class UI_Action_Button : MonoBehaviour
+public class UI_Action_Button : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
     private UnitProducer unitProducer;
     private Unit.EUnitType buildableUnit;
@@ -20,16 +21,21 @@ public class UI_Action_Button : MonoBehaviour
     private bool flashing = false;
     [SerializeField] private float flashingSpeed = 0.25f;
     private float flashingTimer;
+    private UI_Tooltip tooltipUI;
+    private FactionConfig config;
 
     private void Awake()
     {
         button = GetComponentInChildren<Button>();
         background = GetComponentInChildren<Image>();
+        
     }
 
     private void Start()
     {
         button.onClick.AddListener(OnClick);
+        tooltipUI = FindObjectOfType<GameController>().HUD_Manager().Tooltip_HUD();
+        config = FindObjectOfType<GameController>().GetPlayerFaction().Config();
     }
 
     private void Update()
@@ -278,6 +284,109 @@ public class UI_Action_Button : MonoBehaviour
                 button.interactable = false;
             }
         }
+    }
+
+    public void OnPointerEnter(PointerEventData eventData)
+    {
+        if (tooltipUI != null)
+        {
+            string topText = "";
+            string bottomText = "";
+
+            if (unitProducer != null)
+            {
+                topText = "Build " + config.PrefabName(buildableUnit);
+
+                //bottomText = "Cost: ";
+                int foodCost = config.UnitConfig(buildableUnit).foodCost;
+                int woodCost = config.UnitConfig(buildableUnit).woodCost;
+                int goldCost = config.UnitConfig(buildableUnit).goldCost;
+
+
+                if (foodCost > 0)
+                {
+                    bottomText += foodCost + " Food ";
+                }
+
+                if (woodCost > 0)
+                {
+                    bottomText += woodCost + " Wood ";
+                }
+
+                if (goldCost > 0)
+                {
+                    bottomText += goldCost + " Gold";
+                }
+            }
+
+            else if (faction != null)
+            {
+                topText = "Build " + config.PrefabName(constructableBuilding);
+
+                int foodCost = config.BuildingConfig(constructableBuilding).foodCost;
+                int woodCost = config.BuildingConfig(constructableBuilding).woodCost;
+                int goldCost = config.BuildingConfig(constructableBuilding).goldCost;
+
+
+                if (foodCost > 0)
+                {
+                    bottomText += foodCost + " Food ";
+                }
+
+                if (woodCost > 0)
+                {
+                    bottomText += woodCost + " Wood ";
+                }
+
+                if (goldCost > 0)
+                {
+                    bottomText += goldCost + " Gold";
+                }
+            }
+
+            else if (selectedUnits.Count > 0 || selectedBuildings.Count > 0)
+            {
+                if (buttonType == UI_Action.EButtonType.Build)
+                {
+                    topText = "Build Menu";
+                    bottomText = "Lists all buildings.";
+                }
+                else if (buttonType == UI_Action.EButtonType.Back)
+                {
+                    topText = "Go Back";
+                    bottomText = "Back to previous menu.";
+                }
+                else if (buttonType == UI_Action.EButtonType.StancePassive)
+                {
+                    topText = "Passive Stance";
+                    bottomText = "Will do nothing unless ordered.";
+                }
+                else if (buttonType == UI_Action.EButtonType.StanceDefensive)
+                {
+                    topText = "Defensive Stance";
+                    bottomText = "Will attack if attacked.";
+                }
+                else if (buttonType == UI_Action.EButtonType.StanceOffensive)
+                {
+                    topText = "Offensive Stance";
+                    bottomText = "Will attack on sight.";
+                }
+                else if (buttonType == UI_Action.EButtonType.StancePatrol)
+                {
+                    topText = "Patrol";
+                    bottomText = "Walk between two points.";
+                }
+            }
+
+            tooltipUI.Show();
+            tooltipUI.SetText(topText, bottomText);
+        }
+        else Debug.LogError(name + " has no ref to ToolTip_UI");
+    }
+
+    public void OnPointerExit(PointerEventData eventData)
+    {
+        if (tooltipUI != null) tooltipUI.Show(false);
     }
 }
 // Writen by Lukasz Dziedziczak

@@ -123,5 +123,6 @@ public class FogOfWar : MonoBehaviour
         {
             colors[vert].a = 0.2f;
         }
+        changed.Clear();
     }
 }

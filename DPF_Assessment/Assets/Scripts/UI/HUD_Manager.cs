@@ -11,12 +11,14 @@ public class HUD_Manager : MonoBehaviour
     private List<Selectable> selection;
     private FactionConfig config;
     private UI_Info infoUI;
+    private UI_Tooltip tooltipUI;
 
     private void Awake()
     {
         resourcesUI = GetComponentInChildren<UI_Resources>();
         actionsUI = GetComponentInChildren<UI_Action>();
         infoUI = GetComponentInChildren<UI_Info>();
+        tooltipUI = GetComponentInChildren<UI_Tooltip>();
     }
 
     public void SetPlayerFaction(Faction playerFaction)
@@ -112,6 +114,11 @@ public class HUD_Manager : MonoBehaviour
     {
         resourcesUI.UpdateResources();
         actionsUI.UpdateCanAffords();
+    }
+
+    public UI_Tooltip Tooltip_HUD()
+    {
+        return tooltipUI;
     }
 }
 // Writen by Lukasz Dziedziczak

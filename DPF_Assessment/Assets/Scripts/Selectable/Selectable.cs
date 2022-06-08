@@ -79,7 +79,11 @@ public class Selectable : MonoBehaviour
     {
         owningPlayerNumber = newPlayerNumber;
         owningFaction = newFaction;
+        SetMinimapIndicator();
+    }
 
+    public void SetMinimapIndicator()
+    {
         if (minimapIndicator)
         {
             if (gameController.IsPlayerFaction(PlayerNumber()))

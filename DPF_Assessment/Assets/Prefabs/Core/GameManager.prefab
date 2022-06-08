@@ -297,7 +297,7 @@ MonoBehaviour:
   startingWood: 10000
   startingGold: 10000
   treeCount: 0
---- !u!114 &286427952
+--- !u!114 &1775548230
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -569,7 +569,8 @@ PrefabInstance:
       propertyPath: m_Color.r
       value: 0.6609215
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 247991242000584899, guid: 7d626b8a5af6f2243b69898673ba916d, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 7d626b8a5af6f2243b69898673ba916d, type: 3}
 --- !u!1 &9025836470427567462 stripped
 GameObject:

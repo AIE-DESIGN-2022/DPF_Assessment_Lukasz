@@ -185,7 +185,7 @@ public class FactionConfig : ScriptableObject
             }
         }
 
-        return possiblePrefabs[0].name;
+        return possiblePrefabs[0].name.Replace("(Male)", "");
     }
 
     public string PrefabName(Building.EBuildingType type)

@@ -158,6 +158,8 @@ public class Building : Selectable
     public void ConstructBuilding(float buildRate)
     {
         health.Heal(buildRate);
+        HUD_BuildingStatusUpdate();
+        HUD_HealthBarUpdate();
 
         if (health.IsFull())
         {
@@ -184,17 +186,20 @@ public class Building : Selectable
                 break;
 
             case EBuildState.Building:
+                SetMinimapIndicator();
                 GetComponent<NavMeshObstacle>().enabled = true;
                 SetMaterialsColour(Color.white);
                 ConstructionSite();
                 break;
 
             case EBuildState.Complete:
+                SetMinimapIndicator();
                 GetComponent<NavMeshObstacle>().enabled = true;
                 ConstructionSite(false);
                 break;
 
             case EBuildState.Destroyed:
+                SetMinimapIndicator();
                 GetComponent<NavMeshObstacle>().enabled = false;
                 EnableRenderersAndColliders(false);
                 Rubble();

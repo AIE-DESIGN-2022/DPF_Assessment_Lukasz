@@ -86,11 +86,11 @@ public class BuildingConstructor : MonoBehaviour
         if (unit != null && unit.Animator() != null & !unit.Animator().GetBool("building"))
         {
             unit.Animator().SetBool("building", true);
-            transform.forward = currentBuildTarget.transform.position;
+            
             unit.HUD_BuildingStatusUpdate();
         }
         EquipTool();
-        transform.LookAt(currentBuildTarget.transform);
+        transform.forward = currentBuildTarget.transform.position;
     }
 
     public void ClearBuildTarget()
@@ -113,6 +113,7 @@ public class BuildingConstructor : MonoBehaviour
         if (currentBuildTarget != null)
         {
             currentBuildTarget.ConstructBuilding(buildRate);
+            unit.HUD_BuildingStatusUpdate();
         }
     }
 
