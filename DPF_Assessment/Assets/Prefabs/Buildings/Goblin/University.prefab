@@ -214,7 +214,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   owningPlayerNumber: 0
   flashing: 0
-  sightDistance: 15
+  sightDistance: 20
   buildingType: 2
   resourceDropPoint: 0
   rangeOffset: 3

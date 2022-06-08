@@ -15,6 +15,7 @@ public class GameController : MonoBehaviour
     private FogOfWarController fogOfWarController;
     private UI_Menu pauseMenu;
     private Transform mapTransform;
+    private List<Selectable> nonPlayersSelectables = new List<Selectable>();
 
     [Header("New Game")]
     [SerializeField] private bool isNewGame = false;
@@ -58,6 +59,40 @@ public class GameController : MonoBehaviour
     {
         if (isNewGame) SetupNewGame();
         else SetupGame();
+        BuildListOfNonPlayerSelectable();
+    }
+
+    private void BuildListOfNonPlayerSelectable()
+    {
+        Selectable[] selectables = FindObjectsOfType<Selectable>();
+        foreach (Selectable selectable in selectables)
+        {
+            if (selectable.PlayerNumber() == 0) nonPlayersSelectables.Add(selectable);
+        }
+    }
+
+    public List<Selectable> AllSelectablesButPlayers()
+    {
+        List<Selectable> list = new List<Selectable>();
+
+        foreach (Faction faction in factions)
+        {
+            if (faction.PlayerNumber() != playerNumber)
+            {
+                foreach (Selectable selectable in faction.Selectables())
+                {
+                    list.Add(selectable);
+                }
+
+            }
+        }
+
+        foreach (Selectable selectable in nonPlayersSelectables)
+        {
+            list.Add(selectable);
+        }
+
+        return list;
     }
 
     private void SetupNewGame()

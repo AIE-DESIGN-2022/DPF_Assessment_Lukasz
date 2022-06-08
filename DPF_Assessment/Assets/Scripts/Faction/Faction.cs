@@ -386,7 +386,10 @@ public class Faction : MonoBehaviour
 
         foreach (Building building in buildings)
         {
-            list.Add(building);
+            if (building.BuildState() == Building.EBuildState.Complete)
+            {
+                list.Add(building);
+            }
         }
 
         return list;

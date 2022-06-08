@@ -249,5 +249,14 @@ public class Selectable : MonoBehaviour
     }
 
     public float SightDistance() { return sightDistance; }
+
+    public void Visable(bool isVisable)
+    {
+        MeshRenderer[] meshes = GetComponentsInChildren<MeshRenderer>();
+        foreach (MeshRenderer mesh in meshes)
+        {
+            mesh.enabled = isVisable;
+        }
+    }
 }
 // Writen by Lukasz Dziedziczak

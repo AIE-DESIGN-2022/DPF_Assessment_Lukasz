@@ -255,6 +255,8 @@ public class PlayerController : MonoBehaviour
 
     private void HandleLeftMouseDown()
     {
+        //AnyUnderMouse();
+
         if (!cameraController.MouseIsInPlayArea()) return;
 
         selectionPoint1 = Input.mousePosition;
@@ -475,6 +477,20 @@ public class PlayerController : MonoBehaviour
         RaycastHit hit;
         Physics.Raycast(ray, out hit, 500, selectableMask);
         return hit;
+    }
+
+    private void AnyUnderMouse()
+    {
+        LayerMask fogLayer = new LayerMask();
+        fogLayer |= (1 << LayerMask.NameToLayer("FogOfWar"));
+
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        RaycastHit hit;
+        Physics.Raycast(ray, out hit, 500, fogLayer);
+
+        print("hit point" + hit.point);
+        print("name= " + hit.transform.gameObject.name);
+        print("layer= " + hit.transform.gameObject.layer);
     }
 
     private Selectable SelectableUnderMouse()

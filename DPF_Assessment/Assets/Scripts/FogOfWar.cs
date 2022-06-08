@@ -5,56 +5,49 @@ using UnityEngine;
 
 public class FogOfWar : MonoBehaviour
 {
-    private GameObject forOfWar;
+    private GameObject fogOfWar;
     private Mesh mesh;
     private Vector3[] vertices;
     private Color[] colors;
     private Color32[] colors32;
+    private Vector3[] positions;
     private LayerMask fogLayer;
     private Camera gameCamera;
+    private List<int> changed;
 
     private void Awake()
     {
-        forOfWar = gameObject;
-        mesh = forOfWar.GetComponent<MeshFilter>().mesh;
+        fogOfWar = gameObject;
+        mesh = fogOfWar.GetComponent<MeshFilter>().mesh;
         vertices = mesh.vertices;
         colors = new Color[vertices.Length];
         colors32 = new Color32[vertices.Length];
+        positions = new Vector3[vertices.Length];
+        fogLayer = new LayerMask();
         fogLayer |= (1 << LayerMask.NameToLayer("FogOfWar"));
-        
+        //fogLayer = fogOfWar.layer;
+        changed = new List<int>();
     }
 
 
     // Start is called before the first frame update
     void Start()
     {
-        for (int i = 0; i < colors.Length; i++)
+        for (int i = 0; i < vertices.Length; i++)
         {
             colors[i] = Color.black;
             colors32[i] = Color.black;
+            positions[i] = fogOfWar.transform.TransformPoint(vertices[i]);
         }
         gameCamera = FindObjectOfType<GameController>().CameraController().Camera();
 
         if (vertices.Length == 0) Debug.LogError(name + " no vertices found");
-        //else print("number of vertices: " + vertices.Length);
     }
 
     // Update is called once per frame
     void Update()
     {
-        //Test();
-    }
 
-    private void Test()
-    {
-        for (int i = 0; i < vertices.Length;i++)
-        {
-            if (i < vertices.Length/2)
-            {
-                colors[i].a = 0;
-            }
-        }
-        UpdateColor();
     }
 
     void UpdateColor()
@@ -76,37 +69,45 @@ public class FogOfWar : MonoBehaviour
 
     public void ProcessVisibility(List<Selectable> selectables)
     {
+        TurnBackAllChanged();
+        List<Vector3> fogHits = new List<Vector3>();
 
         foreach (Selectable selectable in selectables)
         {
-            
             Vector3 rayOrigin = selectable.transform.position;
-            rayOrigin.y = 100;
-            //Ray ray = new Ray(gameCamera.transform.position, selectable.transform.position - gameCamera.transform.position);
-            Ray ray = new Ray(rayOrigin, selectable.transform.up * -1);
+            rayOrigin.y += 50;
+            Vector3 rayDirection = selectable.transform.up * -1;
+            Ray ray = new Ray(rayOrigin, rayDirection);
             RaycastHit hit;
-            if (Physics.Raycast(ray, out hit, 300, fogLayer))
-            {
-                //print(selectable.name + " hit fogOfWar at " + hit.point);
-                for (int i = 0; i < vertices.Length; i++)
-                {
-                    Vector3 v = forOfWar.transform.TransformPoint(vertices[i]);
-                    float distance = Vector3.SqrMagnitude(v - hit.point);
-                    float sightDistanceSqr = (selectable.SightDistance() * selectable.SightDistance());
-                    if (distance < sightDistanceSqr)
-                    {
-                        float alpha = Mathf.Min(colors[i].a, distance / sightDistanceSqr);
-                        colors[i].a = alpha;
 
-                        if (alpha < 0.1f)
-                        {
-                            print(i + " set to " + alpha);
-                        }
-                    }
-                }
-                UpdateColor();
+            
+            if (Physics.Raycast(ray, out hit, 100, fogLayer))
+            {
+                fogHits.Add(hit.point);
             }
         }
+
+        for (int i = 0; i < vertices.Length; i++)
+        {
+            float distance = 0;
+            float sightDistanceSqr = 20*20;
+
+            foreach (Vector3 fogHit in fogHits)
+            {
+                distance = Vector3.SqrMagnitude(positions[i] - fogHit);
+
+                if (distance != 0 && distance < sightDistanceSqr)
+                {
+                    //float alpha = Mathf.Min(colors[i].a, distance / sightDistanceSqr);
+                    //colors[i].a = alpha;
+                    colors[i].a = 0;
+                    changed.Add(i);
+                }
+            }
+
+            
+        }
+        UpdateColor();
     }
 
     public void SetFogHeight(float height)
@@ -114,5 +115,13 @@ public class FogOfWar : MonoBehaviour
         Vector3 position = transform.position;
         position.y = height;
         transform.position = position;
+    }
+
+    private void TurnBackAllChanged()
+    {
+        foreach (int vert in changed)
+        {
+            colors[vert].a = 0.2f;
+        }
     }
 }

@@ -39,8 +39,10 @@ public class GameCameraController : MonoBehaviour
     private GameController gameController;
     private LineRenderer minimapcameraLines;
     private LayerMask terrainMask;
+    private LayerMask fogMask;
 
     private Faction playerFaction;
+    private FogOfWarController fogOfWarController;
 
 
     void Awake()
@@ -49,6 +51,8 @@ public class GameCameraController : MonoBehaviour
         gameController = FindObjectOfType<GameController>();
         minimapcameraLines = FindObjectOfType<LineRenderer>();
         terrainMask |= (1 << LayerMask.NameToLayer("Terrain"));
+        fogMask |= (1 << LayerMask.NameToLayer("FogOfWar"));
+        fogOfWarController = FindObjectOfType<FogOfWarController>();
     }
 
     void Start()
@@ -78,7 +82,7 @@ public class GameCameraController : MonoBehaviour
     void Update()
     {
         CameraMovement();
-        CameraHeigh();
+        CameraHeighUpdate();
         PanByArrowKey();
         PanByRightClick();
 
@@ -129,7 +133,7 @@ public class GameCameraController : MonoBehaviour
         transform.RotateAround(transform.position, transform.TransformDirection(Vector3.up), horizontal * cameraRotationSpeed);
     }
 
-    private void CameraHeigh()
+    private void CameraHeighUpdate()
     {
         if (!MouseIsInPlayArea()) return;
 
@@ -144,6 +148,7 @@ public class GameCameraController : MonoBehaviour
                 currentCameraAngle = NewCameraAngle(newDistanceToGround);
                 ResetCameraPosition();
                 DrawMinimapCameraLines();
+                //fogOfWarController.SetFogHeight(CameraHeight() / 3 * 2);
             }
         }  
     }
@@ -251,8 +256,13 @@ public class GameCameraController : MonoBehaviour
             float distanceToGroundAsPercentage = (newDistanceToGround - minDistanceToGround) / range;
             newCameraAngle = (cameraAngle/100) * (distanceToGroundAsPercentage * 100);
         }
-        //print(newCameraAngle);
-        return newCameraAngle;
+
+        if (newCameraAngle > 45)
+        {
+            return newCameraAngle;
+        }
+        else return 45;
+        
     }
 
     private bool IsInsideTerrain(Vector3 newPos)
@@ -309,8 +319,8 @@ public class GameCameraController : MonoBehaviour
         {
             Ray ray = _camera.ScreenPointToRay(screenPosition);
             RaycastHit hit;
-            Physics.Raycast(ray, out hit, 500, terrainMask);
-            Vector3 mapPos = new Vector3(hit.point.x, transform.position.y + 5, hit.point.z);
+            Physics.Raycast(ray, out hit, 500, fogMask);
+            Vector3 mapPos = new Vector3(hit.point.x, 25, hit.point.z);
             linePositions.Add(mapPos);
         }
 
