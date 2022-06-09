@@ -90,7 +90,8 @@ public class BuildingConstructor : MonoBehaviour
             unit.HUD_BuildingStatusUpdate();
         }
         EquipTool();
-        transform.forward = currentBuildTarget.transform.position;
+        //transform.forward = currentBuildTarget.transform.position;
+        transform.LookAt(currentBuildTarget.transform.position);
     }
 
     public void ClearBuildTarget()

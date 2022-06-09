@@ -461,5 +461,15 @@ public class Unit : Selectable
         return health.HealthPercentage() != 1;
     }
 
+    public bool IsIdle()
+    {
+        if (resourceGatherer != null && resourceGatherer.HasResourceTarget()) return false;
+        if (resourceGatherer != null && resourceGatherer.HasDropOffTarget()) return false;
+        if (buildingConstructor != null && buildingConstructor.HasBuildTarget()) return false;
+
+        if (hasStopped) return true;
+        else return false;
+    }
+
 }
 // Writen by Lukasz Dziedziczak

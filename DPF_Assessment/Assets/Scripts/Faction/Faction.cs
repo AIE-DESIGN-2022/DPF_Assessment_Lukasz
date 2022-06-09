@@ -394,5 +394,20 @@ public class Faction : MonoBehaviour
 
         return list;
     }
+
+    public List<Selectable> IdleWorkers()
+    {
+        List<Selectable> list = new List<Selectable>();
+
+        foreach (Unit unit in units)
+        {
+            if (unit.UnitType() == Unit.EUnitType.Worker && unit.IsIdle())
+            {
+                list.Add(unit);
+            }
+        }
+
+        return list;
+    }
 }
 // Writen by Lukasz Dziedziczak

@@ -1013,6 +1013,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Swordsman
       objectReference: {fileID: 0}
+    - target: {fileID: 8418730917576266227, guid: 50ea675e450a47a4581431bfa39c3c89, type: 3}
+      propertyPath: unitStance
+      value: 2
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 50ea675e450a47a4581431bfa39c3c89, type: 3}
 --- !u!4 &1275361682 stripped
@@ -1722,6 +1726,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5469529345731184090, guid: 1ea37eef814277f4f8d96f5c83a930c4, type: 3}
       propertyPath: m_Positions.Array.data[1].z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6842617767896643849, guid: 1ea37eef814277f4f8d96f5c83a930c4, type: 3}
+      propertyPath: isNewGame
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6867176360101429541, guid: 1ea37eef814277f4f8d96f5c83a930c4, type: 3}

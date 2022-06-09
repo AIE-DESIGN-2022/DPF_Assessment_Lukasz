@@ -15,10 +15,12 @@ public class Projectile : MonoBehaviour
     private bool flyingInAir = true;
     private ParticleSystem fire;
     private ParticleSystem explosion;
+    private CombatMultiplier combatMultiplier;
 
     private void Awake()
     {
         FindParticleSystems();
+        combatMultiplier = (CombatMultiplier)Resources.Load<CombatMultiplier>("CombatMultiplier");
     }
 
     private void FindParticleSystems()
@@ -34,7 +36,7 @@ public class Projectile : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        if (combatMultiplier == null) Debug.LogError(name + " cannot find CombatMultiplier");
     }
 
     // Update is called once per frame
@@ -63,28 +65,15 @@ public class Projectile : MonoBehaviour
         {
             Hit(selectable);
         }
-
-
-        /*Unit unit = other.transform.GetComponent<Unit>();
-        if (unit != null && unit != owner && unit.PlayerNumber() != owner.PlayerNumber())
-        {
-            Hit(unit);
-        }
-        else
-        {
-            Building building = other.transform.GetComponent<Building>();
-            if (building != null)
-            {
-                Hit(building);
-            }
-        }*/
     }
 
     private void Hit(Selectable target)
     {
         flyingInAir = false;
-        target.TakeDamage(damage, owner);
-        //transform.parent = target.transform;
+        float damageMultiplier = combatMultiplier.GetMultiplier(owner, target);
+        //print(name + " giving damage=" + damage + " multiplier=" + damageMultiplier + " total=" + damage * damageMultiplier);
+        target.TakeDamage(damage * damageMultiplier, owner);
+        transform.parent = target.transform;
         Destroy(gameObject, 3);
 
         if (fire != null && explosion != null)

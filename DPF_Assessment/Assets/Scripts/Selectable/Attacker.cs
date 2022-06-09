@@ -22,6 +22,7 @@ public class Attacker : MonoBehaviour
     private GameObject weapon;
     private bool hasProjectileWeapon;
     private float sightTimer = 0;
+    private CombatMultiplier combatMultiplier;
 
     [Header("Tower Settings")]
     [SerializeField] private Unit.EUnitStance towerStance = Unit.EUnitStance.Defensive;
@@ -32,6 +33,7 @@ public class Attacker : MonoBehaviour
     {
         unit = GetComponent<Unit>();
         building = GetComponent<Building>();
+        combatMultiplier = (CombatMultiplier)Resources.Load<CombatMultiplier>("CombatMultiplier");
     }
 
     // Start is called before the first frame update
@@ -46,6 +48,7 @@ public class Attacker : MonoBehaviour
                 if (t.name == "TowerSpawn") towerSpawn = t;
             }
         }
+        if (combatMultiplier == null) Debug.LogError(name + " cannot find CombatMultiplier");
     }
 
     private void Equip(EquipmentConfig newEquipment)
@@ -254,7 +257,11 @@ public class Attacker : MonoBehaviour
             }
             else
             {
-                target.TakeDamage(attackDamage, unit);
+                float attackMultiplier = 1;
+                if (unit != null) attackMultiplier = combatMultiplier.GetMultiplier(unit, target);
+                else if (building != null) attackMultiplier = combatMultiplier.GetMultiplier(building, target);
+                //print(name + " giving damage=" + attackDamage + " multiplier=" + attackMultiplier + " total=" + attackDamage * attackMultiplier);
+                target.TakeDamage(attackDamage * attackMultiplier, unit);
                 if (!target.IsAlive()) ClearTarget();
             }
         }

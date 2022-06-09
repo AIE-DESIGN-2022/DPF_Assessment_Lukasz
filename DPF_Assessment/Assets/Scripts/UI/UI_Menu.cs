@@ -125,7 +125,7 @@ public class UI_Menu : MonoBehaviour
     {
         //SceneManager.LoadScene("SampleScene");
         ToggleShowing();
-        sceneLoading.LoadScene((int)SceneIndex.SAMPLE_SCENE);
+        sceneLoading.LoadScene((int)SceneIndex.MISSION_1);
     }
 
     private void NewSkirmishClicked()

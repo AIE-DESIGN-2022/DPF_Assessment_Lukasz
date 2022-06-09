@@ -19,7 +19,7 @@ public class FogOfWarController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        SetFogHeight(12);
+        //SetFogHeight(12);
     }
 
     // Update is called once per frame
@@ -59,6 +59,6 @@ public class FogOfWarController : MonoBehaviour
 
     public void SetFogHeight(float newHeight)
     {
-        fogOfWar.SetFogHeight(newHeight);
+        if (fogOfWar != null) fogOfWar.SetFogHeight(newHeight);
     }
 }
