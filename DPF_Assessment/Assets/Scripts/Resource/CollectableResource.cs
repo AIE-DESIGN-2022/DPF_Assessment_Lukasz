@@ -145,22 +145,31 @@ public class CollectableResource : Selectable
         return isAFarm;
     }
 
+    
     private void MoveToGroundLevel()
     {
+        if (resourceType != EResourceType.Wood) return;
+
         LayerMask terrainMask2 = new LayerMask();
         terrainMask2 |= (1 << LayerMask.NameToLayer("Terrain"));
 
         Vector3 rayOrigin = transform.position;
-        rayOrigin.y -= 50;
+        rayOrigin.y += 50;
 
         float terrainLevel = 0;
 
         Ray ray = new Ray(rayOrigin, transform.up * -1);
         RaycastHit hit;
+
         if (Physics.Raycast(ray, out hit, 500, terrainMask2))
         {
             terrainLevel = hit.point.y;
         }
+        else
+        {
+            Debug.Log("no hit");
+        }
+
         if (terrainLevel != 0)
         {
             transform.position = new Vector3(rayOrigin.x, terrainLevel, rayOrigin.z);
