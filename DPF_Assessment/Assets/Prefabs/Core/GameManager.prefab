@@ -275,6 +275,7 @@ Transform:
   - {fileID: 2856508187261364826}
   - {fileID: 7889831926990997356}
   - {fileID: 1862316394097063349}
+  - {fileID: 3801597174237311951}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -297,6 +298,49 @@ MonoBehaviour:
   startingWood: 10000
   startingGold: 10000
   treeCount: 0
+--- !u!1 &7162194239550008649
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3801597174237311951}
+  - component: {fileID: 7172168948695530308}
+  m_Layer: 0
+  m_Name: ObjectiveManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3801597174237311951
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7162194239550008649}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4531869063087608862}
+  m_RootOrder: 7
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7172168948695530308
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7162194239550008649}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c6bc7ded92f0cb4d8f3770d2ae5db82, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &1775548230
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -644,10 +688,6 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1315889075191875592, guid: b2abf92b6dd021040b8b5af54088989a, type: 3}
-      propertyPath: cameraAngle
-      value: 75
-      objectReference: {fileID: 0}
-    - target: {fileID: 1315889075191875592, guid: b2abf92b6dd021040b8b5af54088989a, type: 3}
       propertyPath: topHUDSection
       value: 
       objectReference: {fileID: 9025836470700623210}
@@ -655,21 +695,9 @@ PrefabInstance:
       propertyPath: bottomHUDSection
       value: 
       objectReference: {fileID: 9025836469676277014}
-    - target: {fileID: 1315889075191875592, guid: b2abf92b6dd021040b8b5af54088989a, type: 3}
-      propertyPath: distanceToGround
-      value: 25
-      objectReference: {fileID: 0}
-    - target: {fileID: 1315889075191875592, guid: b2abf92b6dd021040b8b5af54088989a, type: 3}
-      propertyPath: minDistanceToGround
-      value: 12
-      objectReference: {fileID: 0}
     - target: {fileID: 1315889075191875593, guid: b2abf92b6dd021040b8b5af54088989a, type: 3}
       propertyPath: m_Name
       value: GameCamera
-      objectReference: {fileID: 0}
-    - target: {fileID: 1315889075613357441, guid: b2abf92b6dd021040b8b5af54088989a, type: 3}
-      propertyPath: m_CullingMask.m_Bits
-      value: 887
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b2abf92b6dd021040b8b5af54088989a, type: 3}

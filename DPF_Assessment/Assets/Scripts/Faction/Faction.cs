@@ -79,7 +79,7 @@ public class Faction : MonoBehaviour
 
         if (gameStarted && units.Count == 0 && buildings.Count == 0)
         {
-            print("faction End");
+            print(name + "faction End");
             gameStarted = false;
             gameController.FactionDefated(this);
         }

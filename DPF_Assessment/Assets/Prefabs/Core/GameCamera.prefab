@@ -45,14 +45,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   allowMovement: 1
-  boarderScreenPercentage: 7
+  boarderScreenPercentage: 15
   scrollSpeed: 5
   timeBeforeScrollStart: 0.3
   cameraRotationSpeed: 2
   cameraAngle: 75
-  distanceToGround: 20
+  distanceToGround: 25
   maxDistanceToGround: 30
-  minDistanceToGround: 15
+  minDistanceToGround: 12
   angleChangeDistanceToGround: 15
   topHUDSection: {fileID: 0}
   bottomHUDSection: {fileID: 0}
@@ -120,7 +120,7 @@ Camera:
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 631
+    m_Bits: 887
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
