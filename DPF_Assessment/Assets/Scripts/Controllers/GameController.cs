@@ -17,6 +17,7 @@ public class GameController : MonoBehaviour
     private UI_Menu pauseMenu;
     private Transform mapTransform;
     private List<Selectable> nonPlayersSelectables = new List<Selectable>();
+    private List<CollectableResource> collectableResources = new List<CollectableResource>();
 
     [Header("New Game")]
     [SerializeField] private bool isNewGame = false;
@@ -62,6 +63,7 @@ public class GameController : MonoBehaviour
         if (isNewGame) SetupNewGame();
         else SetupGame();
         BuildListOfNonPlayerSelectable();
+        BuildListOfCollectableResources();
     }
 
     private void BuildListOfNonPlayerSelectable()
@@ -71,6 +73,31 @@ public class GameController : MonoBehaviour
         {
             if (selectable.PlayerNumber() == 0) nonPlayersSelectables.Add(selectable);
         }
+    }
+
+    private void BuildListOfCollectableResources()
+    {
+        collectableResources.Clear();
+        CollectableResource[] resources = FindObjectsOfType<CollectableResource>();
+        foreach(CollectableResource resource in resources)
+        {
+            collectableResources.Add(resource);
+        }
+    }
+
+    private List<CollectableResource> ListOfCollectableResources()
+    {
+        if (collectableResources.Count == 0) BuildListOfCollectableResources();
+
+        List<CollectableResource> list = new List<CollectableResource>();
+
+        foreach (CollectableResource collectable in collectableResources.ToArray())
+        {
+            Building farm = collectable.GetComponent<Building>();
+            if (collectable != null && collectable.HasResource() && farm == null) list.Add(collectable);
+        }
+
+        return list;
     }
 
     public List<Selectable> AllSelectablesButPlayers()
@@ -276,6 +303,28 @@ public class GameController : MonoBehaviour
         }
 
         return list;
+    }
+
+    public CollectableResource NearbyResource(Vector3 position, float sightRadious, CollectableResource.EResourceType type)
+    {
+        CollectableResource nearest = null;
+        float nearestDistance = Mathf.Infinity;
+
+        foreach (CollectableResource resource in ListOfCollectableResources())
+        {
+            float distance = Vector3.Distance(position, resource.transform.position);
+            
+            if (distance < sightRadious && resource.ResourceType() == type)
+            {
+                if (distance < nearestDistance)
+                {
+                    nearest = resource;
+                    nearestDistance = distance;
+                }
+            }
+        }
+
+        return nearest;
     }
 }
 // Writen by Lukasz Dziedziczak

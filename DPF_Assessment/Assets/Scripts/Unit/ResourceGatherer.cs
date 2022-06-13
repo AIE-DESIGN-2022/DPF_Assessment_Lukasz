@@ -79,6 +79,7 @@ public class ResourceGatherer : MonoBehaviour
         if (!targetResource.HasResource())
         {
             ClearTargetResource();
+            FindNearByResource();
             return;
         }
         unit.StopMoveTo();
@@ -111,6 +112,16 @@ public class ResourceGatherer : MonoBehaviour
         transform.LookAt(targetResource.transform);
     }
 
+    private void FindNearByResource()
+    {
+        print("finding nearby " + gatheringType);
+        GameController gameController = FindObjectOfType<GameController>();
+
+        CollectableResource nearest = gameController.NearbyResource(transform.position, unit.SightDistance(), gatheringType);
+
+        if (nearest != null) lastTargetResource = nearest;
+    }
+
     public void SetTargetResource(CollectableResource newResource, bool isAlreadyAtResource = false)
     {
         targetResource = newResource;
@@ -135,6 +146,10 @@ public class ResourceGatherer : MonoBehaviour
             if (rememberForLater) lastTargetResource = targetResource;
             targetResource = null;
         }
+        if (targetResource == null && rememberForLater)
+        {
+            FindNearByResource();
+        }    
         if (unit != null)
         {
             unit.Animator().SetBool("working", false);
@@ -145,9 +160,6 @@ public class ResourceGatherer : MonoBehaviour
         else Debug.LogError(gameObject.name + " Gatherer's unit referance missing.");
 
         UnequipTool();
-        if (unit != null && unit.Animator().GetBool("working")) unit.Animator().SetBool("working", false);
-        if (unit != null && unit.Animator().GetBool("gathering")) unit.Animator().SetBool("gathering", false);
-        if (unit != null && unit.Animator().GetBool("mining")) unit.Animator().SetBool("mining", false);
         isInRange = false;
     }
 
@@ -218,14 +230,14 @@ public class ResourceGatherer : MonoBehaviour
         if (gatheredAmount + gatherRate > maxCarry)
         {
             gatheredAmount += targetResource.Gather(maxCarry - gatheredAmount);
-            ClearTargetResource();
+            ClearTargetResource(true);
         }
         else
         {
             gatheredAmount += targetResource.Gather(gatherRate);
         }
 
-        if (targetResource == null) ClearTargetResource();
+        if (targetResource == null) ClearTargetResource(true);
         unit.HUD_StatusUpdate();
     }
 
