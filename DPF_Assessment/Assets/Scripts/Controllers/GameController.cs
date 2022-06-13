@@ -18,6 +18,7 @@ public class GameController : MonoBehaviour
     private Transform mapTransform;
     private List<Selectable> nonPlayersSelectables = new List<Selectable>();
     private List<CollectableResource> collectableResources = new List<CollectableResource>();
+    private StatSystem statSystem;
 
     [Header("New Game")]
     [SerializeField] private bool isNewGame = false;
@@ -35,6 +36,7 @@ public class GameController : MonoBehaviour
         cameraController = GetComponentInChildren<GameCameraController>();
         fogOfWarController = GetComponentInChildren<FogOfWarController>();
         objectiveManager = GetComponentInChildren<ObjectiveManager>();
+        statSystem = GetComponent<StatSystem>();
         FindMenus();
     }
 
@@ -175,6 +177,7 @@ public class GameController : MonoBehaviour
 
     public void EndGame(bool playerWon)
     {
+        statSystem.EndGame(playerWon);
         SceneManager.LoadScene("EndScreen");
     }
 

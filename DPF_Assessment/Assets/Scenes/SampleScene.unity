@@ -1847,6 +1847,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: GameManager
       objectReference: {fileID: 0}
+    - target: {fileID: 7172168948695530308, guid: 1ea37eef814277f4f8d96f5c83a930c4, type: 3}
+      propertyPath: killFactionObjectivePrefab
+      value: 
+      objectReference: {fileID: 7881336815428277846, guid: 35f33d5f7c3dfa84ab955e1d51c657c1, type: 3}
     - target: {fileID: 8266365395078538727, guid: 1ea37eef814277f4f8d96f5c83a930c4, type: 3}
       propertyPath: m_IsActive
       value: 1
