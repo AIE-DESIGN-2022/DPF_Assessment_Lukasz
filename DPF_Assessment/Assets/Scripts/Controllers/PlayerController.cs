@@ -262,7 +262,7 @@ public class PlayerController : MonoBehaviour
         selectionPoint1 = Input.mousePosition;
     }
 
-    private void AddToSelection(Selectable selectable)
+    public void AddToSelection(Selectable selectable)
     {
         if (selectable.GetComponent<Building>() != null && selectable.GetComponent<Building>().BuildState() == Building.EBuildState.Destroyed) return;
 
@@ -569,7 +569,7 @@ public class PlayerController : MonoBehaviour
         return hit.point;
     }
 
-    private void ClearSelection()
+    public void ClearSelection()
     {
         if (currentSelection.Count <= 0) return;
 

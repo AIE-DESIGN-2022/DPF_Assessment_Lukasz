@@ -69,6 +69,7 @@ public class Projectile : MonoBehaviour
 
     private void Hit(Selectable target)
     {
+        if (target == null) return;
         flyingInAir = false;
         float damageMultiplier = combatMultiplier.GetMultiplier(owner, target);
         //print(name + " giving damage=" + damage + " multiplier=" + damageMultiplier + " total=" + damage * damageMultiplier);

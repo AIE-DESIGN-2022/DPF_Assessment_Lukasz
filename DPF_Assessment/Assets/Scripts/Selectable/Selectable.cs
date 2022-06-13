@@ -179,6 +179,7 @@ public class Selectable : MonoBehaviour
         if (IsSelected())
         {
             FindObjectOfType<GameController>().HUD_Manager().Info_HUD().UpdateHealthBar();
+            FindObjectOfType<GameController>().HUD_Manager().InfoMulti_HUD().UpdateHealthBar(this);
         }
     }
 

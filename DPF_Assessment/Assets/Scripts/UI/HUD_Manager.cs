@@ -11,6 +11,7 @@ public class HUD_Manager : MonoBehaviour
     private List<Selectable> selection;
     private FactionConfig config;
     private UI_Info infoUI;
+    private UI_InfoMulti infoMultiUI;
     private UI_Tooltip tooltipUI;
 
     private void Awake()
@@ -18,6 +19,7 @@ public class HUD_Manager : MonoBehaviour
         resourcesUI = GetComponentInChildren<UI_Resources>();
         actionsUI = GetComponentInChildren<UI_Action>();
         infoUI = GetComponentInChildren<UI_Info>();
+        infoMultiUI = GetComponentInChildren<UI_InfoMulti>();
         tooltipUI = GetComponentInChildren<UI_Tooltip>();
     }
 
@@ -40,6 +42,11 @@ public class HUD_Manager : MonoBehaviour
     public UI_Info Info_HUD()
     {
         return infoUI;
+    }
+
+    public UI_InfoMulti InfoMulti_HUD()
+    {
+        return infoMultiUI;
     }
 
     public UI_Action Actions_HUD()
@@ -99,6 +106,8 @@ public class HUD_Manager : MonoBehaviour
             {
                 actionsUI.UnitsSelected(selectedUnits);
             }
+
+            infoMultiUI.NewSelection(selection);
         }
         
     }
@@ -108,6 +117,7 @@ public class HUD_Manager : MonoBehaviour
         selection = null;
         actionsUI.Clear();
         infoUI.ClearSelection();
+        infoMultiUI.ClearSelection();
     }
 
     public void UpdateResources()
