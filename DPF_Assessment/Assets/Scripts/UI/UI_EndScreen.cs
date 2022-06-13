@@ -44,11 +44,11 @@ public class UI_EndScreen : MonoBehaviour
 
         if (isWinner)
         {
-            topText.text = "You Won!";
+            topText.text = "Victory!";
         }
         else
         {
-            topText.text = "You Lost!";
+            topText.text = "Defeat!";
         }
     }
 
