@@ -13,6 +13,7 @@ public class GameController : MonoBehaviour
     private PlayerController playerController;
     private GameCameraController cameraController;
     private FogOfWarController fogOfWarController;
+    private ObjectiveManager objectiveManager;
     private UI_Menu pauseMenu;
     private Transform mapTransform;
     private List<Selectable> nonPlayersSelectables = new List<Selectable>();
@@ -32,6 +33,7 @@ public class GameController : MonoBehaviour
         playerController = GetComponentInChildren<PlayerController>();
         cameraController = GetComponentInChildren<GameCameraController>();
         fogOfWarController = GetComponentInChildren<FogOfWarController>();
+        objectiveManager = GetComponentInChildren<ObjectiveManager>();
         FindMenus();
     }
 
@@ -122,27 +124,29 @@ public class GameController : MonoBehaviour
             }
         }
         playerController.SetHUD_Manager(hud_Manager);
+
+        objectiveManager.MakeObjectives(GetNonPlayerFactions());
     }
 
     public void FactionDefated(Faction faction)
     {
-        if (faction.PlayerNumber() != playerNumber)
+        if (faction.PlayerNumber() == playerNumber)
+        {
+            EndGame(false);
+        }
+        else if (faction.PlayerNumber() != playerNumber)
         {
             factions.Remove(faction);
             Destroy(faction.gameObject);
 
-            if (factions.Count == 1)
+            /*if (factions.Count == 1)
             {
                 EndGame(true);
-            }
-        }
-        else if (faction.PlayerNumber() == playerNumber)
-        {
-            EndGame(false);
+            }*/
         }
     }
 
-    private void EndGame(bool playerWon)
+    public void EndGame(bool playerWon)
     {
         SceneManager.LoadScene("EndScreen");
     }
@@ -169,6 +173,8 @@ public class GameController : MonoBehaviour
         }
 
         if (factions.Count == 0 && !isNewGame) Debug.LogError(name + " found no factions at game start.");
+
+        objectiveManager.MakeObjectives(GetNonPlayerFactions());
     }
 
     // Update is called once per frame
@@ -258,6 +264,18 @@ public class GameController : MonoBehaviour
     public void CountTree()
     {
         treeCount++;
+    }
+
+    public List<Faction> GetNonPlayerFactions()
+    {
+        List<Faction> list = new List<Faction>();
+
+        foreach (Faction faction in factions)
+        {
+            if (faction.PlayerNumber() != playerNumber) list.Add(faction);
+        }
+
+        return list;
     }
 }
 // Writen by Lukasz Dziedziczak

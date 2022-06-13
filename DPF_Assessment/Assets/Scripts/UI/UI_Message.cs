@@ -11,7 +11,7 @@ public class UI_Message : MonoBehaviour
 
     private void Awake()
     {
-        textbox = GetComponent<Text>();
+        textbox = GetComponentInChildren<Text>();
     }
 
     // Update is called once per frame

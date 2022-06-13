@@ -63,4 +63,9 @@ public class Objective : MonoBehaviour
     public string Title { get { return objectiveTitle; } }
 
     public string Description {  get { return objectiveDescription; } }
+
+    public void SetTitle(string newTitle)
+    {
+        objectiveTitle = newTitle;
+    }
 }
