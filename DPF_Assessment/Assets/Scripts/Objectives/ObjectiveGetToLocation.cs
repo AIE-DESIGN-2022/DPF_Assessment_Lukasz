@@ -12,9 +12,10 @@ public class ObjectiveGetToLocation : Objective
     }
 
     // Update is called once per frame
-    void Update()
+    private new void Update()
     {
-        
+        base.Update();
+
     }
 
     private void OnTriggerEnter(Collider other)

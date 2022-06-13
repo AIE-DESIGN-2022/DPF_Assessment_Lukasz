@@ -314,7 +314,7 @@ public class GameController : MonoBehaviour
         {
             float distance = Vector3.Distance(position, resource.transform.position);
             
-            if (distance < sightRadious && resource.ResourceType() == type)
+            if (distance < sightRadious && resource.ResourceType() == type && !resource.HasCollector)
             {
                 if (distance < nearestDistance)
                 {

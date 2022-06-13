@@ -14,6 +14,7 @@ public class CollectableResource : Selectable
 
     private int currentAmount;
     private List<MeshRenderer> corn = new List<MeshRenderer>();
+    private ResourceGatherer collector;
 
     private new void Awake()
     {
@@ -182,6 +183,18 @@ public class CollectableResource : Selectable
             transform.position = new Vector3(rayOrigin.x, terrainLevel, rayOrigin.z);
         }
         
+    }
+
+    public void SetCollector(ResourceGatherer newCollector)
+    {
+        collector = newCollector;
+    }
+
+    public bool HasCollector { get { return collector != null; } }
+
+    public void ClearCollector()
+    {
+        collector = null;
     }
 }
 // Writen by Lukasz Dziedziczak

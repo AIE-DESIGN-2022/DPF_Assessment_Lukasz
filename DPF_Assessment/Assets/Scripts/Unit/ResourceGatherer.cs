@@ -114,7 +114,7 @@ public class ResourceGatherer : MonoBehaviour
 
     private void FindNearByResource()
     {
-        print("finding nearby " + gatheringType);
+        //print("finding nearby " + gatheringType);
         GameController gameController = FindObjectOfType<GameController>();
 
         CollectableResource nearest = gameController.NearbyResource(transform.position, unit.SightDistance(), gatheringType);
@@ -124,7 +124,11 @@ public class ResourceGatherer : MonoBehaviour
 
     public void SetTargetResource(CollectableResource newResource, bool isAlreadyAtResource = false)
     {
+        if (newResource.HasCollector) return;
+
+        unit.ClearPreviousActions();
         targetResource = newResource;
+        targetResource.SetCollector(this);
         if (faction == null) SetFaction();
         SetTargetDropOffPoint(faction.ClosestResourceDropPoint(targetResource));
         if (dropOff == null) Debug.LogError(name + " has no drop off point.");
@@ -144,6 +148,7 @@ public class ResourceGatherer : MonoBehaviour
         if (targetResource != null)
         {
             if (rememberForLater) lastTargetResource = targetResource;
+            targetResource.ClearCollector();
             targetResource = null;
         }
         if (targetResource == null && rememberForLater)
