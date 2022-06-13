@@ -105,6 +105,7 @@ public class BuildingConstructor : MonoBehaviour
 
     public void SetBuildTarget(Building newTarget)
     {
+        unit.ClearPreviousActions();
         currentBuildTarget = newTarget;
         unit.HUD_BuildingStatusUpdate();
     }

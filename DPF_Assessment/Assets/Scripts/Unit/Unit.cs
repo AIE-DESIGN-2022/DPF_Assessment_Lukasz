@@ -162,7 +162,7 @@ public class Unit : Selectable
         HUD_StatusUpdate();
     }
 
-    private void ClearPreviousActions()
+    public void ClearPreviousActions()
     {
         if (resourceGatherer != null)
         {

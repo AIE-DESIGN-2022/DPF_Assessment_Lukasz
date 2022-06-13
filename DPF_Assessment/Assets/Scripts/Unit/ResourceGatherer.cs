@@ -45,6 +45,8 @@ public class ResourceGatherer : MonoBehaviour
             if (gatheredAmount > 0)
             {
                 if (unit != null && unit.Animator().GetBool("working")) unit.Animator().SetBool("working", false);
+                if (unit != null && unit.Animator().GetBool("gathering")) unit.Animator().SetBool("gathering", false);
+                if (unit != null && unit.Animator().GetBool("mining")) unit.Animator().SetBool("mining", false);
                 unit.MoveTo(dropOff);
             }
         }
@@ -143,7 +145,9 @@ public class ResourceGatherer : MonoBehaviour
         else Debug.LogError(gameObject.name + " Gatherer's unit referance missing.");
 
         UnequipTool();
-        
+        if (unit != null && unit.Animator().GetBool("working")) unit.Animator().SetBool("working", false);
+        if (unit != null && unit.Animator().GetBool("gathering")) unit.Animator().SetBool("gathering", false);
+        if (unit != null && unit.Animator().GetBool("mining")) unit.Animator().SetBool("mining", false);
         isInRange = false;
     }
 
@@ -221,6 +225,7 @@ public class ResourceGatherer : MonoBehaviour
             gatheredAmount += targetResource.Gather(gatherRate);
         }
 
+        if (targetResource == null) ClearTargetResource();
         unit.HUD_StatusUpdate();
     }
 

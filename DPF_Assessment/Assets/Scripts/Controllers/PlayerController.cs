@@ -271,7 +271,7 @@ public class PlayerController : MonoBehaviour
         HUD_Manager.NewSelection(currentSelection);
     }
 
-    private void AddToSelection(List<Selectable> selectables)
+    public void AddToSelection(List<Selectable> selectables)
     {
         foreach (Selectable selectable in selectables)
         {

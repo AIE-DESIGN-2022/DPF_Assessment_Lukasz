@@ -62,7 +62,7 @@ public class ObjectiveManager : MonoBehaviour
 
     public void MakeObjectives(List<Faction> factions)
     {
-        if (objectives.Count > 0) return;
+        if (objectives.Count > 0 || killFactionObjectivePrefab == null) return;
 
         if (factions.Count == 0) Debug.LogError(name + " no factions to make objectives.");
 

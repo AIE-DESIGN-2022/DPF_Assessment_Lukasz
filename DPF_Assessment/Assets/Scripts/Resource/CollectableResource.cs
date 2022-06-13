@@ -61,16 +61,19 @@ public class CollectableResource : Selectable
     public int Gather(int gatheringAmount)
     {
         int returnAmount = 0;
-        if (currentAmount - gatheringAmount > 0)
+        if (currentAmount > 0)
         {
-            returnAmount = gatheringAmount;
-            currentAmount -= gatheringAmount;
-        }
-        else
-        {
-            returnAmount = currentAmount;
-            currentAmount = 0;
-            ResourceDepleted();
+            if (currentAmount - gatheringAmount > 0)
+            {
+                returnAmount = gatheringAmount;
+                currentAmount -= gatheringAmount;
+            }
+            else
+            {
+                returnAmount = currentAmount;
+                currentAmount = 0;
+                ResourceDepleted();
+            }
         }
         HUD_StatusUpdate();
         return returnAmount;
@@ -94,6 +97,10 @@ public class CollectableResource : Selectable
                 farm.GetComponent<Health>().NewBuilding();
                 farm.SetBuildState(Building.EBuildState.Building);
                 farm.FarmRebuild();
+            }
+            else
+            {
+                Destroy(gameObject);
             }
         }
         else Destroy(gameObject);

@@ -130,5 +130,14 @@ public class HUD_Manager : MonoBehaviour
     {
         return tooltipUI;
     }
+
+    public void IdleWorkerButton()
+    {
+        GameController gameController = FindObjectOfType<GameController>();
+        List<Selectable> idleWorkers = gameController.GetPlayerFaction().IdleWorkers();
+        gameController.PlayerController().ClearSelection();
+        gameController.PlayerController().AddToSelection(idleWorkers);
+
+    }
 }
 // Writen by Lukasz Dziedziczak
