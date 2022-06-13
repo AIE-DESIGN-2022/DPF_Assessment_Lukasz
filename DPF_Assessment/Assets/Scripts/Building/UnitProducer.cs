@@ -16,12 +16,14 @@ public class UnitProducer : MonoBehaviour
     private float timeLeft;
     private Building building;
     private Faction faction;
+    private StatSystem statSystem;
 
     private void Awake()
     {
         buildQue = new List<Unit.EUnitType>();
         building = GetComponent<Building>();
         SetTransforms();
+        statSystem = FindObjectOfType<StatSystem>();
     }
 
     private void SetTransforms()
@@ -54,6 +56,7 @@ public class UnitProducer : MonoBehaviour
             isCurrentlyBuilding = false;
             Unit newUnit = faction.SpawnUnit(currentlyBuilding, spawnTransform);
             newUnit.MoveTo(rallyPoint.position);
+            statSystem.AddStatBuilt(newUnit.UnitType());
             building.HUD_BuildingStatusUpdate();
         }
 

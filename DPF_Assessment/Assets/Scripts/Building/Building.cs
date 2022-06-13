@@ -189,6 +189,7 @@ public class Building : Selectable
                 SetMinimapIndicator();
                 GetComponent<NavMeshObstacle>().enabled = true;
                 SetMaterialsColour(Color.white);
+                AddStat();
                 ConstructionSite();
                 break;
 
@@ -196,6 +197,7 @@ public class Building : Selectable
                 SetMinimapIndicator();
                 GetComponent<NavMeshObstacle>().enabled = true;
                 ConstructionSite(false);
+
                 break;
 
             case EBuildState.Destroyed:
@@ -207,6 +209,17 @@ public class Building : Selectable
                 Destroy(gameObject);
                 break;
         }
+    }
+
+    private void AddStat()
+    {
+        StatSystem statSystem = FindObjectOfType<StatSystem>();
+
+        if (gameController.IsPlayerFaction(PlayerNumber()))
+        {
+            statSystem.AddStatBuilt(buildingType);
+        }
+
     }
 
     private void SetMaterialsColour(Color newColor)

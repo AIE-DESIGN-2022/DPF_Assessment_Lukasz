@@ -19,6 +19,7 @@ public class Faction : MonoBehaviour
     private GameController gameController;
     private bool placingBuilding = false;
     private bool gameStarted = false;
+    private StatSystem statSystem;
 
     public enum EFaction
     {
@@ -29,6 +30,7 @@ public class Faction : MonoBehaviour
     private void Awake()
     {
         LoadFactionConfig();
+        statSystem = FindObjectOfType<StatSystem>();
     }
 
     // Start is called before the first frame update
@@ -289,11 +291,33 @@ public class Faction : MonoBehaviour
     public void Death(Selectable deadSelectable)
     {
         Unit unit = deadSelectable.GetComponent<Unit>();
-        if (unit != null) units.Remove(unit);
+        if (unit != null)
+        {
+            units.Remove(unit);
+            if (FindObjectOfType<GameController>().IsPlayerFaction(playerNumber))
+            {
+
+            }
+            else
+            {
+                statSystem.AddStatKilled(unit.UnitType());
+            }
+        }
         else
         {
             Building building = deadSelectable.GetComponent<Building>();
-            if (building != null) buildings.Remove(building);
+            if (building != null)
+            {
+                buildings.Remove(building);
+                if (FindObjectOfType<GameController>().IsPlayerFaction(playerNumber))
+                {
+
+                }
+                else
+                {
+                    statSystem.AddStatKilled(building.BuildingType());
+                }
+            }
         }
     }
 
