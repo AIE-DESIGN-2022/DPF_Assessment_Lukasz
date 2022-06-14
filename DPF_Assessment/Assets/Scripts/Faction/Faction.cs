@@ -81,7 +81,7 @@ public class Faction : MonoBehaviour
 
         if (gameStarted && units.Count == 0 && buildings.Count == 0)
         {
-            print(name + "faction End");
+            //print(name + ": Faction End");
             gameStarted = false;
             gameController.FactionDefated(this);
         }
@@ -432,6 +432,37 @@ public class Faction : MonoBehaviour
         }
 
         return list;
+    }
+
+    public void RemoveFromFaction(Unit oldUnit)
+    {
+        units.Remove(oldUnit);
+    }
+
+    public void RemoveFromFaction(Building oldBuilding)
+    {
+        buildings.Remove(oldBuilding);
+    }
+
+    public void TransferOwnership(Selectable selectable)
+    {
+        Building building = selectable.GetComponent<Building>();
+        Unit unit = selectable.GetComponent<Unit>();
+        Faction oldFaction = selectable.Faction();
+        selectable.transform.parent = transform;
+        selectable.Setup(playerNumber, this);
+
+        if (unit != null)
+        {
+            oldFaction.RemoveFromFaction(unit);
+            units.Add(unit);
+        }
+        else if (building != null)
+        {
+            oldFaction.RemoveFromFaction(building);
+            buildings.Add(building);
+        }
+
     }
 }
 // Writen by Lukasz Dziedziczak

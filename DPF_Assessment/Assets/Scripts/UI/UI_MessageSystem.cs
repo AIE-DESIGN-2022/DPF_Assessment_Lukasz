@@ -73,7 +73,7 @@ public class UI_MessageSystem : MonoBehaviour
         
     }
 
-    public void ShowMessage(string messageText, float timeBeforeShow = 0f, float timeToLive = 20f)
+    public void ShowMessage(string messageText, float timeBeforeShow = 0f, float timeToLive = 14f)
     {
         
         if (messagePrefab != null)

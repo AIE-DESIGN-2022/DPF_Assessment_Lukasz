@@ -19,6 +19,7 @@ public class GameController : MonoBehaviour
     private List<Selectable> nonPlayersSelectables = new List<Selectable>();
     private List<CollectableResource> collectableResources = new List<CollectableResource>();
     private StatSystem statSystem;
+    private UI_MessageSystem messageSystem;
 
     [Header("New Game")]
     [SerializeField] private bool isNewGame = false;
@@ -37,6 +38,7 @@ public class GameController : MonoBehaviour
         fogOfWarController = GetComponentInChildren<FogOfWarController>();
         objectiveManager = GetComponentInChildren<ObjectiveManager>();
         statSystem = GetComponent<StatSystem>();
+        messageSystem = GetComponentInChildren<UI_MessageSystem>();
         FindMenus();
     }
 
@@ -331,5 +333,7 @@ public class GameController : MonoBehaviour
 
         return nearest;
     }
+
+    public UI_MessageSystem MessageSystem { get { return messageSystem; } }
 }
 // Writen by Lukasz Dziedziczak

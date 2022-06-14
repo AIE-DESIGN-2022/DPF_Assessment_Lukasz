@@ -58,6 +58,7 @@ public class UnitProducer : MonoBehaviour
             newUnit.MoveTo(rallyPoint.position);
             statSystem.AddStatBuilt(newUnit.UnitType());
             building.HUD_BuildingStatusUpdate();
+            building.GameController.MessageSystem.ShowMessage("Unit Produced: " + newUnit.name.Replace("(Clone)", ""));
         }
 
     }

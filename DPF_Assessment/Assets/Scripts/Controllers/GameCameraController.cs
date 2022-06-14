@@ -40,9 +40,11 @@ public class GameCameraController : MonoBehaviour
     private LineRenderer minimapcameraLines;
     private LayerMask terrainMask;
     private LayerMask fogMask;
-
     private Faction playerFaction;
     private FogOfWarController fogOfWarController;
+    private bool autoPan;
+    private Vector3 autoPanLocation;
+    private float autoPanSpeed;
 
 
     void Awake()
@@ -85,10 +87,26 @@ public class GameCameraController : MonoBehaviour
         CameraHeighUpdate();
         PanByArrowKey();
         PanByRightClick();
+        AutoPan();
 
         /*if (Input.GetMouseButtonDown(2)) allowMovement = false;
         if (Input.GetMouseButton(2)) CameraRotation();
         if (Input.GetMouseButtonUp(2)) allowMovement = true;*/
+    }
+
+    private void AutoPan()
+    {
+        if (autoPan)
+        {
+            transform.position = Vector3.Lerp(transform.position, autoPanLocation, autoPanSpeed * Time.deltaTime);
+
+            if (Vector3.Distance(transform.position, autoPanLocation) < 3)
+            {
+                //transform.position = autoPanLocation;
+                autoPan = false;
+                allowMovement = true;
+            }
+        }
     }
 
     private void PanByRightClick()
@@ -400,6 +418,14 @@ public class GameCameraController : MonoBehaviour
     public void SetScrollSpeed(float newScrollSpeed)
     {
         scrollSpeed = newScrollSpeed;
+    }
+
+    public void PanCameraTo(Vector3 newLocation, float panSpeed = 1)
+    {
+        autoPan = true;
+        autoPanLocation = new Vector3(newLocation.x, transform.position.y, newLocation.z);
+        autoPanSpeed = panSpeed;
+        allowMovement = false;
     }
 }
 // Writen by Lukasz Dziedziczak

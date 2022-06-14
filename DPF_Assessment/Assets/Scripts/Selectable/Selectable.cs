@@ -22,6 +22,7 @@ public class Selectable : MonoBehaviour
     private float flashingTimer = 0f;
     private float flashFor = 2;
     private float flashForTimer = 0;
+    private bool flashingUntillSelected = false;
 
     [SerializeField] protected float sightDistance = 15;
 
@@ -69,6 +70,12 @@ public class Selectable : MonoBehaviour
         if (selectionIndicator != null)
         {
             selectionIndicator.enabled = isSelected;
+        }
+
+        if (isSelected && flashingUntillSelected)
+        {
+            flashingUntillSelected = false;
+            flashing = false;
         }
         
     }
@@ -226,6 +233,13 @@ public class Selectable : MonoBehaviour
         SetFlashing(true);
     }
 
+    public void FlashUntillSelected()
+    {
+        flashFor = 0;
+        flashingUntillSelected = true;
+        SetFlashing(true);
+    }
+
     public List<Selectable> GetEnemiesInSight()
     {
         List<Selectable> list = new List<Selectable>();
@@ -263,5 +277,7 @@ public class Selectable : MonoBehaviour
             mesh.enabled = isVisable;
         }
     }
+
+    public GameController GameController { get { return gameController; } }
 }
 // Writen by Lukasz Dziedziczak

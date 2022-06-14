@@ -197,7 +197,7 @@ public class Building : Selectable
                 SetMinimapIndicator();
                 GetComponent<NavMeshObstacle>().enabled = true;
                 ConstructionSite(false);
-
+                GameController.MessageSystem.ShowMessage("Construction Complete: " + name.Replace("(Clone)", ""));
                 break;
 
             case EBuildState.Destroyed:

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -11,15 +12,34 @@ public class Objective : MonoBehaviour
     [SerializeField] protected string objectiveDescription;
     [SerializeField] protected float messageTimeDelay = 0;
 
+    [Header("On Completion")]
+    [SerializeField] protected string completionMessage = "";
+    [SerializeField] protected float completionMessageTimeDelay = 0;
     [SerializeField] UnityEvent OnObjectiveComplete;
 
     protected GameController gameController;
     protected ObjectiveManager objectiveManager;
+    public List<ObjectiveAction> actionList = new List<ObjectiveAction>();
 
     protected void Awake()
     {
         gameController = FindObjectOfType<GameController>();
         objectiveManager = GetComponentInParent<ObjectiveManager>();
+        CreateActionList();
+    }
+
+    private void CreateActionList()
+    {
+        ObjectiveAction[] actions = GetComponents<ObjectiveAction>();
+
+        if (actions.Length > 0)
+        {
+            foreach (ObjectiveAction action in actions)
+            {
+                actionList.Add(action);
+            }
+        }
+        
     }
 
 
@@ -39,21 +59,55 @@ public class Objective : MonoBehaviour
 
     public void ObjectiveComplete()
     {
-        Debug.Log(name + " is complete");
+        //Debug.Log(name + " is complete");
         isActivated = false;
         OnObjectiveComplete.Invoke();
+        RunObjectiveCompleteActions();
+        ShowObjectiveCompleteNotification();
+    }
+
+    private void RunObjectiveCompleteActions()
+    {
+        foreach(ObjectiveAction action in actionList)
+        {
+            if (action.onObjectiveComplete) action.DoAction();
+        }
     }
 
     public void ActivateObjective()
     {
         isActivated = true;
         ShowObjectiveNotification();
+        RunObjectiveActivateActions();
+    }
+
+    private void RunObjectiveActivateActions()
+    {
+        foreach (ObjectiveAction action in actionList)
+        {
+            if (action.onObjectiveActivate) action.DoAction();
+        }
     }
 
     public void ShowObjectiveNotification()
     {
-        //print(name + " showing notification");
-        objectiveManager.MessageSystem().ShowMessage("New Objective: " + objectiveTitle, messageTimeDelay);
+        if (isVisible)
+        {
+            objectiveManager.MessageSystem().ShowMessage("New Objective: " + objectiveTitle, messageTimeDelay);
+        }
+    }
+
+    public void ShowObjectiveCompleteNotification()
+    {
+        if (isVisible)
+        {
+            objectiveManager.MessageSystem().ShowMessage("Objective Complete: " + objectiveTitle, messageTimeDelay);
+        }
+
+        if (completionMessage != "")
+        {
+            objectiveManager.MessageSystem().ShowMessage(completionMessage, completionMessageTimeDelay);
+        }
     }
 
     public bool IsActivated { get { return isActivated; } }

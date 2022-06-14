@@ -3172,7 +3172,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 20, y: -100}
-  m_SizeDelta: {x: 800, y: 600}
+  m_SizeDelta: {x: 1000, y: 600}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &5179271576045937463
 MonoBehaviour:
@@ -3206,7 +3206,7 @@ MonoBehaviour:
   m_ChildAlignment: 0
   m_StartCorner: 0
   m_StartAxis: 0
-  m_CellSize: {x: 800, y: 90}
+  m_CellSize: {x: 1000, y: 44}
   m_Spacing: {x: 0, y: 10}
   m_Constraint: 0
   m_ConstraintCount: 2
@@ -4287,6 +4287,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1743207524431402490}
     m_Modifications:
+    - target: {fileID: 1782671107873881016, guid: 768f963b31baf0d4d83ed89bf4e061bd, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1782671107873881016, guid: 768f963b31baf0d4d83ed89bf4e061bd, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3021621534712412793, guid: 768f963b31baf0d4d83ed89bf4e061bd, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -4369,6 +4377,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3021621534712412793, guid: 768f963b31baf0d4d83ed89bf4e061bd, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3117162033613199145, guid: 768f963b31baf0d4d83ed89bf4e061bd, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3117162033613199145, guid: 768f963b31baf0d4d83ed89bf4e061bd, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3117162033613199145, guid: 768f963b31baf0d4d83ed89bf4e061bd, type: 3}
+      propertyPath: m_AnchorMin.x
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6472349895015295464, guid: 768f963b31baf0d4d83ed89bf4e061bd, type: 3}
