@@ -28,11 +28,14 @@ public class PlayerController : MonoBehaviour
     private Texture2D cursorAttackActive;
     private Texture2D cursorWorker;
     private Texture2D cursorWorkerActive;
+    private Texture2D cursorPatrol;
+    private Texture2D cursorPatrolActive;
 
     private List<GameObject> selectionCircles = new List<GameObject>();
     private GameObject selectionCirclePrefab;
     private float selectionCircleRate = 0.05f;
     private float selectionCircleTimer = 0;
+    private bool settingPatrolPoint=false;
 
     public enum ECursorMode
     {
@@ -40,7 +43,8 @@ public class PlayerController : MonoBehaviour
         Move,
         Attack,
         Worker,
-        Heal
+        Heal,
+        Patrol
     }
 
 
@@ -68,6 +72,8 @@ public class PlayerController : MonoBehaviour
             if (loadedCursor.name == "Cursor_Attack") cursorAttackActive = loadedCursor;
             if (loadedCursor.name == "G_Cursor_Production") cursorWorker = loadedCursor;
             if (loadedCursor.name == "Cursor_Production") cursorWorkerActive = loadedCursor;
+            if (loadedCursor.name == "G_Cursor_Attack_G") cursorPatrol = loadedCursor;
+            if (loadedCursor.name == "Cursor_Attack_G") cursorPatrolActive = loadedCursor;
         }
     }
 
@@ -153,6 +159,19 @@ public class PlayerController : MonoBehaviour
                 }
                 break;
 
+            case ECursorMode.Patrol:
+                cursorOffSet = new Vector2(cursorAttack.width / 3, 0);
+                if (isActive)
+                {
+                    if (cursorPatrolActive != null) Cursor.SetCursor(cursorPatrolActive, cursorOffSet, CursorMode.Auto);
+                }
+                else
+                {
+
+                    if (cursorPatrol != null) Cursor.SetCursor(cursorPatrol, cursorOffSet, CursorMode.Auto);
+                }
+                break;
+
             default:
                 Debug.LogError(name + " - Cursor Mode not found.");
                 break;
@@ -205,9 +224,10 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     private void Update()
     {
+        UpdateCursor();
+
         if (!playerControlOnline) return;
 
-        UpdateCursor();
 
         if (Input.GetMouseButtonDown(0)) HandleLeftMouseDown();
 
@@ -235,7 +255,8 @@ public class PlayerController : MonoBehaviour
         {
             if (SelectionHasUnits())
             {
-                if (IsPlayersSelectable(SelectableUnderMouse())) SetCursor(ECursorMode.Normal);
+                if (settingPatrolPoint) SetCursor(ECursorMode.Patrol);
+                else if (IsPlayersSelectable(SelectableUnderMouse())) SetCursor(ECursorMode.Normal);
                 else if (SelectionHasAttackers() && IsEnemy(SelectableUnderMouse())) SetCursor(ECursorMode.Attack);
                 else if (SelectionHasWorkers() && (IsCollectableResource(SelectableUnderMouse()) || IsPlayersInteractableBuilding(SelectableUnderMouse()))) SetCursor(ECursorMode.Worker);
                 else SetCursor(ECursorMode.Move);
@@ -787,6 +808,13 @@ public class PlayerController : MonoBehaviour
     public Color PlayerColor()
     {
         return playerColor;
+    }
+
+    public void SettingPatrolPoint(bool newSetting)
+    {
+        settingPatrolPoint = newSetting;
+        PlayerControl(!newSetting);
+        cameraController.allowMovement = !newSetting;
     }
 }
 // Writen by Lukasz Dziedziczak

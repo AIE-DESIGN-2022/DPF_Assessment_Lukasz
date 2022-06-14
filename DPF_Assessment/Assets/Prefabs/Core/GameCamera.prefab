@@ -46,8 +46,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   allowMovement: 1
   boarderScreenPercentage: 15
-  scrollSpeed: 5
-  timeBeforeScrollStart: 0.3
+  scrollSpeed: 1.8
+  timeBeforeScrollStart: 0.4
   cameraRotationSpeed: 2
   cameraAngle: 75
   distanceToGround: 25

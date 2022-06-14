@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-[RequireComponent(typeof(Health)), RequireComponent(typeof(NavMeshObstacle))]
+[RequireComponent(typeof(Health))/*, RequireComponent(typeof(NavMeshObstacle))*/]
 public class Building : Selectable
 {
     [SerializeField] private EBuildingType buildingType;

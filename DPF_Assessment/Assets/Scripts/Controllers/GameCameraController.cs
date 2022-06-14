@@ -155,7 +155,11 @@ public class GameCameraController : MonoBehaviour
 
     private void CameraMovement()
     {
-        if (!allowMovement || !MouseIsInPlayArea()) return;
+        if (!allowMovement || !MouseIsInPlayArea())
+        {
+            timeInScrollSpace = 0;
+            return;
+        }
 
         float mouseX = Input.mousePosition.x / Screen.width;
         float mouseY = Input.mousePosition.y / Screen.height;
@@ -389,6 +393,13 @@ public class GameCameraController : MonoBehaviour
     public float CameraHeight()
     {
         return _camera.transform.position.y;
+    }
+
+    public float ScrollSpeed { get { return scrollSpeed; } }
+
+    public void SetScrollSpeed(float newScrollSpeed)
+    {
+        scrollSpeed = newScrollSpeed;
     }
 }
 // Writen by Lukasz Dziedziczak

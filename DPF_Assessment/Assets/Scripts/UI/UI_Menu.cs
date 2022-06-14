@@ -23,12 +23,15 @@ public class UI_Menu : MonoBehaviour
     private UI_Menu singePlayerMenu;
     private UI_Menu mainMenu;
     private UI_Loading sceneLoading;
+    [SerializeField] private UI_Settings settingsUI;
 
 
     private void Awake()
     {
         gameController = FindObjectOfType<GameController>();
         sceneLoading = FindObjectOfType<UI_Loading>();
+        if (settingsUI == null) settingsUI = FindObjectOfType<UI_Settings>();
+
         FindButtons();
         LoadOtherMenus();
     }
@@ -64,7 +67,8 @@ public class UI_Menu : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        if (gameObject.name != "MainMenu") gameObject.SetActive(false);
+        //if (gameObject.name != "MainMenu") gameObject.SetActive(false);
+        if (singePlayerMenu != null) singePlayerMenu.Show(false);
 
         if (saveButton != null) saveButton.onClick.AddListener(SaveClicked);
         if (loadButton != null) loadButton.onClick.AddListener(LoadClicked);
@@ -80,7 +84,9 @@ public class UI_Menu : MonoBehaviour
         if (multiplayerButton != null) multiplayerButton.interactable = false;
         if (saveButton != null) saveButton.interactable = false;
         if (loadButton != null) loadButton.interactable = false;
-        if (settingsButton != null) settingsButton.interactable = false;
+        if (settingsButton != null && settingsUI == null) settingsButton.interactable = false;
+
+        if (settingsUI != null) settingsUI.Show(false);
 
     }
 
@@ -96,7 +102,8 @@ public class UI_Menu : MonoBehaviour
 
     private void SettingsClicked()
     {
-
+        gameObject.SetActive(false);
+        settingsUI.ShowSettings(this);
     }
 
     private void ExitToMenuClicked()

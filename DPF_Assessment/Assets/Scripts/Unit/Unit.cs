@@ -91,8 +91,7 @@ public class Unit : Selectable
 
                 unitStance = EUnitStance.Patrol;
 
-                gameController.PlayerController().PlayerControl(true);
-                gameController.CameraController().allowMovement = true;
+                gameController.PlayerController().SettingPatrolPoint(false);
                 
                 HUD_StatusUpdate();
                 Move(patrolEndPoint);
@@ -100,6 +99,7 @@ public class Unit : Selectable
 
             if (Input.GetMouseButtonDown(1))
             {
+                gameController.PlayerController().SettingPatrolPoint(false);
                 selectingPatrolPoint = false;
             }
         }
@@ -436,9 +436,7 @@ public class Unit : Selectable
 
     public void SetPatrol()
     {
-        gameController.PlayerController().PlayerControl(false);
-        gameController.CameraController().allowMovement = false;
-        
+        gameController.PlayerController().SettingPatrolPoint(true);
         selectingPatrolPoint = true;
     }
 
@@ -470,6 +468,5 @@ public class Unit : Selectable
         if (hasStopped) return true;
         else return false;
     }
-
 }
 // Writen by Lukasz Dziedziczak

@@ -42,7 +42,7 @@ public class GameController : MonoBehaviour
 
     private void FindMenus()
     {
-        UI_Menu[] menus = GetComponentsInChildren<UI_Menu>();
+        UI_Menu[] menus = FindObjectsOfType<UI_Menu>();
         foreach (UI_Menu menu in menus)
         {
             if (menu.name == "PauseMenu") pauseMenu = menu;
@@ -66,6 +66,8 @@ public class GameController : MonoBehaviour
         else SetupGame();
         BuildListOfNonPlayerSelectable();
         BuildListOfCollectableResources();
+
+        if (pauseMenu != null) pauseMenu.Show(false);
     }
 
     private void BuildListOfNonPlayerSelectable()
