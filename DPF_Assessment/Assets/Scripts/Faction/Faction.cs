@@ -21,6 +21,12 @@ public class Faction : MonoBehaviour
     private bool gameStarted = false;
     private StatSystem statSystem;
 
+    public delegate void UnitCreatedDelegate(Unit.EUnitType unitType);
+    public static UnitCreatedDelegate newUnitCreated;
+
+    public delegate void BuildingCreatedDelegate(Building.EBuildingType buildingType);
+    public static BuildingCreatedDelegate newBuildingCreated;
+
     public enum EFaction
     {
         Human,
@@ -113,6 +119,7 @@ public class Faction : MonoBehaviour
         newUnit.Setup(playerNumber, this);
         newUnit.transform.parent = transform;
         units.Add(newUnit);
+        newUnitCreated(newUnit.UnitType());
         return newUnit;
     }
 
@@ -125,6 +132,7 @@ public class Faction : MonoBehaviour
             newBuilding.Setup(playerNumber, this);
             newBuilding.transform.parent = transform;
             buildings.Add(newBuilding);
+            newBuildingCreated(newBuilding.BuildingType());
             newBuilding.SetBuildState(Building.EBuildState.Placing);
             newBuilding.SetConstructionTeam(builders);
             gameController.PlayerController().PlayerControl(false);

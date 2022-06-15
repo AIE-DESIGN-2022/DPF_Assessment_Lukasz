@@ -5,12 +5,19 @@ using UnityEngine.EventSystems;
 
 public class MiniMap : MonoBehaviour
 {
+    [Tooltip("The Mini-Map Camera object")]
     [SerializeField] private Camera miniMapCamera;
+    [Tooltip("The Game Camera Controller object")]
     [SerializeField] private GameCameraController gameCamera;
+    [Tooltip("The X axis offset when main camera is moved by mouse click on minimap.")]
     [SerializeField] private float offsetX = 10;
+    [Tooltip("The Z axis offset when main camera is moved by mouse click on minimap.")]
     [SerializeField] private float offsetZ = 10;
+
+    // Layer Mask which only has the terrain layer.
     private LayerMask terrainMask;
 
+    // Run at the start of the game
     private void Awake()
     {
         terrainMask |= (1 << LayerMask.NameToLayer("Terrain"));
@@ -21,7 +28,7 @@ public class MiniMap : MonoBehaviour
     {
         if (PointerIsOverUIObject())
         {
-            if (Input.GetMouseButtonDown(0))
+            if (Input.GetMouseButtonDown(0)) // when mini map is clicked raycast down and find where it intersect terrain.
             {
                 Vector3 newPosition = new Vector3();
                 Ray ray = miniMapCamera.ScreenPointToRay(Input.mousePosition);
@@ -31,13 +38,14 @@ public class MiniMap : MonoBehaviour
                     newPosition = hit.point;
                     newPosition.x += offsetX;
                     newPosition.z += offsetZ;
-                    gameCamera.MoveTo(newPosition);
+                    gameCamera.MoveTo(newPosition); // after adding offset move to this location.
                 }
                 
             }
         }
     }
 
+    /* Determins if mouse pointer is over the UI instead of in the game. True if in UI */
     private bool PointerIsOverUIObject()
     {
         PointerEventData EventDataCurrentPosition = new PointerEventData(EventSystem.current);

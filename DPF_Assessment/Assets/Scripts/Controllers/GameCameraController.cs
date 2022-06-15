@@ -7,46 +7,58 @@ using UnityEngine;
 public class GameCameraController : MonoBehaviour
 {
     [Header("Camera Movement")]
+    [Tooltip("True when camera movement is allowed.")]
     public bool allowMovement = true;
+    [Tooltip("Percentage of the screen when mouse is inside scrolling will begin.")]
     [SerializeField, Range(1f, 49f)] float boarderScreenPercentage = 5f;
+    [Tooltip("How fast the camera will plan accross the map. Also changeable by user in settings.")]
     [SerializeField] float scrollSpeed = 1;
+    [Tooltip("How long in seconds before scrolling/paning starts when mouse pointer is in boarder.")]
     [SerializeField, Range(0f, 1f)] float timeBeforeScrollStart;
+    [Tooltip("Speed of how fast Camera can rotate around Camera Controller object.")]
     [SerializeField, Range(1f, 10f)] float cameraRotationSpeed = 2;
 
     [Header("Camera Setup")]
+    [Tooltip("At what angle is the camera looking at the map.")]
     [SerializeField, Range(1f, 90f)] float cameraAngle = 75f;
+    [Tooltip("How far away is the camera away from the map.")]
     [SerializeField] float distanceToGround = 10;
+    [Tooltip("The maximum distance the camera can be away from the ground.")]
     [SerializeField, Range(10f, 100f)] float maxDistanceToGround = 100f;
+    [Tooltip("The minimum distance the camera can be away from the ground.")]
     [SerializeField, Range(1f, 20f)] float minDistanceToGround = 5f;
+    [Tooltip("The distance to ground the angle begins to change.")]
     [SerializeField, Range(2f, 50f)] float angleChangeDistanceToGround = 10;
 
     [Header("UI")]
+    [Tooltip("The object which holds all the top HUD section.")]
     [SerializeField] RectTransform topHUDSection;
+    [Tooltip("The object which holds all the bottom HUD section.")]
     [SerializeField] RectTransform bottomHUDSection;
 
     [Header("Terrain")]
+    [Tooltip("True if the center of the terrain is X=0 and Z=0, otherwise zero is bottom left of the terrain.")]
     [SerializeField] bool centerZero = false;
 
-    private Camera _camera;
-    private float currentDistanceToGround;
-    private float currentCameraAngle;
-    private float terrainX;
-    private float terrainZ;
-    private float timeInScrollSpace = 0;
-    private float topScreenOffSet = 0;
-    private float bottomScreenOffSet = 0;
-    private float mousePosX;
-    private GameController gameController;
-    private LineRenderer minimapcameraLines;
-    private LayerMask terrainMask;
-    private LayerMask fogMask;
-    private Faction playerFaction;
-    private FogOfWarController fogOfWarController;
-    private bool autoPan;
-    private Vector3 autoPanLocation;
-    private float autoPanSpeed;
+    private Camera _camera; // Referance to the main camera.
+    private float currentDistanceToGround; // The current Distance to Ground, this will change during gameplay.
+    private float currentCameraAngle; // The current Camera Angle to Ground, this will change during gameplay.
+    private float terrainX; // The length of the terrain.
+    private float terrainZ; // The width of the terrain.
+    private float timeInScrollSpace = 0; // A timer to keep track of how long the mouse pointer has been in scroll space of the screen.
+    private float topScreenOffSet = 0; // How big the top HUD section is.
+    private float bottomScreenOffSet = 0; // How big the bottom HUD section is.
+    private GameController gameController; // A referance to the Game Controller script.
+    private LineRenderer minimapcameraLines; // A referance to the Lines that are rendered on the minimap to show where the camera is looking at.
+    private LayerMask terrainMask; // A Layer Mask with only the terrain layer referanced.
+    private LayerMask fogMask; // A Layer Mask with only the Fog Of War layer referanced.
+    private Faction playerFaction; // A referance to the player's faction
+    private FogOfWarController fogOfWarController; // A referance to the FogOfWar controller object.
+    private bool autoPan; // True when the camera is being panned by script.
+    private Vector3 autoPanLocation; // The location of where a script is automatically panning the camera to.
+    private float autoPanSpeed; // How fast a script is automatically panning the camera.
 
-
+    // Run at the start of the game before "Start" is run
     void Awake()
     {
         _camera = GetComponentInChildren<Camera>();
@@ -57,6 +69,7 @@ public class GameCameraController : MonoBehaviour
         fogOfWarController = FindObjectOfType<FogOfWarController>();
     }
 
+    // Rum at the start of the game
     void Start()
     {
         currentDistanceToGround = distanceToGround;
@@ -73,6 +86,7 @@ public class GameCameraController : MonoBehaviour
         DrawMinimapCameraLines();
     }
 
+    // Finds the size of the terrain
     private void InitilizeTerrainData()
     {
         Terrain terrain = FindObjectOfType<Terrain>();        
@@ -81,6 +95,7 @@ public class GameCameraController : MonoBehaviour
         terrainZ = terrain.terrainData.size.z;
     }
 
+    // Run at every frame
     void Update()
     {
         CameraMovement();
@@ -94,6 +109,7 @@ public class GameCameraController : MonoBehaviour
         if (Input.GetMouseButtonUp(2)) allowMovement = true;*/
     }
 
+    // Function to facilitate paning by script, called at every frame.
     private void AutoPan()
     {
         if (autoPan)
@@ -109,6 +125,10 @@ public class GameCameraController : MonoBehaviour
         }
     }
 
+    /* Facilitates Panning when right mouse button is held down
+     * and no units are selected. 
+     * Called at every frame.
+     */
     private void PanByRightClick()
     {
         if (Input.GetMouseButton(1) && gameController.PlayerController().NothingSelected())
@@ -126,6 +146,9 @@ public class GameCameraController : MonoBehaviour
         }
     }
 
+    /* Facilitates paning by using arrow keys on keyboard
+     * Called at every frame.
+     */
     private void PanByArrowKey()
     {
         Vector3 step = new Vector3();
@@ -143,6 +166,10 @@ public class GameCameraController : MonoBehaviour
         }
     }
 
+    /* Facilitates ratating camera by holding middle mouse button.
+     * Called at every frame.
+     * Not currently implemented due to issues.
+     */
     private void CameraRotation()
     {
         if (!MouseIsInPlayArea()) return;
@@ -151,6 +178,10 @@ public class GameCameraController : MonoBehaviour
         transform.RotateAround(transform.position, transform.TransformDirection(Vector3.up), horizontal * cameraRotationSpeed);
     }
 
+    /* Facilitates adjusting distance to ground by mouse wheel scroll
+     * Calleds at every frame.
+     * 
+     */
     private void CameraHeighUpdate()
     {
         if (!MouseIsInPlayArea()) return;
@@ -171,6 +202,10 @@ public class GameCameraController : MonoBehaviour
         }  
     }
 
+    /* Facilitaes camera scrolling/paning when mouse is at the edge of the game screen
+     * Called at every frame.
+     * 
+     */
     private void CameraMovement()
     {
         if (!allowMovement || !MouseIsInPlayArea())
@@ -248,6 +283,11 @@ public class GameCameraController : MonoBehaviour
 
     }
 
+    /* Sets the camera's position in relation to it's parent object which 
+     * represents the center of the screen where the camera is pointing at on the map.
+     * 
+     * 
+     */
     private void ResetCameraPosition()
     {
         if (_camera == null) return;
@@ -268,6 +308,10 @@ public class GameCameraController : MonoBehaviour
         _camera.transform.localRotation = Quaternion.Euler(currentCameraAngle, _camera.transform.localRotation.eulerAngles.y, _camera.transform.localRotation.eulerAngles.z);
     }
 
+    /* Returns the camera angle based on the distance to ground.
+     * This facilitates camera rotation to 0 degrees as the camera approches 0 height.
+     * Currently clamped at 45 degrees as there is no way to hide what is under the fog of war.
+     */
     private float NewCameraAngle(float newDistanceToGround)
     {
         float newCameraAngle = cameraAngle;
@@ -287,6 +331,9 @@ public class GameCameraController : MonoBehaviour
         
     }
 
+    /* True when the position is inside the terrain.
+     * This is to prevent scrolling beyond the edge of the map.
+     */
     private bool IsInsideTerrain(Vector3 newPos)
     {
         bool xOk = false;
@@ -305,12 +352,9 @@ public class GameCameraController : MonoBehaviour
         return xOk && zOk;
     }
 
-    public bool IsInUIOffset()
-    {
-        float mouseY = Input.mousePosition.y / Screen.height;
-        return mouseY < bottomScreenOffSet;
-    }
-
+    /* True when the mouse is in the game's play area
+     * False when mouse is over the HUD or UI object.
+     */
     public bool MouseIsInPlayArea()
     {
         float mouseX = Input.mousePosition.x / Screen.width;
@@ -325,8 +369,12 @@ public class GameCameraController : MonoBehaviour
         return true;
     }
 
+    // Returns a referance to the main camera
     public Camera Camera() { return _camera; }
 
+    /* Function which draws the lines on the minimap showing
+     * where the camera is looking at.
+     */
     private void DrawMinimapCameraLines()
     {
         List<Vector3> screenPositions = new List<Vector3>();
@@ -361,23 +409,29 @@ public class GameCameraController : MonoBehaviour
         }
     }
 
+    // Returns the lenth or width (the map is always square anyway) of the map.
     public float MapSize()
     {
         float mapSize = (terrainX + terrainZ) / 2;
         return mapSize;
     }
 
+    // Function to immidiatly move to point camera at a specific position.
     public void MoveTo(Vector3 newPosition)
     {
         transform.position = newPosition;
         DrawMinimapCameraLines();
     }
 
+    // Sets the Game-player's faction
     public void SetPlayerFaction(Faction newFaction)
     {
         playerFaction = newFaction;
     }
 
+    /* Returns a list of selectables which are currently visible on the screen
+     * from the list of selectables provided.
+     */
     public List<Selectable> SelectablesOnScreen(List<Selectable> selectables)
     {
         List<Selectable> list = new List<Selectable>();
@@ -391,11 +445,12 @@ public class GameCameraController : MonoBehaviour
                 list.Add(selectable);
             }
         }
-
-
         return list;
     }
 
+    /* Returns a list of selectables owned by the player which are
+     * currently visable on the screen.
+     */
     public List<Selectable> PlayersSelectablesOnScreen()
     {
         List<Selectable> list = new List<Selectable>();
@@ -408,18 +463,22 @@ public class GameCameraController : MonoBehaviour
         return list;
     }
 
+    // Returns the main camera's height
     public float CameraHeight()
     {
         return _camera.transform.position.y;
     }
 
+    // Returns the current scroll speed
     public float ScrollSpeed { get { return scrollSpeed; } }
 
+    // Sets a new scroll speed
     public void SetScrollSpeed(float newScrollSpeed)
     {
         scrollSpeed = newScrollSpeed;
     }
 
+    // Function used to beging automated paning by script.
     public void PanCameraTo(Vector3 newLocation, float panSpeed = 1)
     {
         autoPan = true;

@@ -16,6 +16,6 @@ public class ObjectiveAction : MonoBehaviour
 
     public virtual void DoAction()
     {
-
+        // any universal actions to all types of Objective Actions go here.
     }
 }

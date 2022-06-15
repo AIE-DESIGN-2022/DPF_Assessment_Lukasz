@@ -27,10 +27,6 @@ public class ObjectiveAction_AssignWork : ObjectiveAction
             foreach (WorkAssignment workAssignment in workAssignments)
             {
                 workAssignment.unit.SetTarget(workAssignment.resource);
-                workAssignment.unit.SetFlashing(false);
-                workAssignment.resource.SetFlashing(false);
-                workAssignment.resource.StartFlashingFor(5);
-
             }    
         }
     }

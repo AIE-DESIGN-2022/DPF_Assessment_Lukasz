@@ -18,9 +18,14 @@ public class Objective : MonoBehaviour
     [SerializeField] UnityEvent OnObjectiveComplete;
     [SerializeField] List<Objective> nextObjective = new List<Objective>();
 
+    [Header("Activation by completion of other objectives")]
+    [SerializeField ] List<Objective> previousObjectives = new List<Objective>();
+    private bool[] hasBeenActivated;
+    private bool[] hasBeenCompleted;
+
     protected GameController gameController;
     protected ObjectiveManager objectiveManager;
-    public List<ObjectiveAction> actionList = new List<ObjectiveAction>();
+    protected List<ObjectiveAction> actionList = new List<ObjectiveAction>();
 
     protected void Awake()
     {
@@ -47,15 +52,37 @@ public class Objective : MonoBehaviour
     // Start is called before the first frame update
     protected void Start()
     {
-        //print(name + " is in scene");
         if (objectiveManager == null) Debug.LogError(name + " cannot find ObjectiveManager");
         if (isActivated) ShowObjectiveNotification();
+        hasBeenActivated = new bool[previousObjectives.Count];
+        hasBeenCompleted = new bool[previousObjectives.Count];
     }
 
     // Update is called once per frame
     protected void Update()
     {
-        
+        CheckIfPreviousHaveBeenCompleted();
+    }
+
+    private void CheckIfPreviousHaveBeenCompleted()
+    {
+        if (!isActivated || previousObjectives.Count == 0) return;
+
+        for (int index = 0; index < previousObjectives.Count; index++)
+        {
+            if (!hasBeenActivated[index] && previousObjectives[index].IsActivated) hasBeenActivated[index] = true;
+
+            if (hasBeenActivated[index] && !hasBeenCompleted[index] && !previousObjectives[index].isActivated) hasBeenCompleted[index] = true;
+        }
+
+        bool allComplete = true;
+
+        foreach (bool completedObjective in hasBeenCompleted)
+        {
+            if (!completedObjective) allComplete = false;
+        }
+
+        if (allComplete) ObjectiveComplete();
     }
 
     public void ObjectiveComplete()

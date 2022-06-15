@@ -228,7 +228,6 @@ public class PlayerController : MonoBehaviour
 
         if (!playerControlOnline) return;
 
-
         if (Input.GetMouseButtonDown(0)) HandleLeftMouseDown();
 
         if (Input.GetMouseButton(0)) HandleLeftMouse();
