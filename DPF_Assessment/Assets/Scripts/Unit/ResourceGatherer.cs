@@ -129,8 +129,7 @@ public class ResourceGatherer : MonoBehaviour
         unit.ClearPreviousActions();
         targetResource = newResource;
         targetResource.SetCollector(this);
-        if (faction == null) SetFaction();
-        SetTargetDropOffPoint(faction.ClosestResourceDropPoint(targetResource));
+        SetTargetDropOffPoint(unit.Faction.ClosestResourceDropPoint(targetResource));
         if (dropOff == null) Debug.LogError(name + " has no drop off point.");
         unit.HUD_StatusUpdate();
         isInRange = isAlreadyAtResource;

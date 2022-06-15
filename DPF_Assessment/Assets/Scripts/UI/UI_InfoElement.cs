@@ -47,12 +47,12 @@ public class UI_InfoElement : MonoBehaviour
 
         if (unit != null)
         {
-            icon.texture = unit.Faction().Config().Icon(unit.UnitType());
+            icon.texture = unit.Faction.Config().Icon(unit.UnitType());
         }
 
         if (building != null)
         {
-            icon.texture = building.Faction().Config().Icon(building.BuildingType());
+            icon.texture = building.Faction.Config().Icon(building.BuildingType());
         }
 
         health = selected.GetComponent<Health>();

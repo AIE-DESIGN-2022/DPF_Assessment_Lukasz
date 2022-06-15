@@ -16,6 +16,7 @@ public class Objective : MonoBehaviour
     [SerializeField] protected string completionMessage = "";
     [SerializeField] protected float completionMessageTimeDelay = 0;
     [SerializeField] UnityEvent OnObjectiveComplete;
+    [SerializeField] List<Objective> nextObjective = new List<Objective>();
 
     protected GameController gameController;
     protected ObjectiveManager objectiveManager;
@@ -64,6 +65,18 @@ public class Objective : MonoBehaviour
         OnObjectiveComplete.Invoke();
         RunObjectiveCompleteActions();
         ShowObjectiveCompleteNotification();
+        ActivateNextObjectives();
+    }
+
+    private void ActivateNextObjectives()
+    {
+        if (nextObjective.Count > 0)
+        {
+            foreach (Objective objective in nextObjective)
+            {
+                objective.ActivateObjective();
+            }
+        }
     }
 
     private void RunObjectiveCompleteActions()

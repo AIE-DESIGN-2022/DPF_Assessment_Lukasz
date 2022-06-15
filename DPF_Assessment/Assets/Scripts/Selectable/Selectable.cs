@@ -112,7 +112,7 @@ public class Selectable : MonoBehaviour
 
     public int PlayerNumber() { return owningPlayerNumber; }
 
-    public Faction Faction() { return owningFaction; }
+    public Faction Faction { get { return owningFaction; } }
 
     public void TakeDamage(float damageAmound, Selectable attacker)
     {

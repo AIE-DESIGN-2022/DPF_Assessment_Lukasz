@@ -110,7 +110,7 @@ public class UI_Info : MonoBehaviour
         Show(true);
         selectedUnit = newSelectedUnit;
         _name.text = selectedUnit.name.Replace("(Clone)", "");
-        icon.texture = selectedUnit.Faction().Config().Icon(selectedUnit.UnitType());
+        icon.texture = selectedUnit.Faction.Config().Icon(selectedUnit.UnitType());
         UpdateStatus();
 
         buildingConstructor = selectedUnit.GetComponent<BuildingConstructor>();
@@ -124,7 +124,7 @@ public class UI_Info : MonoBehaviour
         Show(true);
         selectedBuilding = newSelectedBuilding;
         _name.text = selectedBuilding.name.Replace("(Clone)", "");
-        icon.texture = selectedBuilding.Faction().Config().Icon(selectedBuilding.BuildingType());
+        icon.texture = selectedBuilding.Faction.Config().Icon(selectedBuilding.BuildingType());
         UpdateStatus();
 
         unitProducer = selectedBuilding.GetComponent<UnitProducer>();
@@ -156,7 +156,7 @@ public class UI_Info : MonoBehaviour
                 {
                     return (Texture)Resources.Load<Texture>("HUD_Icons/resource_fruitTree");
                 }
-                else return newSelectedResource.GetComponent<Building>().Faction().Config().Icon(selectedBuilding.BuildingType());
+                else return newSelectedResource.GetComponent<Building>().Faction.Config().Icon(selectedBuilding.BuildingType());
 
             case CollectableResource.EResourceType.Gold:
                 return (Texture)Resources.Load<Texture>("HUD_Icons/resource_gold");

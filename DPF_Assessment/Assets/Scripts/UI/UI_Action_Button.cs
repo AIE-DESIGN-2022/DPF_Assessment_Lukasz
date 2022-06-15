@@ -262,7 +262,7 @@ public class UI_Action_Button : MonoBehaviour, IPointerEnterHandler, IPointerExi
     {
         if (unitProducer != null)
         {
-            Faction buildingFaction = unitProducer.GetComponent<Building>().Faction();
+            Faction buildingFaction = unitProducer.GetComponent<Building>().Faction;
             if (buildingFaction.CanAfford(buildableUnit))
             {
                 button.interactable = true;

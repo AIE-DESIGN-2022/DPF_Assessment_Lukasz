@@ -14,8 +14,8 @@ public class Faction : MonoBehaviour
     [SerializeField] private int gold;
 
     private FactionConfig config;
-    private List<Unit> units = new List<Unit>();
-    private List<Building> buildings = new List<Building>();
+    public List<Unit> units = new List<Unit>();
+    public List<Building> buildings = new List<Building>();
     private GameController gameController;
     private bool placingBuilding = false;
     private bool gameStarted = false;
@@ -448,7 +448,7 @@ public class Faction : MonoBehaviour
     {
         Building building = selectable.GetComponent<Building>();
         Unit unit = selectable.GetComponent<Unit>();
-        Faction oldFaction = selectable.Faction();
+        Faction oldFaction = selectable.Faction;
         selectable.transform.parent = transform;
         selectable.Setup(playerNumber, this);
 

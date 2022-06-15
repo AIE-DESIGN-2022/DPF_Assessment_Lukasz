@@ -6,6 +6,7 @@ using UnityEngine;
 public class ObjectiveAction_GiveControl : ObjectiveAction
 { 
     [SerializeField] List<Selectable> list = new List<Selectable>();
+    [SerializeField] bool flashOnGiveControl = false;
 
     public override void DoAction()
     {
@@ -15,13 +16,10 @@ public class ObjectiveAction_GiveControl : ObjectiveAction
 
     private void TurnControl()
     {
-
         foreach (Selectable selectable in list)
         {
-            Faction oldFaction = selectable.Faction();
-
             gameController.GetPlayerFaction().TransferOwnership(selectable);
-            selectable.FlashUntillSelected();
+            if (flashOnGiveControl) selectable.FlashUntillSelected();
         }
 
         gameController.CameraController().PanCameraTo(list[0].transform.position);

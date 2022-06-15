@@ -72,9 +72,9 @@ public class BuildingConstructor : MonoBehaviour
     {
         if (currentBuildTarget.IsFarmRebuild())
         {
-            if (unit.Faction().CanAfford(Building.EBuildingType.Farm))
+            if (unit.Faction.CanAfford(Building.EBuildingType.Farm))
             {
-                unit.Faction().SubtractFromStockpileCostOf(Building.EBuildingType.Farm);
+                unit.Faction.SubtractFromStockpileCostOf(Building.EBuildingType.Farm);
                 currentBuildTarget.FarmRebuild(false);
             }
             else
@@ -156,7 +156,7 @@ public class BuildingConstructor : MonoBehaviour
     {
         if (currentBuildTarget != null)
         {
-            return unit.Faction().Config().PrefabName(currentBuildTarget.BuildingType());
+            return unit.Faction.Config().PrefabName(currentBuildTarget.BuildingType());
         }
         else
         {
