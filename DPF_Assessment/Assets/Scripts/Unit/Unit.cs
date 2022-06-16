@@ -164,6 +164,7 @@ public class Unit : Selectable
 
     public void ClearPreviousActions()
     {
+        StopMoveTo();
         if (resourceGatherer != null)
         {
             resourceGatherer.ClearTargetResource();
@@ -235,7 +236,7 @@ public class Unit : Selectable
         if (navMeshAgent != null)
         {
             navMeshAgent.isStopped = true;
-            //navMeshAgent.destination = new Vector3();
+            navMeshAgent.destination = transform.position;
         }
     }
 

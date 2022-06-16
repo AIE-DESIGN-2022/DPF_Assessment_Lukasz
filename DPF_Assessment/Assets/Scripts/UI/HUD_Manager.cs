@@ -13,6 +13,8 @@ public class HUD_Manager : MonoBehaviour
     private UI_Info infoUI;
     private UI_InfoMulti infoMultiUI;
     private UI_Tooltip tooltipUI;
+    private UI_Menu pauseMenu;
+
 
     private void Awake()
     {

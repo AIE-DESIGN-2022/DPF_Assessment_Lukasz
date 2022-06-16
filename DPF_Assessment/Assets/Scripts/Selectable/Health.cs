@@ -48,6 +48,9 @@ public class Health : MonoBehaviour
 
     private void Die()
     {
+        Unit unit = GetComponent<Unit>();
+        if (unit != null) unit.ClearPreviousActions();
+
         isAlive = false;
         Animator animator = GetComponent<Animator>();
         if (animator != null) animator.SetTrigger("death");
@@ -61,6 +64,7 @@ public class Health : MonoBehaviour
 
             }
         }
+
 
         if (GetComponent<Selectable>().IsSelected())
         {

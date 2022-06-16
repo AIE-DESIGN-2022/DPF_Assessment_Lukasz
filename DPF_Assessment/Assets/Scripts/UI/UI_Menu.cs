@@ -145,7 +145,7 @@ public class UI_Menu : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (IsShowing())
+        if (IsShowing)
         {
             if (Input.GetKeyDown(KeyCode.Escape)) ToggleShowing();
         }
@@ -179,8 +179,5 @@ public class UI_Menu : MonoBehaviour
         }
     }
 
-    public bool IsShowing()
-    {
-        return gameObject.activeSelf;
-    }
+    public bool IsShowing { get { return gameObject.activeSelf; } }
 }

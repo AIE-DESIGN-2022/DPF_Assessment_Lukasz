@@ -34,7 +34,7 @@ public class UI_Objectives : MonoBehaviour
         if (gameObject.activeSelf)
         {
             gameObject.SetActive(false);
-            listOfObjectives.Clear();
+            ClearListOfObjectives();
         }
         else
         {
@@ -59,6 +59,7 @@ public class UI_Objectives : MonoBehaviour
 
     public void UpdateObjectiveList()
     {
+        ClearListOfObjectives();
         foreach (Objective objective in objectiveManager.Objectives)
         {
             if (objective.IsActivated && objective.IsVisible)
@@ -70,5 +71,20 @@ public class UI_Objectives : MonoBehaviour
         }
 
     }
-  
+
+    public void ClearListOfObjectives()
+    {
+        if (listOfObjectives.Count > 0)
+        {
+            foreach (UI_Objective ui_Objective in listOfObjectives)
+            {
+                Destroy(ui_Objective.gameObject);
+            }
+            listOfObjectives.Clear();
+        }
+
+    }
+
+    public bool IsShowing { get { return gameObject.activeSelf; } }
+
 }

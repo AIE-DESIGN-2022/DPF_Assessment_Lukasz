@@ -78,22 +78,22 @@ public class Attacker : MonoBehaviour
     {
         timeSinceLastAttack += Time.deltaTime;
 
-        if (target != null && target.IsAlive())
+        if (unit != null && unit.IsAlive())
         {
-            if (TargetIsInRange())
+            if (target != null && target.IsAlive())
             {
-                if (unit != null) unit.StopMoveTo();
-                AttackTarget();
+                if (TargetIsInRange())
+                {
+                    if (unit != null) unit.StopMoveTo();
+                    AttackTarget();
+                }
+                else
+                {
+                    if (unit != null) unit.MoveTo(target);
+                }
             }
-            else
-            {
-                if (unit != null) unit.MoveTo(target);
-            }
-        }
-        else if (target != null && !target.IsAlive()) ClearTarget();
+            else if (target != null && !target.IsAlive()) ClearTarget();
 
-        if (unit != null)
-        {
             if ((unit.UnitStance() == Unit.EUnitStance.Offensive && unit.HasStopped()) || unit.UnitStance() == Unit.EUnitStance.Patrol)
             {
                 sightTimer += Time.deltaTime;
@@ -114,7 +114,7 @@ public class Attacker : MonoBehaviour
             }
         }
 
-        if (building != null)
+        if (building != null && building.IsAlive())
         {
             if (towerStance == Unit.EUnitStance.Defensive)
             {
@@ -138,7 +138,9 @@ public class Attacker : MonoBehaviour
             }
         }
 
-        
+
+
+
     }
 
     private void AttackTarget()

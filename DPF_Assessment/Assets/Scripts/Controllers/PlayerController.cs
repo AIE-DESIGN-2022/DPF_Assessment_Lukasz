@@ -225,6 +225,7 @@ public class PlayerController : MonoBehaviour
     private void Update()
     {
         UpdateCursor();
+        if (Input.GetKeyDown(KeyCode.Escape)) HandleEscapePushed();
 
         if (!playerControlOnline) return;
 
@@ -239,7 +240,6 @@ public class PlayerController : MonoBehaviour
         if (Input.GetMouseButton(0) || Input.GetMouseButton(1)) SetCursorActive(true);
         else SetCursorActive(false);
 
-        if (Input.GetKeyDown(KeyCode.Escape)) HandleEscapePushed();
 
         if (Input.GetKeyDown(KeyCode.Delete)) KillSelectedUnits();
 
@@ -270,21 +270,21 @@ public class PlayerController : MonoBehaviour
 
     private void HandleEscapePushed()
     {
-        FindObjectOfType<GameController>().PauseMenu().ToggleShowing();
-    }
+        GameController gameController = FindObjectOfType<GameController>();
 
-    private void HandleLeftMouseDown()
-    {
-        //AnyUnderMouse();
-
-        if (!cameraController.MouseIsInPlayArea()) return;
-
-        selectionPoint1 = Input.mousePosition;
+        if (gameController != null)
+        {
+            if (gameController.PauseMenu.IsShowing) gameController.PauseMenu.ToggleShowing();
+            else if (gameController.SettingsMenu.IsShowing) gameController.SettingsMenu.Show(false);
+            else if (gameController.ObjectivesMenu.IsShowing) gameController.ObjectivesMenu.Show(false);
+            else if (!gameController.PauseMenu.IsShowing) gameController.PauseMenu.ToggleShowing();
+        }
     }
 
     public void AddToSelection(Selectable selectable)
     {
         if (selectable.GetComponent<Building>() != null && selectable.GetComponent<Building>().BuildState() == Building.EBuildState.Destroyed) return;
+        if (SelectableInSelection(selectable)) return;
 
         selectable.Selected(true);
         currentSelection.Add(selectable);
@@ -295,10 +295,31 @@ public class PlayerController : MonoBehaviour
     {
         foreach (Selectable selectable in selectables)
         {
-            selectable.Selected(true);
-            currentSelection.Add(selectable);
+            if (!SelectableInSelection(selectable))
+            {
+                selectable.Selected(true);
+                currentSelection.Add(selectable);
+            }
         }
         HUD_Manager.NewSelection(currentSelection);
+    }
+
+    public void RemoveFromSelection(Selectable selectable)
+    {
+        if (SelectableInSelection(selectable))
+        {
+            currentSelection.Remove(selectable);
+            selectable.Selected(false);
+        }
+        HUD_Manager.NewSelection(currentSelection);
+    }
+
+    private void HandleLeftMouseDown()
+    {
+        if (cameraController.MouseIsInPlayArea())
+        {
+            selectionPoint1 = Input.mousePosition;
+        }
     }
 
     private void HandleLeftMouse()
@@ -319,50 +340,66 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
-            selectionBox.gameObject.SetActive(false);
-            cameraController.allowMovement = true;
+            EndOfSelectionBox();
         }
-
-        /*if (selectionBox.gameObject.activeInHierarchy && !cameraController.MouseIsInPlayArea())
-        {
-            AddToSelection(PlayersUnits(InSelectionBox()));
-
-            selectionBox.gameObject.SetActive(false);
-            cameraController.allowMovement = true;
-        }*/
     }
 
     private void HandleLeftMouseUp()
     {
 
-        if (selectionBox.gameObject.activeInHierarchy && cameraController.MouseIsInPlayArea())
+        if (selectionBox.gameObject.activeInHierarchy)
         {
-            if (!Input.GetKey(KeyCode.LeftShift)) ClearSelection();
-
-            AddToSelection(PlayersUnits(InSelectionBox()));
-
-            selectionBox.gameObject.SetActive(false);
-            cameraController.allowMovement = true;
+            EndOfSelectionBox();
         }
         else if (cameraController.MouseIsInPlayArea())
         {
-            if (!Input.GetKey(KeyCode.LeftShift)) ClearSelection();
+            if (!Input.GetKey(KeyCode.LeftShift) && !Input.GetKey(KeyCode.LeftControl)) ClearSelection();
 
             Selectable selectable = SelectableUnderMouse();
-
-            if (selectable != null && selectable.PlayerNumber() == playerNumber)
+            if (selectable != null)
             {
-                AddToSelection(selectable);
-            }
+                if (Input.GetKey(KeyCode.LeftControl) && SelectableInSelection(selectable))
+                {
+                    RemoveFromSelection(selectable);
+                }
 
-            if (selectable != null && currentSelection.Count == 0)
-            {
-                AddToSelection(selectable);
+                else if (selectable.PlayerNumber() == playerNumber)
+                {
+                    AddToSelection(selectable);
+                }
+
+                else if (currentSelection.Count == 0)
+                {
+                    AddToSelection(selectable);
+                }
             }
         }
 
         selectionPoint1 = new Vector2();
         selectionPoint2 = new Vector2();
+    }
+
+    private void EndOfSelectionBox()
+    {
+        if (!Input.GetKey(KeyCode.LeftShift)) ClearSelection(); // if either left shit or left ctrl isn't pressed; clear selection
+
+        AddToSelection(PlayersUnits(InSelectionBox()));
+
+        selectionBox.gameObject.SetActive(false);
+        cameraController.allowMovement = true;
+    }
+
+    private bool SelectableInSelection(Selectable newSelectable)
+    {
+        if (currentSelection.Count > 0)
+        {
+            foreach (Selectable selectable in currentSelection)
+            {
+                if (selectable == newSelectable) return true;
+            }
+        }
+
+        return false;
     }
 
     private void HandleRightClick()

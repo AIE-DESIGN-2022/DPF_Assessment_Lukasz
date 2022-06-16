@@ -20,6 +20,8 @@ public class GameController : MonoBehaviour
     private List<CollectableResource> collectableResources = new List<CollectableResource>();
     private StatSystem statSystem;
     private UI_MessageSystem messageSystem;
+    private UI_Settings settingsUI;
+    private UI_Objectives objectivesUI;
 
     [Header("New Game")]
     [SerializeField] private bool isNewGame = false;
@@ -49,9 +51,13 @@ public class GameController : MonoBehaviour
         {
             if (menu.name == "PauseMenu") pauseMenu = menu;
         }
+
+        settingsUI = GetComponentInChildren<UI_Settings>();
+        objectivesUI = GetComponentInChildren<UI_Objectives>();
+
     }
 
-    public UI_Menu PauseMenu()
+/*    public UI_Menu PauseMenu()
     {
         if (pauseMenu != null) return pauseMenu;
         else
@@ -59,7 +65,14 @@ public class GameController : MonoBehaviour
             Debug.LogError(name + " cannot find pause menu.");
             return null;
         }
-    }
+    }*/
+
+    public UI_Menu PauseMenu {  get {  return pauseMenu; } }
+
+    public UI_Settings SettingsMenu { get { return settingsUI; } }
+
+    public UI_Objectives ObjectivesMenu { get { return objectivesUI; } }
+
 
     // Start is called before the first frame update
     void Start()

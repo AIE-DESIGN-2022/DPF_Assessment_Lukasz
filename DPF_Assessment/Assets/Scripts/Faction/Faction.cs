@@ -75,19 +75,13 @@ public class Faction : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //print(name + " has " + units.Count + " Units, and " + buildings.Count + " buildings.");
-        /*if (playerNumber == 2)
-        {
-            foreach (Building building in buildings)
-            {
-                print(name + " has a " + building.name);
-            }
-        }*/
-        
+        CheckIfFactionIsAlive();
+    }
 
+    private void CheckIfFactionIsAlive()
+    {
         if (gameStarted && units.Count == 0 && buildings.Count == 0)
         {
-            //print(name + ": Faction End");
             gameStarted = false;
             gameController.FactionDefated(this);
         }
@@ -132,7 +126,6 @@ public class Faction : MonoBehaviour
             newBuilding.Setup(playerNumber, this);
             newBuilding.transform.parent = transform;
             buildings.Add(newBuilding);
-            newBuildingCreated(newBuilding.BuildingType());
             newBuilding.SetBuildState(Building.EBuildState.Placing);
             newBuilding.SetConstructionTeam(builders);
             gameController.PlayerController().PlayerControl(false);
@@ -162,6 +155,11 @@ public class Faction : MonoBehaviour
     {
         gameController.PlayerController().PlayerControl(true);
         placingBuilding = false; 
+    }
+
+    public void BuildingConstructionComplete(Building newBuilding)
+    {
+        newBuildingCreated(newBuilding.BuildingType());
     }
 
     public FactionConfig Config()

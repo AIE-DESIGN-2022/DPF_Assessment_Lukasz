@@ -11,17 +11,16 @@ public class Objective : MonoBehaviour
     [SerializeField] protected string objectiveTitle;
     [SerializeField] protected string objectiveDescription;
     [SerializeField] protected float messageTimeDelay = 0;
+    protected bool hasCompleted = false;
 
     [Header("On Completion")]
     [SerializeField] protected string completionMessage = "";
     [SerializeField] protected float completionMessageTimeDelay = 0;
-    [SerializeField] UnityEvent OnObjectiveComplete;
+    //[SerializeField] UnityEvent OnObjectiveComplete;
     [SerializeField] List<Objective> nextObjective = new List<Objective>();
 
     [Header("Activation by completion of other objectives")]
     [SerializeField ] List<Objective> previousObjectives = new List<Objective>();
-    private bool[] hasBeenActivated;
-    private bool[] hasBeenCompleted;
 
     protected GameController gameController;
     protected ObjectiveManager objectiveManager;
@@ -54,8 +53,6 @@ public class Objective : MonoBehaviour
     {
         if (objectiveManager == null) Debug.LogError(name + " cannot find ObjectiveManager");
         if (isActivated) ShowObjectiveNotification();
-        hasBeenActivated = new bool[previousObjectives.Count];
-        hasBeenCompleted = new bool[previousObjectives.Count];
     }
 
     // Update is called once per frame
@@ -66,34 +63,29 @@ public class Objective : MonoBehaviour
 
     private void CheckIfPreviousHaveBeenCompleted()
     {
-        if (!isActivated || previousObjectives.Count == 0) return;
+        if (previousObjectives.Count == 0 || isActivated) return;
 
-        for (int index = 0; index < previousObjectives.Count; index++)
+        bool allPreviousHaveCompleted = true;
+
+        foreach (Objective objective in previousObjectives)
         {
-            if (!hasBeenActivated[index] && previousObjectives[index].IsActivated) hasBeenActivated[index] = true;
-
-            if (hasBeenActivated[index] && !hasBeenCompleted[index] && !previousObjectives[index].isActivated) hasBeenCompleted[index] = true;
+            if (!objective.hasCompleted) allPreviousHaveCompleted = false; 
         }
 
-        bool allComplete = true;
-
-        foreach (bool completedObjective in hasBeenCompleted)
-        {
-            if (!completedObjective) allComplete = false;
-        }
-
-        if (allComplete) ObjectiveComplete();
+        if (allPreviousHaveCompleted) ActivateObjective();
     }
 
     public void ObjectiveComplete()
     {
-        //Debug.Log(name + " is complete");
-        isActivated = false;
-        OnObjectiveComplete.Invoke();
+        ActivateNextObjectives();
+        //OnObjectiveComplete.Invoke();
         RunObjectiveCompleteActions();
         ShowObjectiveCompleteNotification();
-        ActivateNextObjectives();
+        isActivated = false;
+        hasCompleted = true;
     }
+
+    public bool HasCompleted { get { return hasCompleted; } }
 
     private void ActivateNextObjectives()
     {
@@ -116,6 +108,8 @@ public class Objective : MonoBehaviour
 
     public void ActivateObjective()
     {
+        if (hasCompleted || isActivated) return;
+
         isActivated = true;
         ShowObjectiveNotification();
         RunObjectiveActivateActions();
@@ -141,7 +135,7 @@ public class Objective : MonoBehaviour
     {
         if (isVisible)
         {
-            objectiveManager.MessageSystem().ShowMessage("Objective Complete: " + objectiveTitle, messageTimeDelay);
+            objectiveManager.MessageSystem().ShowMessage("Objective Complete: " + objectiveTitle, completionMessageTimeDelay);
         }
 
         if (completionMessage != "")

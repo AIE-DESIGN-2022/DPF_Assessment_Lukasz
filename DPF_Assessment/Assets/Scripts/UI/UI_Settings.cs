@@ -92,4 +92,6 @@ public class UI_Settings : MonoBehaviour
 
         scrollSpeedSlider.value = cameraController.ScrollSpeed;
     }
+
+    public bool IsShowing { get { return gameObject.activeSelf; } }
 }
