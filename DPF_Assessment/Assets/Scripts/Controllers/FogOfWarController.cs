@@ -9,6 +9,8 @@ public class FogOfWarController : MonoBehaviour
     private GameController gameController;
     private Faction playerFaction;
 
+    private float taskTimer = Mathf.Infinity;
+
     private void Awake()
     {
         fogOfWar = FindObjectOfType<FogOfWar>();
@@ -25,11 +27,12 @@ public class FogOfWarController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //UpdateSelectableVisibility();
+        taskTimer += Time.deltaTime;
 
-        if (playerFaction != null && fogOfWar != null)
+        if (fogOfWar.IsReady && taskTimer > fogOfWar.LastTaskDuration * 1.1f)
         {
-            fogOfWar.ProcessVisibility(playerFaction.Selectables());
+            taskTimer = 0;
+            fogOfWar.ProcessVisibilityAsync(playerFaction.Selectables());
         }
     }
 

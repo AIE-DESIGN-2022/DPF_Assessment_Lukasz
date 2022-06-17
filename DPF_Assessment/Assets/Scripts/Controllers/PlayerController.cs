@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class PlayerController : MonoBehaviour
 {
@@ -644,12 +645,15 @@ public class PlayerController : MonoBehaviour
     {
         bool hasGivenOrder = false;
 
+        NavMeshHit hit;
+        if (!NavMesh.SamplePosition(newLocation, out hit, 2, NavMesh.AllAreas)) return;
+
         if (currentSelection.Count == 1)
         {
             Unit unit = currentSelection[0].GetComponent<Unit>();
             if (unit != null && unit.PlayerNumber() == playerNumber)
             {
-                unit.MoveTo(newLocation);
+                unit.MoveTo(hit.position);
                 hasGivenOrder = true;
             }
         }

@@ -1,6 +1,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 using UnityEngine;
 
 public class FogOfWar : MonoBehaviour
@@ -14,6 +16,11 @@ public class FogOfWar : MonoBehaviour
     private LayerMask fogLayer;
     private Camera gameCamera;
     private List<int> changed;
+    private CancellationTokenSource tokenSource;
+    private float taskTimer = 1;
+    private bool timerStarted = false;
+    private float lastTaskDuration = Mathf.Infinity;
+    [SerializeField] private float sightDistanceOffSet = 1;
 
     private void Awake()
     {
@@ -42,12 +49,19 @@ public class FogOfWar : MonoBehaviour
         gameCamera = FindObjectOfType<GameController>().CameraController().Camera();
 
         if (vertices.Length == 0) Debug.LogError(name + " no vertices found");
+
+        tokenSource = new CancellationTokenSource();
     }
 
     // Update is called once per frame
     void Update()
     {
-
+        if (timerStarted) taskTimer += Time.deltaTime;
+        else if (taskTimer > 0)
+        {
+            lastTaskDuration = taskTimer;
+            taskTimer = 0;
+        }
     }
 
     void UpdateColor()
@@ -125,4 +139,104 @@ public class FogOfWar : MonoBehaviour
         }
         changed.Clear();
     }
+
+    public async void ProcessVisibilityAsync(List<Selectable> selectables)
+    {
+        //print("async task start");
+        timerStarted = true;
+        bool complete = false;
+
+        List<Vector3> fogHits = new List<Vector3>();
+        List<float> sightDistances = new List<float>();
+        foreach (Selectable selectable in selectables)
+        {
+            Vector3 rayOrigin = selectable.transform.position;
+            rayOrigin.y += 50;
+            Vector3 rayDirection = selectable.transform.up * -1;
+            Ray ray = new Ray(rayOrigin, rayDirection);
+            RaycastHit hit;
+
+
+            if (Physics.Raycast(ray, out hit, 100, fogLayer))
+            {
+                fogHits.Add(hit.point);
+            }
+
+            sightDistances.Add(selectable.SightDistance() + sightDistanceOffSet);
+        }
+
+        complete = await Task.Run(() => 
+        {
+            foreach (int vert in changed)
+            {
+                colors[vert].a = 0.2f;
+
+                if (tokenSource.IsCancellationRequested)
+                {
+                    return false;
+                }
+            }
+            changed.Clear();
+
+            for (int i = 0; i < vertices.Length; i++)
+            {
+                float distanceSqr = 0;
+                
+
+                for (int s = 0; s < fogHits.Count; s++)
+                {
+                    distanceSqr = Vector3.SqrMagnitude(positions[i] - fogHits[s]);
+                    float sightDistanceSqr = sightDistances[s] * sightDistances[s];
+
+                    if (distanceSqr != 0 && distanceSqr < sightDistanceSqr)
+                    {
+                        //float alpha = Mathf.Min(colors[i].a, distanceSqr / sightDistanceSqr);
+                        //colors[i].a = alpha;
+                        colors[i].a = 0;
+                        changed.Add(i);
+                    }
+
+                    if (tokenSource.IsCancellationRequested)
+                    {
+                        return false;
+                    }
+                }
+
+                /*foreach (Vector3 fogHit in fogHits)
+                {
+                    distanceSqr = Vector3.SqrMagnitude(positions[i] - fogHit);
+
+                    if (distanceSqr != 0 && distanceSqr < sightDistanceSqr)
+                    {
+                        //float alpha = Mathf.Min(colors[i].a, distance / sightDistanceSqr);
+                        //colors[i].a = alpha;
+                        colors[i].a = 0;
+                        changed.Add(i);
+                    }
+
+                    if (tokenSource.IsCancellationRequested)
+                    {
+                        return false;
+                    }
+                }*/
+
+
+            }
+            return true;
+        },tokenSource.Token);
+
+        if(tokenSource.IsCancellationRequested)
+        {
+            return;
+        }
+
+        if (mesh != null) mesh.colors = colors;
+
+        //print("async task complete");
+        timerStarted = false;
+    }
+
+    public float LastTaskDuration { get { return lastTaskDuration; } }
+
+    public bool IsReady { get { return !timerStarted; } }
 }

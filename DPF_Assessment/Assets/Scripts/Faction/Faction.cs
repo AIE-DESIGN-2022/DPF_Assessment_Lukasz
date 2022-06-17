@@ -109,11 +109,12 @@ public class Faction : MonoBehaviour
 
     public Unit SpawnUnit(Unit.EUnitType newUnitType, Transform spawnLocation)
     {
+        if (newUnitCreated != null) newUnitCreated(newUnitType);
         Unit newUnit = Instantiate(config.GetUnitPrefab(newUnitType), spawnLocation.position, spawnLocation.rotation);
         newUnit.Setup(playerNumber, this);
         newUnit.transform.parent = transform;
         units.Add(newUnit);
-        newUnitCreated(newUnit.UnitType());
+        //newUnitCreated(newUnit.UnitType());
         return newUnit;
     }
 
@@ -159,7 +160,7 @@ public class Faction : MonoBehaviour
 
     public void BuildingConstructionComplete(Building newBuilding)
     {
-        newBuildingCreated(newBuilding.BuildingType());
+        if(newBuildingCreated != null) newBuildingCreated(newBuilding.BuildingType());
     }
 
     public FactionConfig Config()
