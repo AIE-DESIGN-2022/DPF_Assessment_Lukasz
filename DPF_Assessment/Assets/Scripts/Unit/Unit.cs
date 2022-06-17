@@ -189,10 +189,13 @@ public class Unit : Selectable
 
     private void Move(Vector3 newLocation)
     {
+        NavMeshHit hit;
+        if (!NavMesh.SamplePosition(newLocation, out hit, 3, NavMesh.AllAreas)) return;
+
         if (navMeshAgent != null)
         {
             
-            navMeshAgent.destination = GetClosestAvailablePosition(newLocation);
+            navMeshAgent.destination = GetClosestAvailablePosition(hit.position);
 
             if (navMeshAgent.isStopped) navMeshAgent.isStopped = false;
         }
