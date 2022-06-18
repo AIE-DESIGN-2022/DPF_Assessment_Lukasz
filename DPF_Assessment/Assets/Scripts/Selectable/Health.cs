@@ -48,10 +48,10 @@ public class Health : MonoBehaviour
 
     private void Die()
     {
+        isAlive = false;
         Unit unit = GetComponent<Unit>();
         if (unit != null) unit.ClearPreviousActions();
 
-        isAlive = false;
         Animator animator = GetComponent<Animator>();
         if (animator != null) animator.SetTrigger("death");
         else

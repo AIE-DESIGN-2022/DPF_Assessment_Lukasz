@@ -7,17 +7,17 @@ using UnityEngine.AI;
 
 public class PlayerController : MonoBehaviour
 {
-    [SerializeField] Color playerColor;
-    [SerializeField] private List<Selectable> currentSelection;
-    private int playerNumber = 1;
-    private HUD_Manager HUD_Manager;
-    private GameCameraController cameraController;
-    private bool playerControlOnline = true;
-    private RectTransform selectionBox;
-    private Vector2 selectionPoint1;
-    private Vector2 selectionPoint2;
-    private LayerMask terrainMask;
-    private LayerMask selectableMask;
+    [SerializeField] Color playerColor; // The color used in the player's units/buildings selection & minimap indicators
+    [SerializeField] private List<Selectable> currentSelection; // A list of the currently selected units/buildings/resources
+    private int playerNumber = 1; // the player number, will be changed later when multiplayer is added
+    private HUD_Manager HUD_Manager; // a referance to the HUD manager class
+    private GameCameraController cameraController; // a referance to the player controller class
+    private bool playerControlOnline = true; // true when player can issue orders and make selections
+    private RectTransform selectionBox; // a referance to the selection box HUD element
+    private Vector2 selectionPoint1; // the location on screen where the top left corner of the selection box is
+    private Vector2 selectionPoint2; // the location on screen where the bottom right corner of the selection box is
+    private LayerMask terrainMask; // contains only the terrain layer
+    private LayerMask selectableMask; // contains only the terrain and selectable layers
 
     // Cursors
     private ECursorMode cursorMode = ECursorMode.Normal;
@@ -32,23 +32,27 @@ public class PlayerController : MonoBehaviour
     private Texture2D cursorPatrol;
     private Texture2D cursorPatrolActive;
 
-    private List<GameObject> selectionCircles = new List<GameObject>();
-    private GameObject selectionCirclePrefab;
-    private float selectionCircleRate = 0.05f;
-    private float selectionCircleTimer = 0;
-    private bool settingPatrolPoint=false;
+    private List<GameObject> selectionCircles = new List<GameObject>(); // a list of currently instantiated movement order indicators
+    private GameObject selectionCirclePrefab; // the prefab used to instantiae a movement confirmation indicator
+    private float selectionCircleRate = 0.05f; // how fast the movement order indicator shrinks
+    private float selectionCircleTimer = 0; // a timer used to shrink all the movement confrimation indicators per rate
+    private bool settingPatrolPoint=false; // true when setting a patrol point for units
+    private bool mouseClickedRecently;
+    private float doubleClickInterval = 0.25f;
+    private float doubleClickTimer = 0;
 
+    // The context the cursor (mouse pointer) can be in, based on what it is hovering over and what is selected
     public enum ECursorMode
     {
-        Normal,
-        Move,
-        Attack,
-        Worker,
-        Heal,
-        Patrol
+        Normal, // cursor when not in one of the other states
+        Move, // when a movement order can be issued to units
+        Attack, // when an attack order can be issued to units/towers
+        Worker, // when worker can construct or gather resource under mouse
+        Heal, // when healer can heal unit under mouse, currently unused
+        Patrol // when setting a new patrol point
     }
 
-
+    // Run while the game is loading
     private void Awake()
     {
         cameraController = FindObjectOfType<GameCameraController>();
@@ -60,6 +64,7 @@ public class PlayerController : MonoBehaviour
         selectionCirclePrefab = (GameObject)Resources.Load("Prefabs/selectionCircle");
     }
 
+    // Loads the cursor textures from the resources folder.
     private void LoadCursors()
     {
         Texture2D[] loadedCursors = Resources.LoadAll<Texture2D>("Cursors/");
@@ -78,6 +83,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    // Finds the selection box UI element and sets the class' referance to it
     private RectTransform FindSelectionBox()
     {
         RectTransform[] rectTrans = FindObjectsOfType<RectTransform>();
@@ -100,6 +106,11 @@ public class PlayerController : MonoBehaviour
         SetCursor(ECursorMode.Normal);
     }
 
+    /* Function to change the cursor based on context
+     * isActive = the mouse button is down
+     * There are two color variations, one for when mouse button is down
+     * the other when it is not.
+     */
     private void SetCursor(ECursorMode newCursorMode, bool isActive = false)
     {
         if(newCursorMode != cursorMode) cursorMode = newCursorMode;
@@ -182,11 +193,14 @@ public class PlayerController : MonoBehaviour
         
     }
 
+    // Changes cursor when mouse button down
+    // Active = any mouse button down
     private void SetCursorActive(bool isActive)
     {
         SetCursor(cursorMode, isActive);
     }
 
+    // True if current selection has worker units
     private bool SelectionHasWorkers()
     {
         foreach (Selectable selectable in currentSelection)
@@ -198,6 +212,7 @@ public class PlayerController : MonoBehaviour
         return false;
     }
 
+    // True if the current selection has units
     private bool SelectionHasUnits()
     {
         if (currentSelection.Count > 0)
@@ -211,6 +226,7 @@ public class PlayerController : MonoBehaviour
         return false;
     }
 
+    // True if the current selection has a unit cabale of attacking other units
     private bool SelectionHasAttackers()
     {
         foreach (Selectable selectable in currentSelection)
@@ -225,10 +241,12 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     private void Update()
     {
-        UpdateCursor();
+        DoubleClickTimer();
+        SelectionCircleLogic(); // selection circles are drawn as movement order confirmation indicators
+        UpdateCursor(); // change cursor based on context the cursor is in
         if (Input.GetKeyDown(KeyCode.Escape)) HandleEscapePushed();
 
-        if (!playerControlOnline) return;
+        if (!playerControlOnline) return; // all code below this line will not execute when the player's control is disabled
 
         if (Input.GetMouseButtonDown(0)) HandleLeftMouseDown();
 
@@ -244,9 +262,30 @@ public class PlayerController : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Delete)) KillSelectedUnits();
 
-        SelectionCircleLogic();
     }
 
+    private void DoubleClickTimer()
+    {
+        if (mouseClickedRecently)
+        {
+            doubleClickTimer += Time.deltaTime;
+
+            if (doubleClickTimer > doubleClickInterval)
+            {
+                DoubleClickReset();
+            }
+        }
+    }
+
+    private void DoubleClickReset()
+    {
+        mouseClickedRecently = false;
+        doubleClickTimer = 0;
+    }
+
+    /* Process for updating the cursor
+     * Called every frame
+     */
     private void UpdateCursor()
     {
         if (Input.GetMouseButton(0)) return;
@@ -269,6 +308,11 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    /* Process for when player presses Esc on the keyboard
+     * Varies based on what is currently being displayed
+     * Closes any HUD dialog being shown if any
+     * Otherwise opens the pause menu
+     */
     private void HandleEscapePushed()
     {
         GameController gameController = FindObjectOfType<GameController>();
@@ -282,6 +326,8 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    /* Adds the passed in selectable to the current selection
+     */
     public void AddToSelection(Selectable selectable)
     {
         if (selectable.GetComponent<Building>() != null && selectable.GetComponent<Building>().BuildState() == Building.EBuildState.Destroyed) return;
@@ -292,6 +338,8 @@ public class PlayerController : MonoBehaviour
         HUD_Manager.NewSelection(currentSelection);
     }
 
+    /* Adds the passed in list of selectable to the current selection
+     */
     public void AddToSelection(List<Selectable> selectables)
     {
         foreach (Selectable selectable in selectables)
@@ -305,6 +353,7 @@ public class PlayerController : MonoBehaviour
         HUD_Manager.NewSelection(currentSelection);
     }
 
+    // Removes passed in selectable from the current selection
     public void RemoveFromSelection(Selectable selectable)
     {
         if (SelectableInSelection(selectable))
@@ -315,6 +364,7 @@ public class PlayerController : MonoBehaviour
         HUD_Manager.NewSelection(currentSelection);
     }
 
+    // Proccess for when the left mouse button is initially pressed down
     private void HandleLeftMouseDown()
     {
         if (cameraController.MouseIsInPlayArea())
@@ -323,6 +373,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    // Process for when the Left mouse button is currently being held down
     private void HandleLeftMouse()
     {
         if (selectionPoint1 == new Vector2()) return;
@@ -339,12 +390,13 @@ public class PlayerController : MonoBehaviour
             selectionBox.sizeDelta = new Vector2(Mathf.Abs(width), Mathf.Abs(height));
             selectionBox.anchoredPosition = selectionPoint1 + new Vector2(width/2 , height/2);
         }
-        else
+        else if (selectionBox.gameObject.activeSelf && !cameraController.MouseIsInPlayArea())
         {
             EndOfSelectionBox();
         }
     }
 
+    // Process for when the Left mouse button is relased after being pressed
     private void HandleLeftMouseUp()
     {
 
@@ -354,24 +406,46 @@ public class PlayerController : MonoBehaviour
         }
         else if (cameraController.MouseIsInPlayArea())
         {
-            if (!Input.GetKey(KeyCode.LeftShift) && !Input.GetKey(KeyCode.LeftControl)) ClearSelection();
-
-            Selectable selectable = SelectableUnderMouse();
-            if (selectable != null)
+            if (mouseClickedRecently)
             {
-                if (Input.GetKey(KeyCode.LeftControl) && SelectableInSelection(selectable))
-                {
-                    RemoveFromSelection(selectable);
-                }
+                ClearSelection();
 
-                else if (selectable.PlayerNumber() == playerNumber)
+                Selectable selectableUnderMouse = SelectableUnderMouse();
+                if (selectableUnderMouse)
                 {
-                    AddToSelection(selectable);
-                }
+                    Unit unitUnderMouse = selectableUnderMouse.GetComponent<Unit>();
 
-                else if (currentSelection.Count == 0)
+                    if (unitUnderMouse)
+                    {
+                        AddToSelection(AllUnitsOfTypeOnScreen(unitUnderMouse.UnitType()));
+                        DoubleClickReset();
+                    }
+                }
+            }
+            else
+            {
+                mouseClickedRecently = true;
+
+                // if either left shit or left ctrl isn't pressed; clear selection
+                if (!Input.GetKey(KeyCode.LeftShift) && !Input.GetKey(KeyCode.LeftControl) && !Input.GetKey(KeyCode.RightShift) && !Input.GetKey(KeyCode.RightControl)) ClearSelection();
+
+                Selectable selectable = SelectableUnderMouse();
+                if (selectable != null)
                 {
-                    AddToSelection(selectable);
+                    if ((Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl)) && SelectableInSelection(selectable))
+                    {
+                        RemoveFromSelection(selectable);
+                    }
+
+                    else if (selectable.PlayerNumber() == playerNumber)
+                    {
+                        AddToSelection(selectable);
+                    }
+
+                    else if (currentSelection.Count == 0)
+                    {
+                        AddToSelection(selectable);
+                    }
                 }
             }
         }
@@ -380,9 +454,10 @@ public class PlayerController : MonoBehaviour
         selectionPoint2 = new Vector2();
     }
 
+    // Process for when player finishes drawing a selection box
     private void EndOfSelectionBox()
     {
-        if (!Input.GetKey(KeyCode.LeftShift)) ClearSelection(); // if either left shit or left ctrl isn't pressed; clear selection
+        if (!Input.GetKey(KeyCode.LeftShift) && !Input.GetKey(KeyCode.RightShift)) ClearSelection(); 
 
         AddToSelection(PlayersUnits(InSelectionBox()));
 
@@ -390,6 +465,23 @@ public class PlayerController : MonoBehaviour
         cameraController.allowMovement = true;
     }
 
+    private List<Selectable> AllUnitsOfTypeOnScreen(Unit.EUnitType unitType)
+    {
+        List<Selectable> list = new List<Selectable>();
+
+        List<Unit> playerUnits = FindObjectOfType<GameController>().GetPlayerFaction().units;
+        foreach (Unit unit in playerUnits)
+        {
+            Vector3 screenPos = cameraController.Camera().WorldToScreenPoint(unit.transform.position);
+            if (screenPos.x > 0 && screenPos.x < Screen.width && screenPos.y > 0 && screenPos.y < Screen.height)
+            { 
+                if (unit.UnitType() == unitType) list.Add(unit);
+            }
+        }
+        return list;
+    }
+
+    // True if passed in selectable is in the list of currently selected Selectables
     private bool SelectableInSelection(Selectable newSelectable)
     {
         if (currentSelection.Count > 0)
@@ -403,6 +495,7 @@ public class PlayerController : MonoBehaviour
         return false;
     }
 
+    // Process for when the player has right-clicked on the mouse
     private void HandleRightClick()
     {
         if (!cameraController.MouseIsInPlayArea()) return;
@@ -433,6 +526,9 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    // Handles when the player the player right-clicks on the passed in building
+    // Either to (re)construct a building if friendly
+    // Or to attack it if it's an enemy's 
     private void RightClickOnBuilding(Building building)
     {
         // check if owned by player
@@ -446,6 +542,8 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    // Handles when the player right-clicks the passed in unit
+    // Healing them if they are friendly, or attacking them if they are a enemy
     private void RightClickOnUnit(Unit unit)
     {
         // check if owned by player
@@ -459,7 +557,7 @@ public class PlayerController : MonoBehaviour
         }    
     }
 
-
+    // Returns a list of selectables that are under a drawn selection box
     private List<Selectable> InSelectionBox()
     {
         List<Selectable> list = new List<Selectable>();
@@ -480,6 +578,7 @@ public class PlayerController : MonoBehaviour
         return list;
     }
 
+    // Returns a list of the player's units/buildings from the list of passed in units/buildings/resources
     private List<Selectable> PlayersUnits(List<Selectable> selectables)
     {
         List<Selectable> list = new List<Selectable>();
@@ -496,6 +595,7 @@ public class PlayerController : MonoBehaviour
         return list;
     }
 
+    // Issues an order to units to interact with the passed in building if possible
     private void GiveUnitToBuildingOrder(Building building)
     {
         bool orderGiven = false;
@@ -529,6 +629,8 @@ public class PlayerController : MonoBehaviour
         if (orderGiven) building.ConfirmOrder();
     }
 
+    /* Returns a RaycastHit for what is under the mouse
+     */
     private RaycastHit UnderMouse()
     {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -537,6 +639,9 @@ public class PlayerController : MonoBehaviour
         return hit;
     }
 
+    /* Function used for testing
+     * Gives print out what is under mouse, combine with a mouse down function to use
+     */
     private void AnyUnderMouse()
     {
         LayerMask fogLayer = new LayerMask();
@@ -551,6 +656,8 @@ public class PlayerController : MonoBehaviour
         print("layer= " + hit.transform.gameObject.layer);
     }
 
+    /* Returns a selectable under the mouse pointer or null if there is none
+     */
     private Selectable SelectableUnderMouse()
     {
         RaycastHit hit = UnderMouse();
@@ -562,6 +669,7 @@ public class PlayerController : MonoBehaviour
         else return null;
     }
 
+    // True if selectable passed in is an enemy to the player
     private bool IsEnemy(Selectable selectableUnderMouse)
     {
         if (selectableUnderMouse == null) return false;
@@ -580,6 +688,7 @@ public class PlayerController : MonoBehaviour
         return false;
     }
 
+    // True if selectable passed in is a collectable resource
     private bool IsCollectableResource(Selectable selectableUnderMouse)
     {
         if (selectableUnderMouse == null) return false;
@@ -590,6 +699,7 @@ public class PlayerController : MonoBehaviour
         return false;
     }
 
+    // True if selectable passed in is player's building and needs to be repaired.
     private bool IsPlayersInteractableBuilding(Selectable selectableUnderMouse)
     {
         if (selectableUnderMouse == null) return false;
@@ -605,6 +715,7 @@ public class PlayerController : MonoBehaviour
         return false;
     }
 
+    // True if selectable passed in is owned by the player, is part of players faction
     private bool IsPlayersSelectable(Selectable selectableUnderMouse)
     {
         if (selectableUnderMouse == null) return false;
@@ -614,11 +725,13 @@ public class PlayerController : MonoBehaviour
         return false;
     }
 
+    // Returns a Vector of the RaycastHit from the mouse to the ground
     public Vector3 LocationUnderMouse()
     {
         return UnderMouse().point;
     }
 
+    // Returns a Vector of a location on the terrain under the mouse
     public Vector3 TerrainLocationUnderMouse()
     {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -627,6 +740,7 @@ public class PlayerController : MonoBehaviour
         return hit.point;
     }
 
+    // Clears the currect selection
     public void ClearSelection()
     {
         if (currentSelection.Count <= 0) return;
@@ -641,6 +755,7 @@ public class PlayerController : MonoBehaviour
         SetCursor(ECursorMode.Normal);
     }
 
+    // Issues a movement order to the passed in location to the currently selected Units
     private void GiveMoveOrder(Vector3 newLocation)
     {
         bool hasGivenOrder = false;
@@ -664,17 +779,10 @@ public class PlayerController : MonoBehaviour
         }
 
         if (hasGivenOrder) SpawnSelectionCircle(newLocation);
-
-        /*foreach (Selectable selectable in currentSelection)
-        {
-            Unit unit = selectable.GetComponent<Unit>();
-            if (unit != null && unit.PlayerNumber() == playerNumber)
-            {
-                unit.MoveTo(newLocation);
-            }
-        }*/
     }
 
+    
+    // Issues an attack order on the passed in selectable to the currectly selected Units
     private void GiveAttackOrder(Selectable newTarget)
     {
         bool hasGivenOrder = false;
@@ -705,6 +813,7 @@ public class PlayerController : MonoBehaviour
         if (hasGivenOrder) newTarget.ConfirmAttack();
     }
 
+    // Issues a healing order to the healers in the currect selection targeting the passed in Unit
     private void GiveUnitHealOrder(Unit unit)
     {
         bool hasGivenOrder = false;
@@ -722,6 +831,7 @@ public class PlayerController : MonoBehaviour
         if (hasGivenOrder) unit.ConfirmOrder();
     }
 
+    // Issues a collect of the passed in resource order to the current selection 
     private void GiveCollectResourceOrder(CollectableResource newResource)
     {
         bool hasGivenOrder = false;
@@ -739,16 +849,20 @@ public class PlayerController : MonoBehaviour
         if (hasGivenOrder) newResource.ConfirmOrder();
     }
 
+    // Sets the class' reference to the HUD manager
     public void SetHUD_Manager(HUD_Manager newManager)
     {
         HUD_Manager = newManager;
     }
 
+    // Enables/Disables the player's control of the game
     public void PlayerControl(bool online)
     {
         playerControlOnline = online;
     }
 
+    // Issues an order to multiple selected units to move but not all to the same spot
+    // but rather each unit next to the last unit
     private void MoveInFormation(Vector3 newLocation)
     {
         int numberOfRows = (currentSelection.Count / 5) + 1;
@@ -773,8 +887,10 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    // True if nothing is currently selected
     public bool NothingSelected() { return currentSelection.Count == 0; }
 
+    // Issues a Seppuku order to currently selected units/buildings
     private void KillSelectedUnits()
     {
         if (currentSelection.Count > 0)
@@ -797,6 +913,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    // Called when a selected unit has died so it can be removed for current selection list
     public void SelectedUnitDied(Selectable selectable)
     {
         if (currentSelection.Contains(selectable))
@@ -808,6 +925,7 @@ public class PlayerController : MonoBehaviour
         HUD_Manager.NewSelection(currentSelection);
     }
 
+    // Spawns an indicator to the player at the passed in location where a movement order has been issued
     private void SpawnSelectionCircle(Vector3 location)
     {
         if (selectionCirclePrefab != null)
@@ -819,6 +937,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    // Processes the animation of Movement Order Indicators spawned by the previous function
     private void SelectionCircleLogic()
     {
         if (selectionCircles.Count > 0)
@@ -845,11 +964,13 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    // Returns the player's color, used in selection indication circles and squares
     public Color PlayerColor()
     {
         return playerColor;
     }
 
+    // Enables/Disables player control when setting new patrol point for units
     public void SettingPatrolPoint(bool newSetting)
     {
         settingPatrolPoint = newSetting;

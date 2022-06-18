@@ -308,5 +308,7 @@ public class ResourceGatherer : MonoBehaviour
 
     public bool HasDropOffTarget() { return dropOff != null; }
 
+    public CollectableResource CurrentTarget { get {  return targetResource; } }
+
 }
 // Writen by Lukasz Dziedziczak

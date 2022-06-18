@@ -437,99 +437,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 8802002943941821610, guid: 26591ff36cb5ef440843000e2bb69096, type: 3}
   m_PrefabInstance: {fileID: 22409783}
   m_PrefabAsset: {fileID: 0}
---- !u!1001 &23290324
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 1711991032}
-    m_Modifications:
-    - target: {fileID: -2355512982411042935, guid: 519a77f66a653724399a842025b434c0, type: 3}
-      propertyPath: objectiveTitle
-      value: Find the village
-      objectReference: {fileID: 0}
-    - target: {fileID: -2355512982411042935, guid: 519a77f66a653724399a842025b434c0, type: 3}
-      propertyPath: messageTimeDelay
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: -2355512982411042935, guid: 519a77f66a653724399a842025b434c0, type: 3}
-      propertyPath: objectiveDescription
-      value: Follow the path to find the village.
-      objectReference: {fileID: 0}
-    - target: {fileID: -2355512982411042935, guid: 519a77f66a653724399a842025b434c0, type: 3}
-      propertyPath: nextObjective.Array.size
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: -2355512982411042935, guid: 519a77f66a653724399a842025b434c0, type: 3}
-      propertyPath: nextObjective.Array.data[0]
-      value: 
-      objectReference: {fileID: 1036720091}
-    - target: {fileID: 1105850513431628792, guid: 519a77f66a653724399a842025b434c0, type: 3}
-      propertyPath: m_RootOrder
-      value: 6
-      objectReference: {fileID: 0}
-    - target: {fileID: 1105850513431628792, guid: 519a77f66a653724399a842025b434c0, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 124.67
-      objectReference: {fileID: 0}
-    - target: {fileID: 1105850513431628792, guid: 519a77f66a653724399a842025b434c0, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 12.3
-      objectReference: {fileID: 0}
-    - target: {fileID: 1105850513431628792, guid: 519a77f66a653724399a842025b434c0, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 217.1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1105850513431628792, guid: 519a77f66a653724399a842025b434c0, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1105850513431628792, guid: 519a77f66a653724399a842025b434c0, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1105850513431628792, guid: 519a77f66a653724399a842025b434c0, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1105850513431628792, guid: 519a77f66a653724399a842025b434c0, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1105850513431628792, guid: 519a77f66a653724399a842025b434c0, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1105850513431628792, guid: 519a77f66a653724399a842025b434c0, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1105850513431628792, guid: 519a77f66a653724399a842025b434c0, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4309394367177289996, guid: 519a77f66a653724399a842025b434c0, type: 3}
-      propertyPath: m_Name
-      value: Objective-FindVillage
-      objectReference: {fileID: 0}
-    - target: {fileID: 4309394367177289996, guid: 519a77f66a653724399a842025b434c0, type: 3}
-      propertyPath: m_StaticEditorFlags
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8228844680181583973, guid: 519a77f66a653724399a842025b434c0, type: 3}
-      propertyPath: m_Size.x
-      value: 12
-      objectReference: {fileID: 0}
-    - target: {fileID: 8228844680181583973, guid: 519a77f66a653724399a842025b434c0, type: 3}
-      propertyPath: m_Size.y
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 8228844680181583973, guid: 519a77f66a653724399a842025b434c0, type: 3}
-      propertyPath: m_Size.z
-      value: 12
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 519a77f66a653724399a842025b434c0, type: 3}
 --- !u!1001 &27613620
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -13410,18 +13317,13 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 8802002943941821610, guid: 26591ff36cb5ef440843000e2bb69096, type: 3}
   m_PrefabInstance: {fileID: 1589713139}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &1602049201 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 4309394367177289996, guid: 519a77f66a653724399a842025b434c0, type: 3}
-  m_PrefabInstance: {fileID: 23290324}
-  m_PrefabAsset: {fileID: 0}
 --- !u!114 &1602049203
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1602049201}
+  m_GameObject: {fileID: 4309394367195943128}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 347c50cbec4439a4b86893fce45bb3ef, type: 3}
@@ -13456,7 +13358,7 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1602049201}
+  m_GameObject: {fileID: 4309394367195943128}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: aa7c8c603bad3de4c95ba1b10656f371, type: 3}
@@ -16938,7 +16840,7 @@ MonoBehaviour:
   m_Center: {x: 0, y: 2, z: 0}
   m_LayerMask:
     serializedVersion: 2
-    m_Bits: 576
+    m_Bits: 64
   m_UseGeometry: 0
   m_DefaultArea: 0
   m_IgnoreNavMeshAgent: 1
@@ -19906,3 +19808,72 @@ MonoBehaviour:
   gold: 0
   costOfUnits: 
   costOfBuildings: 03000000
+--- !u!4 &1105850513412713004
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4309394367195943128}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 124.67, y: 12.3, z: 217.1}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1711991032}
+  m_RootOrder: 6
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &4309394367195943128
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1105850513412713004}
+  - component: {fileID: 6867859054433336925}
+  - component: {fileID: 8228844680204612017}
+  - component: {fileID: 1602049205}
+  - component: {fileID: 1602049203}
+  m_Layer: 0
+  m_Name: Objective-FindVillage
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &6867859054433336925
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4309394367195943128}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7f60ba81340d232439d770f3d9ef9a14, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isActivated: 1
+  isVisible: 1
+  objectiveTitle: Find the village
+  objectiveDescription: Follow the path to find the village.
+  messageTimeDelay: 1
+  completionMessage: 
+  completionMessageTimeDelay: 0
+  nextObjective:
+  - {fileID: 1036720091}
+  previousObjectives: []
+--- !u!65 &8228844680204612017
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4309394367195943128}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 12, y: 5, z: 12}
+  m_Center: {x: 0, y: 0, z: 0}

@@ -84,7 +84,6 @@ public class Attacker : MonoBehaviour
             {
                 if (TargetIsInRange())
                 {
-                    if (unit != null) unit.StopMoveTo();
                     AttackTarget();
                 }
                 else
@@ -151,6 +150,7 @@ public class Attacker : MonoBehaviour
 
             if (unit != null)
             {
+                unit.StopMoveTo();
                 transform.LookAt(target.transform);
                 unit.Animator().SetTrigger("attack");
                 unit.HUD_StatusUpdate();

@@ -190,7 +190,30 @@ public class CollectableResource : Selectable
         collector = newCollector;
     }
 
-    public bool HasCollector { get { return collector != null; } }
+    public bool HasCollector 
+    { get 
+        {
+            CheckIfCollectorStillCollecting();
+
+            return collector != null; 
+        } 
+    }
+
+    private void CheckIfCollectorStillCollecting()
+    {
+        if (collector != null)
+        {
+            if (!collector.HasResourceTarget())
+            {
+                ClearCollector();
+            }
+
+            if (collector.HasResourceTarget() && !collector.CurrentTarget == this)
+            {
+                ClearCollector();
+            }
+        }
+    }
 
     public void ClearCollector()
     {

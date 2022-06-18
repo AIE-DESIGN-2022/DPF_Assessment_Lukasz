@@ -455,6 +455,7 @@ public class Faction : MonoBehaviour
     {
         Building building = selectable.GetComponent<Building>();
         Unit unit = selectable.GetComponent<Unit>();
+        CollectableResource farm = selectable.GetComponent<CollectableResource>();
         Faction oldFaction = selectable.Faction;
         selectable.transform.parent = transform;
         selectable.Setup(playerNumber, this);
@@ -468,6 +469,11 @@ public class Faction : MonoBehaviour
         {
             oldFaction.RemoveFromFaction(building);
             buildings.Add(building);
+
+            if (farm)
+            {
+                farm.Setup(playerNumber, this);
+            }
         }
 
     }

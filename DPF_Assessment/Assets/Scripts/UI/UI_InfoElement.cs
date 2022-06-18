@@ -1,8 +1,12 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+/* This is a class for an individual selectable showing in the bottom info bar
+ * when multiple things have been selected.
+ * Shows icon of the selectable and it's health.
+ * When clicked it will clear the selection and only select the clicked selectable.
+ * When clicked and control is held selectable is removed from current selection.
+ */
 public class UI_InfoElement : MonoBehaviour
 {
     private RawImage icon;
@@ -33,12 +37,7 @@ public class UI_InfoElement : MonoBehaviour
         button.onClick.AddListener(OnClick);
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
+    // Called when first instantiated to setup this UI element
     public void Set(Selectable selectable)
     {
         selected = selectable;
@@ -59,6 +58,7 @@ public class UI_InfoElement : MonoBehaviour
         UpdateHealthBar();
     }
 
+    // Called to update the health bar, when selected unit is damaged or is healed.
     public void UpdateHealthBar()
     {
         if (health != null)
@@ -67,15 +67,22 @@ public class UI_InfoElement : MonoBehaviour
         }
     }
 
+    // Returns the selectable represented by this UI element.
     public Selectable Selectable { get { return selected; } }
 
+
+    // When this UI element is clicked
     private void OnClick()
     {
-        /*List<Selectable> list = new List<Selectable>();
-        list.Add(selected);*/
-
-        playerController.ClearSelection();
-        playerController.AddToSelection(selected);
+        if (Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl))
+        {
+            playerController.RemoveFromSelection(selected);
+        }
+        else
+        {
+            playerController.ClearSelection();
+            playerController.AddToSelection(selected);
+        }
     }
     
 }
