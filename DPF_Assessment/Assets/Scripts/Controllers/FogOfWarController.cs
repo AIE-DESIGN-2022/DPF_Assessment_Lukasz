@@ -27,6 +27,7 @@ public class FogOfWarController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (fogOfWar == null) return;
         taskTimer += Time.deltaTime;
 
         if (fogOfWar.IsReady && taskTimer > fogOfWar.LastTaskDuration * 1.1f)

@@ -38,6 +38,11 @@ public class UnitProducer : MonoBehaviour
 
     private void Start()
     {
+        if (rallyPoint != null)
+        {
+            building.SetRallyPointFlag(rallyPoint.GetComponentInChildren<MeshRenderer>());
+            building.ShowRallyPointFlag(false);
+        }
     }
 
     private void Update()
@@ -165,6 +170,14 @@ public class UnitProducer : MonoBehaviour
         name = name.Replace("(Female)", "");
         name = name.Replace("(Male)", "");
         return name;
+    }
+
+    public void SetRallyPoint(Vector3 newPosition)
+    {
+        if (rallyPoint != null)
+        {
+            rallyPoint.transform.position = newPosition;
+        }    
     }
 }
 // Writen by Lukasz Dziedziczak

@@ -521,10 +521,35 @@ public class PlayerController : MonoBehaviour
             }
             else
             {
-                GiveMoveOrder(hit.point);
+                RightClickOnTerrain(hit.point);
             }
         }
     }
+
+    private void RightClickOnTerrain(Vector3 newLocation)
+    {
+        if (currentSelection.Count == 1)
+        {
+            Building selectedBuilding = currentSelection[0].GetComponent<Building>();
+            if (selectedBuilding != null)
+            {
+                UnitProducer unitProducer = selectedBuilding.GetComponent<UnitProducer>();
+                if (unitProducer != null)
+                {
+                    unitProducer.SetRallyPoint(newLocation);
+                }
+            }
+            else
+            {
+                GiveMoveOrder(newLocation);
+            }
+        }
+        else
+        {
+            GiveMoveOrder(newLocation);
+        }
+    }
+
 
     // Handles when the player the player right-clicks on the passed in building
     // Either to (re)construct a building if friendly

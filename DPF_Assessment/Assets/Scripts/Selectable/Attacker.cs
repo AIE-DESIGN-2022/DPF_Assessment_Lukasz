@@ -15,7 +15,7 @@ public class Attacker : MonoBehaviour
     [Tooltip("How close to target the unit has to be for an attack.")]
     [SerializeField] private float attackRange = 1;
 
-    private Selectable target;
+    public Selectable target;
     private float timeSinceLastAttack = Mathf.Infinity;
     private Unit unit;
     private Building building;
@@ -134,6 +134,11 @@ public class Attacker : MonoBehaviour
             if (target != null && !TargetIsInSight())
             {
                 ClearTarget();
+            }
+
+            if (target != null && TargetIsInRange())
+            {
+                AttackTarget();
             }
         }
 

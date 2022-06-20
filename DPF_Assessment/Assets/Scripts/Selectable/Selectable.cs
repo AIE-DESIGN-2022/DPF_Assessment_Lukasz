@@ -26,6 +26,8 @@ public class Selectable : MonoBehaviour
 
     [SerializeField] protected float sightDistance = 15;
 
+    private MeshRenderer rallyPointFlag;
+
     protected void Awake()
     {
         selectionIndicator = GetComponentInChildren<SpriteRenderer>();
@@ -77,7 +79,8 @@ public class Selectable : MonoBehaviour
             flashingUntillSelected = false;
             flashing = false;
         }
-        
+
+        ShowRallyPointFlag(isSelected);
     }
 
     public bool IsSelected() { return selectionIndicator.enabled; }
@@ -279,5 +282,18 @@ public class Selectable : MonoBehaviour
     }
 
     public GameController GameController { get { return gameController; } }
+
+    public void SetRallyPointFlag(MeshRenderer meshRender)
+    {
+        rallyPointFlag = meshRender;
+    }
+
+    public void ShowRallyPointFlag(bool isShowing)
+    {
+        if (rallyPointFlag != null)
+        {
+            rallyPointFlag.gameObject.SetActive(isShowing);
+        }
+    }
 }
 // Writen by Lukasz Dziedziczak
