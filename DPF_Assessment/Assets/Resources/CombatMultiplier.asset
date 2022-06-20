@@ -28,7 +28,7 @@ MonoBehaviour:
     - unitType: 3
       attackMultiplier: 2
   - unitType: 3
-    buildingAttackMultiplier: 10
+    buildingAttackMultiplier: 5
     oponents:
     - unitType: 1
       attackMultiplier: 2

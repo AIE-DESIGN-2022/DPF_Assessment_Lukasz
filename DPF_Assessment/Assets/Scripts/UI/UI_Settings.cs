@@ -90,7 +90,16 @@ public class UI_Settings : MonoBehaviour
         menu = newPreviousMenu;
         Show();
 
-        scrollSpeedSlider.value = cameraController.ScrollSpeed;
+        if (cameraController != null)
+        {
+            if (!scrollSpeedSlider.gameObject.activeSelf) scrollSpeedSlider.gameObject.SetActive(true);
+            scrollSpeedSlider.value = cameraController.ScrollSpeed;
+        }
+        else
+        {
+            scrollSpeedSlider.gameObject.SetActive(false);
+        }
+        
     }
 
     public bool IsShowing { get { return gameObject.activeSelf; } }

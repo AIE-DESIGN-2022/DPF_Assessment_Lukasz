@@ -132,6 +132,18 @@ public class Selectable : MonoBehaviour
             if (defender != null && !defender.HasTarget())
             {
                 defender.SetTarget(attacker);
+
+                foreach (Unit friendly in unit.GetFrendlyUnitsInSight())
+                {
+                    if (friendly.UnitStance() != Unit.EUnitStance.Passive)
+                    {
+                        Attacker friendlyDefender = friendly.GetComponent<Attacker>();
+                        if (friendlyDefender != null && !friendlyDefender.HasTarget())
+                        {
+                            friendlyDefender.SetTarget(attacker);
+                        }
+                    }
+                }
             }
         }
 
