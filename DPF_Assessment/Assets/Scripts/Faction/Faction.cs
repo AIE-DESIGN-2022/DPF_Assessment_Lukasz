@@ -121,14 +121,14 @@ public class Faction : MonoBehaviour
     {
         if (!placingBuilding)
         {
-            placingBuilding = true;
+            if (gameController.IsPlayerFaction(playerNumber)) placingBuilding = true;
             Building newBuilding = Instantiate(config.GetBuildingPrefab(newType));
             newBuilding.Setup(playerNumber, this);
             newBuilding.transform.parent = transform;
             buildings.Add(newBuilding);
             newBuilding.SetBuildState(Building.EBuildState.Placing);
             newBuilding.SetConstructionTeam(builders);
-            gameController.PlayerController().PlayerControl(false);
+            if(gameController.IsPlayerFaction(playerNumber)) gameController.PlayerController().PlayerControl(false);
             return newBuilding;
         }
         else return null;
@@ -153,7 +153,7 @@ public class Faction : MonoBehaviour
 
     public void FinishBuildingPlacement() 
     {
-        gameController.PlayerController().PlayerControl(true);
+        if (gameController.IsPlayerFaction(playerNumber)) gameController.PlayerController().PlayerControl(true);
         placingBuilding = false; 
     }
 
@@ -324,6 +324,11 @@ public class Faction : MonoBehaviour
                     statSystem.AddStatKilled(building.BuildingType());
                 }
             }
+        }
+
+        if (GetComponent<EnemyAIController>() != null)
+        {
+            GetComponent<EnemyAIController>().SelectableDied(deadSelectable);
         }
     }
 

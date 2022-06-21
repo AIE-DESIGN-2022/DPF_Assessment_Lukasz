@@ -173,7 +173,7 @@ public class ResourceGatherer : MonoBehaviour
         isInRange=false;
     }
 
-    private bool IsInRange()
+    public bool IsInRange()
     {
         /*if (targetResource != null)
         {

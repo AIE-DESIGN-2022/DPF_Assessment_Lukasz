@@ -32,6 +32,12 @@ public class Unit : Selectable
     private Vector3 destination;
     private bool selectingAttackMove = false;
 
+    private float brokenTimer = 0;
+    private float brokenTimeOut = 1;
+    private CollectableResource resourceTimedOut;
+    private LayerMask terrainMask; // contains only the terrain layer
+
+
     public enum EUnitType
     {
         Worker,
@@ -70,7 +76,7 @@ public class Unit : Selectable
 
         if (leftHand == null) Debug.LogError(name + " missing left hand transform.");
         if (rightHand == null) Debug.LogError(name + " missing right hand transform.");
-
+        terrainMask |= (1 << LayerMask.NameToLayer("Terrain"));
     }
 
     private new void Update()
@@ -80,7 +86,61 @@ public class Unit : Selectable
         PatrolPointSelection();
         PatrolAction();
         AttackMoveSelection();
+        //TestIfBroken();
     }
+
+    private void TestIfBroken()
+    {
+        if (animator == null) return;
+
+        if (resourceGatherer != null && resourceGatherer.HasDropOffTarget())
+        {
+            Vector3 velocity = transform.InverseTransformDirection(navMeshAgent.velocity);
+            if (velocity.magnitude == 0)
+            {
+                if (!animator.GetBool("gathering") && !animator.GetBool("working") && !animator.GetBool("mining"))
+                {
+                    brokenTimer += Time.deltaTime;
+
+                    if (brokenTimer > brokenTimeOut)
+                    {
+                        resourceTimedOut = resourceGatherer.targetResource;
+                        ClearPreviousActions();
+                        MoveTo(RandomPointOnTerrainNear());
+                        brokenTimer = 0;
+                    }
+                }
+            }
+        }
+        if (resourceGatherer != null && resourceTimedOut != null)
+        {
+            Vector3 velocity = transform.InverseTransformDirection(navMeshAgent.velocity);
+            if (velocity.magnitude == 0)
+            {
+                ClearPreviousActions();
+                SetTarget(resourceTimedOut);
+                resourceTimedOut = null;
+            }
+        }
+    }
+
+    public bool IsWorking()
+    {
+        if (resourceGatherer != null && resourceGatherer.HasResourceTarget() && resourceGatherer.IsInRange())
+        {
+            if (animator.GetBool("gathering") || animator.GetBool("working") || animator.GetBool("mining"))
+            {
+                return true;
+            }
+        }
+        else if (resourceGatherer != null && resourceGatherer.HasDropOffTarget())
+        {
+            return true;
+        }
+
+        return false;
+    }
+        
 
     private void AttackMoveSelection()
     {
@@ -517,6 +577,42 @@ public class Unit : Selectable
     {
         gameController.PlayerController().AttackMoveSelection(true);
         selectingAttackMove = true;
+    }
+
+    public Vector3 RandomPointOnTerrain()
+    {
+        float mapsize = FindObjectOfType<GameController>().CameraController().MapSize();
+        float randomX = UnityEngine.Random.Range(0, mapsize);
+        float randomZ = UnityEngine.Random.Range(0, mapsize);
+        float y = TerrainLevel(randomX, randomZ);
+
+        return new Vector3(randomX, y, randomZ);
+    }
+
+    private bool IsNear(Vector3 newPosition)
+    {
+        float distance = Vector3.Distance(transform.position, newPosition);
+        return distance < SightDistance();
+    }
+
+    private float TerrainLevel(float x, float z)
+    {
+        Vector3 origin = new Vector3(x, 30, z);
+        Vector3 direction = transform.up * -1;
+        RaycastHit hit;
+        Physics.Raycast(origin, direction, out hit, 50.0f, terrainMask);
+        return hit.point.y;
+    }
+
+    public Vector3 RandomPointOnTerrainNear()
+    {
+        Vector3 newPosition;
+        do
+        {
+            newPosition = RandomPointOnTerrain();
+        }
+        while (!IsNear(newPosition));
+        return newPosition;
     }
 }
 // Writen by Lukasz Dziedziczak

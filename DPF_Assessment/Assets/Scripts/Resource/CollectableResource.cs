@@ -16,6 +16,9 @@ public class CollectableResource : Selectable
     private List<MeshRenderer> corn = new List<MeshRenderer>();
     private ResourceGatherer collector;
 
+    public delegate void CollectableResourceDepleted(CollectableResource resource);
+    public static CollectableResourceDepleted onResourceDepleted;
+
     private new void Awake()
     {
         base.Awake();
@@ -82,6 +85,8 @@ public class CollectableResource : Selectable
 
     private void ResourceDepleted()
     {
+        if (onResourceDepleted != null) onResourceDepleted.Invoke(this);
+
         if (resourceType == EResourceType.Wood)
         {
             MeshRenderer mr = GetComponentInChildren<MeshRenderer>();

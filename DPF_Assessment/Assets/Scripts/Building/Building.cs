@@ -83,6 +83,8 @@ public class Building : Selectable
 
     private void ProcessPlacement()
     {
+        if (!gameController.IsPlayerFaction(PlayerNumber())) return;
+
         if (gameController.CameraController().MouseIsInPlayArea())
         {
             Vector3 mouseWorldLocation = gameController.PlayerController().TerrainLocationUnderMouse();
@@ -101,7 +103,6 @@ public class Building : Selectable
                 if (Input.GetMouseButtonDown(0)) // Left click to select new building location.
                 {
                     SetBuildState(EBuildState.Building);
-                    health.NewBuilding();
                     gameController.PlayerController().PlayerControl(true);
                     owningFaction.FinishBuildingPlacement();
 
@@ -187,6 +188,7 @@ public class Building : Selectable
 
             case EBuildState.Building:
                 SetMinimapIndicator();
+                health.NewBuilding();
                 GetComponent<NavMeshObstacle>().enabled = true;
                 SetMaterialsColour(Color.white);
                 AddStat();
