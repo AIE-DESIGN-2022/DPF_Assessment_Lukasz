@@ -21,10 +21,10 @@ public class Faction : MonoBehaviour
     private bool gameStarted = false;
     private StatSystem statSystem;
 
-    public delegate void UnitCreatedDelegate(Unit.EUnitType unitType);
+    public delegate void UnitCreatedDelegate(Unit newUnit);
     public static UnitCreatedDelegate newUnitCreated;
 
-    public delegate void BuildingCreatedDelegate(Building.EBuildingType buildingType);
+    public delegate void BuildingCreatedDelegate(Building building);
     public static BuildingCreatedDelegate newBuildingCreated;
 
     public enum EFaction
@@ -109,12 +109,11 @@ public class Faction : MonoBehaviour
 
     public Unit SpawnUnit(Unit.EUnitType newUnitType, Transform spawnLocation)
     {
-        if (newUnitCreated != null) newUnitCreated(newUnitType);
         Unit newUnit = Instantiate(config.GetUnitPrefab(newUnitType), spawnLocation.position, spawnLocation.rotation);
         newUnit.Setup(playerNumber, this);
         newUnit.transform.parent = transform;
         units.Add(newUnit);
-        //newUnitCreated(newUnit.UnitType());
+        if (newUnitCreated != null) newUnitCreated(newUnit);
         return newUnit;
     }
 
@@ -160,7 +159,7 @@ public class Faction : MonoBehaviour
 
     public void BuildingConstructionComplete(Building newBuilding)
     {
-        if(newBuildingCreated != null) newBuildingCreated(newBuilding.BuildingType());
+        if(newBuildingCreated != null) newBuildingCreated(newBuilding);
     }
 
     public FactionConfig Config()

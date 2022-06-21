@@ -271,6 +271,20 @@ public class Selectable : MonoBehaviour
         return list;
     }
 
+    public List<CollectableResource> GetResourcesInSight()
+    {
+        List<CollectableResource> list = new List<CollectableResource>();
+        RaycastHit[] hits = Physics.SphereCastAll(transform.position, sightDistance, Vector3.up);
+        foreach (RaycastHit hit in hits)
+        {
+            CollectableResource resource = hit.transform.GetComponent<CollectableResource>();
+
+            if (resource != null && !list.Contains(resource)) list.Add(resource);
+        }
+
+        return list;
+    }
+
     public void ConfirmOrder()
     {
         StartFlashingFor(1);

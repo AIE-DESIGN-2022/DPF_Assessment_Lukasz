@@ -168,6 +168,11 @@ public class GameController : MonoBehaviour
                 cameraController.MoveTo(spawnPoints[i].GroundCoordinates());
                 fogOfWarController.SetPlayerFaction(newFaction);
             }
+
+            if (i != 0)
+            {
+                newObject.AddComponent<EnemyAIController>();
+            }
         }
         playerController.SetHUD_Manager(hud_Manager);
 

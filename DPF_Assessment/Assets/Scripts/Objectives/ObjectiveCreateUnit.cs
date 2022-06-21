@@ -17,11 +17,11 @@ public class ObjectiveCreateUnit : Objective
     }
 
 
-    private void NewUnitCreated(Unit.EUnitType newUnitType)
+    private void NewUnitCreated(Unit newUnit)
     {
         if (!isActivated) return;
 
-        if (newUnitType == unitType)
+        if (newUnit.UnitType() == unitType)
         {
             unitsCreated++;
 

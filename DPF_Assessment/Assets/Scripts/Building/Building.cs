@@ -198,7 +198,7 @@ public class Building : Selectable
                 GetComponent<NavMeshObstacle>().enabled = true;
                 ConstructionSite(false);
                 owningFaction.BuildingConstructionComplete(this);
-                GameController.MessageSystem.ShowMessage("Construction Complete: " + name.Replace("(Clone)", ""));
+                if(gameController.IsPlayerFaction(PlayerNumber()) ) GameController.MessageSystem.ShowMessage("Construction Complete: " + name.Replace("(Clone)", ""));
                 break;
 
             case EBuildState.Destroyed:

@@ -16,11 +16,11 @@ public class ObjectiveCreateBuilding : Objective
         Faction.newBuildingCreated += NewBuildingCreated;
     }
 
-    private void NewBuildingCreated(Building.EBuildingType newBuildingType)
+    private void NewBuildingCreated(Building newBuilding)
     {
         if (!isActivated) return;
 
-        if (newBuildingType == buildingType)
+        if (newBuilding.BuildingType() == buildingType)
         {
             buildingsCreated++;
 

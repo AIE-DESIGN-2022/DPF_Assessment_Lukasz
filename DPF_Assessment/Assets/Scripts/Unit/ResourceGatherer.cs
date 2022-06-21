@@ -6,7 +6,7 @@ using UnityEngine;
 
 public class ResourceGatherer : MonoBehaviour
 {
-    private CollectableResource targetResource;
+    public CollectableResource targetResource;
     private CollectableResource lastTargetResource;
     private Unit unit;
     private int gatheredAmount = 0;
@@ -125,7 +125,6 @@ public class ResourceGatherer : MonoBehaviour
     public void SetTargetResource(CollectableResource newResource, bool isAlreadyAtResource = false)
     {
         if (newResource.HasCollector) return;
-
         unit.ClearPreviousActions();
         targetResource = newResource;
         targetResource.SetCollector(this);

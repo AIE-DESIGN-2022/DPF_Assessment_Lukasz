@@ -63,7 +63,7 @@ public class UnitProducer : MonoBehaviour
             newUnit.MoveTo(rallyPoint.position);
             statSystem.AddStatBuilt(newUnit.UnitType());
             building.HUD_BuildingStatusUpdate();
-            building.GameController.MessageSystem.ShowMessage("Unit Produced: " + newUnit.name.Replace("(Clone)", ""));
+            if (building.GameController.IsPlayerFaction(building.PlayerNumber())) building.GameController.MessageSystem.ShowMessage("Unit Produced: " + newUnit.name.Replace("(Clone)", ""));
         }
 
     }
@@ -179,5 +179,19 @@ public class UnitProducer : MonoBehaviour
             rallyPoint.transform.position = newPosition;
         }    
     }
+
+    public int QueSize()
+    {
+        if (isCurrentlyBuilding)
+        {
+            int size = 1;
+            size += buildQue.Count;
+
+            return size;
+        }
+        else return 0;
+    }
+
+    public Building Building { get { return building; } }
 }
 // Writen by Lukasz Dziedziczak
