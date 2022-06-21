@@ -31,6 +31,8 @@ public class PlayerController : MonoBehaviour
     private Texture2D cursorWorkerActive;
     private Texture2D cursorPatrol;
     private Texture2D cursorPatrolActive;
+    private Texture2D cursorAttackMove;
+    private Texture2D cursorAttackMoveActive;
 
     private List<GameObject> selectionCircles = new List<GameObject>(); // a list of currently instantiated movement order indicators
     private GameObject selectionCirclePrefab; // the prefab used to instantiae a movement confirmation indicator
@@ -40,6 +42,7 @@ public class PlayerController : MonoBehaviour
     private bool mouseClickedRecently;
     private float doubleClickInterval = 0.25f;
     private float doubleClickTimer = 0;
+    private bool attackMoveSelection = false;
 
     // The context the cursor (mouse pointer) can be in, based on what it is hovering over and what is selected
     public enum ECursorMode
@@ -49,7 +52,8 @@ public class PlayerController : MonoBehaviour
         Attack, // when an attack order can be issued to units/towers
         Worker, // when worker can construct or gather resource under mouse
         Heal, // when healer can heal unit under mouse, currently unused
-        Patrol // when setting a new patrol point
+        Patrol, // when setting a new patrol point
+        AttackMove // when setting a location to perform an attack move to
     }
 
     // Run while the game is loading
@@ -80,6 +84,8 @@ public class PlayerController : MonoBehaviour
             if (loadedCursor.name == "Cursor_Production") cursorWorkerActive = loadedCursor;
             if (loadedCursor.name == "G_Cursor_Attack_G") cursorPatrol = loadedCursor;
             if (loadedCursor.name == "Cursor_Attack_G") cursorPatrolActive = loadedCursor;
+            if (loadedCursor.name == "G_Cursor_Attack_R") cursorAttackMove = loadedCursor;
+            if (loadedCursor.name == "Cursor_Attack_R") cursorAttackMoveActive = loadedCursor;
         }
     }
 
@@ -181,6 +187,19 @@ public class PlayerController : MonoBehaviour
                 {
 
                     if (cursorPatrol != null) Cursor.SetCursor(cursorPatrol, cursorOffSet, CursorMode.Auto);
+                }
+                break;
+
+            case ECursorMode.AttackMove:
+                cursorOffSet = new Vector2(cursorAttack.width / 3, 0);
+                if (isActive)
+                {
+                    if (cursorAttackMoveActive != null) Cursor.SetCursor(cursorAttackMoveActive, cursorOffSet, CursorMode.Auto);
+                }
+                else
+                {
+
+                    if (cursorAttackMove != null) Cursor.SetCursor(cursorAttackMove, cursorOffSet, CursorMode.Auto);
                 }
                 break;
 
@@ -295,6 +314,7 @@ public class PlayerController : MonoBehaviour
             if (SelectionHasUnits())
             {
                 if (settingPatrolPoint) SetCursor(ECursorMode.Patrol);
+                else if (attackMoveSelection) SetCursor(ECursorMode.AttackMove);
                 else if (IsPlayersSelectable(SelectableUnderMouse())) SetCursor(ECursorMode.Normal);
                 else if (SelectionHasAttackers() && IsEnemy(SelectableUnderMouse())) SetCursor(ECursorMode.Attack);
                 else if (SelectionHasWorkers() && (IsCollectableResource(SelectableUnderMouse()) || IsPlayersInteractableBuilding(SelectableUnderMouse()))) SetCursor(ECursorMode.Worker);
@@ -1002,5 +1022,15 @@ public class PlayerController : MonoBehaviour
         PlayerControl(!newSetting);
         cameraController.allowMovement = !newSetting;
     }
+
+    // Enable/Disable selecting a attack-move point
+    public void AttackMoveSelection(bool isSelecting)
+    {
+        if (isSelecting != attackMoveSelection)
+        {
+            attackMoveSelection = isSelecting;
+            PlayerControl(!isSelecting);
+        }
+    }    
 }
 // Writen by Lukasz Dziedziczak

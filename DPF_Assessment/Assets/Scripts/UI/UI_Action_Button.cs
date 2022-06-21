@@ -226,6 +226,9 @@ public class UI_Action_Button : MonoBehaviour, IPointerEnterHandler, IPointerExi
             case UI_Action.EButtonType.StancePatrol:
                 return (Texture)Resources.Load<Texture>("HUD_Icons/Patrol");
 
+            case UI_Action.EButtonType.AttackMove:
+                return (Texture)Resources.Load<Texture>("HUD_Icons/AttackMove");
+
             default:
                 return null;
         }
@@ -375,6 +378,12 @@ public class UI_Action_Button : MonoBehaviour, IPointerEnterHandler, IPointerExi
                 {
                     topText = "Patrol";
                     bottomText = "Walk between two points.";
+                }
+
+                else if (buttonType == UI_Action.EButtonType.AttackMove)
+                {
+                    topText = "Attack Move";
+                    bottomText = "Move to a new location with aggresive stance.";
                 }
             }
 

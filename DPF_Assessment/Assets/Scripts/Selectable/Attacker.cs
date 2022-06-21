@@ -23,6 +23,7 @@ public class Attacker : MonoBehaviour
     private bool hasProjectileWeapon;
     private float sightTimer = 0;
     private CombatMultiplier combatMultiplier;
+    private bool attackMove = false;
 
     [Header("Tower Settings")]
     [SerializeField] private Unit.EUnitStance towerStance = Unit.EUnitStance.Defensive;
@@ -95,20 +96,16 @@ public class Attacker : MonoBehaviour
 
             if ((unit.UnitStance() == Unit.EUnitStance.Offensive && unit.HasStopped()) || unit.UnitStance() == Unit.EUnitStance.Patrol)
             {
-                sightTimer += Time.deltaTime;
+                AttackEnemiesInRange();
+            }
 
-                if (target == null && sightTimer > 0.5f)
+            if (attackMove && target == null)
+            {
+                AttackEnemiesInRange();
+
+                if (target == null)
                 {
-                    //print(name + " running aggressive behaviour");
-                    sightTimer = 0;
-                    List<Selectable> enemiesInSight = unit.GetEnemiesInSight();
-                    //print(enemiesInSight.Count);
-                    if (enemiesInSight.Count == 1) SetTarget(enemiesInSight[0]);
-                    if (enemiesInSight.Count > 1)
-                    {
-                        SetTarget(ClosestTarget(enemiesInSight));
-                    }
-                    //print(name + "set target of " + target);
+                    unit.ContinueToDestination();
                 }
             }
         }
@@ -117,18 +114,7 @@ public class Attacker : MonoBehaviour
         {
             if (towerStance == Unit.EUnitStance.Defensive)
             {
-                sightTimer += Time.deltaTime;
-
-                if (target == null && sightTimer > 0.5f)
-                {
-                    sightTimer = 0;
-                    List<Selectable> enemiesInSight = building.GetEnemiesInSight();
-                    if (enemiesInSight.Count == 1) SetTarget(enemiesInSight[0]);
-                    if (enemiesInSight.Count > 1)
-                    {
-                        SetTarget(ClosestTarget(enemiesInSight));
-                    }
-                }
+                AttackEnemiesInRange();
             }
 
             if (target != null && !TargetIsInSight())
@@ -141,10 +127,26 @@ public class Attacker : MonoBehaviour
                 AttackTarget();
             }
         }
+    }
 
+    private void AttackEnemiesInRange()
+    {
+        sightTimer += Time.deltaTime;
 
+        if (target == null && sightTimer > 0.5f)
+        {
+            sightTimer = 0;
+            List<Selectable> enemiesInSight = null;
 
+            if (unit != null) enemiesInSight = unit.GetEnemiesInSight();
+            else if (building != null) enemiesInSight = building.GetEnemiesInSight();
 
+            if (enemiesInSight != null && enemiesInSight.Count == 1) SetTarget(enemiesInSight[0]);
+            if (enemiesInSight != null && enemiesInSight.Count > 1)
+            {
+                SetTarget(ClosestTarget(enemiesInSight));
+            }
+        }
     }
 
     private void AttackTarget()
@@ -301,5 +303,12 @@ public class Attacker : MonoBehaviour
     {
         return towerStance;
     }
+
+    public void IsAttackMove(bool isAttackMove)
+    {
+        attackMove = isAttackMove;
+    }
+
+    public bool CurrentlyAttackMove { get { return attackMove; } }
 }
 // Writen by Lukasz Dziedziczak

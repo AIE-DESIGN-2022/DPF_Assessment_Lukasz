@@ -29,6 +29,8 @@ public class Unit : Selectable
     private Vector3 patrolEndPoint;
     private int currentPatrolPoint = 0;
     private EUnitStance previousStance;
+    private Vector3 destination;
+    private bool selectingAttackMove = false;
 
     public enum EUnitType
     {
@@ -77,6 +79,28 @@ public class Unit : Selectable
         UpdateAnimation();
         PatrolPointSelection();
         PatrolAction();
+        AttackMoveSelection();
+    }
+
+    private void AttackMoveSelection()
+    {
+        if (selectingAttackMove && gameController.CameraController().MouseIsInPlayArea())
+        {
+            if (Input.GetMouseButtonDown(0))
+            {
+                gameController.PlayerController().AttackMoveSelection(false);
+                selectingAttackMove = false;
+                AttackMove(gameController.PlayerController().LocationUnderMouse());
+
+                HUD_StatusUpdate();
+            }
+
+            if (Input.GetMouseButtonDown(1))
+            {
+                gameController.PlayerController().AttackMoveSelection(false);
+                selectingAttackMove = false;
+            }
+        }
     }
 
     private void PatrolPointSelection()
@@ -150,6 +174,7 @@ public class Unit : Selectable
             {
                 hasStopped = true;
                 if (IsSelected()) HUD_StatusUpdate();
+                if (attacker && attacker.CurrentlyAttackMove) attacker.IsAttackMove(false);
             }
         }
     }
@@ -471,6 +496,27 @@ public class Unit : Selectable
 
         if (hasStopped) return true;
         else return false;
+    }
+
+    public void AttackMove(Vector3 newLocation)
+    {
+        attacker.IsAttackMove(true);
+        MoveTo(newLocation);
+        destination = newLocation;
+    }
+
+    public void ContinueToDestination()
+    {
+        if (destination != null)
+        {
+            MoveTo(destination);
+        }
+    }
+
+    public void StartAttackMove()
+    {
+        gameController.PlayerController().AttackMoveSelection(true);
+        selectingAttackMove = true;
     }
 }
 // Writen by Lukasz Dziedziczak

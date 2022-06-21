@@ -18,7 +18,8 @@ public class UI_Action : MonoBehaviour
         StancePassive,
         StanceDefensive,
         StanceOffensive,
-        StancePatrol
+        StancePatrol,
+        AttackMove
     }
 
     private void Awake()
@@ -109,7 +110,15 @@ public class UI_Action : MonoBehaviour
         }
 
         // 2nd button
-        BuildButton(EButtonType.Blank, selectedUnits);
+        if (AnyAreAttackers(selectedUnits))
+        {
+            BuildButton(EButtonType.AttackMove, selectedUnits);
+        }
+        else
+        {
+            BuildButton(EButtonType.Blank, selectedUnits);
+        }
+        
 
         // 3rd button
         if (AnyAreAttackers(selectedUnits))
@@ -212,6 +221,11 @@ public class UI_Action : MonoBehaviour
             case EButtonType.StancePatrol:
                 ChangeStanceOnUnits(units, Unit.EUnitStance.Patrol);
                 break;
+
+            case EButtonType.AttackMove:
+                AttackMoveButtonPushed(units);
+                break;
+
         }
     }
 
@@ -362,6 +376,17 @@ public class UI_Action : MonoBehaviour
             foreach (UI_Action_Button actionButton in actionButtons)
             {
                 actionButton.UpdateCanAfford();
+            }
+        }
+    }
+
+    public void AttackMoveButtonPushed(List<Unit> selectedUnits)
+    {
+        if (selectedUnits.Count > 0)
+        {
+            foreach (Unit unit in selectedUnits)
+            {
+                unit.StartAttackMove();
             }
         }
     }
