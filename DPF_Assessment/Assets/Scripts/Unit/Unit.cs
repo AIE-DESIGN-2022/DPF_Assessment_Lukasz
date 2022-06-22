@@ -126,7 +126,7 @@ public class Unit : Selectable
 
     public bool IsWorking()
     {
-        if (resourceGatherer != null && resourceGatherer.HasResourceTarget() && resourceGatherer.IsInRange())
+        if (resourceGatherer != null && resourceGatherer.hasResourceTarget && resourceGatherer.IsInRange())
         {
             if (animator.GetBool("gathering") || animator.GetBool("working") || animator.GetBool("mining"))
             {
@@ -252,6 +252,7 @@ public class Unit : Selectable
         StopMoveTo();
         if (resourceGatherer != null)
         {
+            resourceGatherer.ClearResourcesCollectors();
             resourceGatherer.ClearTargetResource();
             resourceGatherer.ClearDropOffPoint();
         }
@@ -381,7 +382,7 @@ public class Unit : Selectable
 
         if (resourceGatherer != null)
         {
-            if (resourceGatherer.HasResourceTarget())
+            if (resourceGatherer.hasResourceTarget)
             {
                 status1 = "Gathering resources";
             }
@@ -550,7 +551,7 @@ public class Unit : Selectable
 
     public bool IsIdle()
     {
-        if (resourceGatherer != null && resourceGatherer.HasResourceTarget()) return false;
+        if (resourceGatherer != null && resourceGatherer.hasResourceTarget) return false;
         if (resourceGatherer != null && resourceGatherer.HasDropOffTarget()) return false;
         if (buildingConstructor != null && buildingConstructor.HasBuildTarget()) return false;
 

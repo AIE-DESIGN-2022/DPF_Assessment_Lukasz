@@ -14,7 +14,7 @@ public class CollectableResource : Selectable
 
     private int currentAmount;
     private List<MeshRenderer> corn = new List<MeshRenderer>();
-    private ResourceGatherer collector;
+    public ResourceGatherer collector;
 
     public delegate void CollectableResourceDepleted(CollectableResource resource);
     public static CollectableResourceDepleted onResourceDepleted;
@@ -198,22 +198,27 @@ public class CollectableResource : Selectable
     public bool HasCollector 
     { get 
         {
-            CheckIfCollectorStillCollecting();
+            //CheckIfCollectorStillCollecting();
 
             return collector != null; 
         } 
+    }
+
+    public bool IsCollector(ResourceGatherer newCollector)
+    {
+        return collector == newCollector;
     }
 
     private void CheckIfCollectorStillCollecting()
     {
         if (collector != null)
         {
-            if (!collector.HasResourceTarget())
+            if (!collector.hasResourceTarget)
             {
                 ClearCollector();
             }
 
-            if (collector.HasResourceTarget() && !collector.CurrentTarget == this)
+            if (collector.hasResourceTarget && (collector.CurrentTarget != this && collector.lastTaret != this))
             {
                 ClearCollector();
             }

@@ -7,7 +7,7 @@ using UnityEngine;
 public class ResourceGatherer : MonoBehaviour
 {
     public CollectableResource targetResource;
-    private CollectableResource lastTargetResource;
+    public CollectableResource lastTargetResource;
     private Unit unit;
     private int gatheredAmount = 0;
     private CollectableResource.EResourceType gatheringType;
@@ -124,15 +124,35 @@ public class ResourceGatherer : MonoBehaviour
 
     public void SetTargetResource(CollectableResource newResource, bool isAlreadyAtResource = false)
     {
-        if (newResource.HasCollector) return;
+        if (newResource.HasCollector && !newResource.IsCollector(this)) return;
+        if (newResource != targetResource && newResource != lastTargetResource) ClearResourcesCollectors();
+
         unit.ClearPreviousActions();
         targetResource = newResource;
         targetResource.SetCollector(this);
+
         SetTargetDropOffPoint(unit.Faction.ClosestResourceDropPoint(targetResource));
         if (dropOff == null) Debug.LogError(name + " has no drop off point.");
         unit.HUD_StatusUpdate();
+
         isInRange = isAlreadyAtResource;
-        //print(name + " set target= " + targetResource);
+        //print(name + " set new target= " + targetResource);
+    }
+
+    public void SetLastTargetToCurrectTargetResource()
+    {
+        if (lastTargetResource != null && targetResource == null)
+        {
+            //print(name + "setting to last target = " + lastTargetResource);
+            targetResource = lastTargetResource;
+            lastTargetResource = null;
+
+            SetTargetDropOffPoint(unit.Faction.ClosestResourceDropPoint(targetResource));
+            unit.HUD_StatusUpdate();
+            isInRange = false;
+        }
+
+        
     }
 
     public void SetTargetDropOffPoint(Building building)
@@ -143,13 +163,13 @@ public class ResourceGatherer : MonoBehaviour
 
     public void ClearTargetResource(bool rememberForLater = false)
     {
+
         if (targetResource != null)
         {
             if (rememberForLater) lastTargetResource = targetResource;
-            targetResource.ClearCollector();
             targetResource = null;
         }
-        if (targetResource == null && rememberForLater)
+        else if (targetResource == null && rememberForLater)
         {
             FindNearByResource();
         }    
@@ -171,6 +191,18 @@ public class ResourceGatherer : MonoBehaviour
         if (dropOff != null) dropOff = null;
         unit.HUD_StatusUpdate();
         isInRange=false;
+    }
+
+    public void ClearResourcesCollectors()
+    {
+        if (targetResource != null)
+        {
+            targetResource.ClearCollector();
+        }
+        if (lastTargetResource != null)
+        {
+            lastTargetResource.ClearCollector();
+        }
     }
 
     public bool IsInRange()
@@ -240,7 +272,7 @@ public class ResourceGatherer : MonoBehaviour
             gatheredAmount += targetResource.Gather(gatherRate);
         }
 
-        if (targetResource == null) ClearTargetResource(true);
+        //if (targetResource == null) ClearTargetResource(true);
         unit.HUD_StatusUpdate();
     }
 
@@ -260,9 +292,7 @@ public class ResourceGatherer : MonoBehaviour
 
             if (lastTargetResource != null && lastTargetResource.HasResource())
             {
-                SetTargetResource(lastTargetResource);
-                isInRange = false;
-                lastTargetResource = null;
+                SetLastTargetToCurrectTargetResource();
             }
             else if (lastTargetResource != null && !lastTargetResource.HasResource() && lastTargetResource.IsAFarm())
             {
@@ -303,11 +333,15 @@ public class ResourceGatherer : MonoBehaviour
         faction = FindObjectOfType<GameController>().GetFaction(unit.PlayerNumber());
     }
 
-    public bool HasResourceTarget() { return targetResource != null; }
+    public bool hasResourceTarget { get { return targetResource != null; } }
+    
+    public bool hasLastTargetResource { get { return lastTargetResource != null; } }
 
     public bool HasDropOffTarget() { return dropOff != null; }
 
     public CollectableResource CurrentTarget { get {  return targetResource; } }
+
+    public CollectableResource lastTaret { get { return lastTargetResource; } }
 
 }
 // Writen by Lukasz Dziedziczak
