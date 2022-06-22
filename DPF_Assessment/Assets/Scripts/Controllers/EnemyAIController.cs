@@ -46,10 +46,10 @@ public class EnemyAIController : MonoBehaviour
     [System.Serializable]
     public class WorkerJob
     {
-        private CollectableResource.EResourceType jobType;
-        private CollectableResource collectableResource;
-        private Unit worker;
-        private bool isFarm;
+        public CollectableResource.EResourceType jobType;
+        public CollectableResource collectableResource;
+        public Unit worker;
+        public bool isFarm;
 
         public WorkerJob(CollectableResource newCollectableResource, bool isNewFarm = false)
         {
@@ -60,15 +60,60 @@ public class EnemyAIController : MonoBehaviour
 
         public void AssignWorker(Unit newWorker)
         {
-            if ()
+            if (isFarm)
+            {
+                Building farm = collectableResource.GetComponent<Building>();
+                if (farm.BuildState() == Building.EBuildState.Complete)
+                {
+                    worker = newWorker;
+                    worker.GetComponent<ResourceGatherer>().SetTargetResource(collectableResource);
+                }
+                else if (farm.BuildState() == Building.EBuildState.Building)
+                {
+                    worker = newWorker;
+                    worker.GetComponent<BuildingConstructor>().SetBuildTarget(farm);
+                }
+            }
+            else
+            {
+                worker = newWorker;
+                worker.GetComponent<ResourceGatherer>().SetTargetResource(collectableResource);
+            }
 
-            worker = newWorker;
-            worker.GetComponent<ResourceGatherer>().SetTargetResource(collectableResource);
+            
         }
 
-        public bool hasWorker { get { return worker != null; } }
+        public bool needsWorker { get 
+            { 
+                if (isFarm)
+                {
+                    Building farm = collectableResource.GetComponent<Building>();
+                    if (farm != null && farm.BuildState() == Building.EBuildState.PlacingBad && farm.BuildState() == Building.EBuildState.Placing)
+                    {
+                        return false;
+                    }
+                    else
+                    {
+                        return worker == null;
+                    }
+                }
+                else return worker == null;
+
+
+            } }
 
         public CollectableResource.EResourceType type { get { return jobType; } }
+
+        public CollectableResource resource {  get { return collectableResource; } }
+
+        public void ClearWorker()
+        {
+            if (worker != null)
+            {
+                worker.ClearPreviousActions();
+                worker = null;
+            }
+        }
     }
 
     private void Start()
@@ -98,10 +143,48 @@ public class EnemyAIController : MonoBehaviour
         if (tick > tickRate)
         {
             tick = 0;
-            BuildListofJobs();
+            JobUpkeep();
             WorkerUpkeep();
             BuildingsUpkeep();
             ArmyUpkeep();
+        }
+    }
+
+    private void JobUpkeep()
+    {
+        BuildListofJobs();
+        CheckJobs();
+    }
+
+    private void CheckJobs()
+    {
+        if (jobs.Count > 0)
+        {
+            foreach (WorkerJob job in jobs.ToArray())
+            {
+                if (job.needsWorker)
+                {
+                    jobs.Remove(job);
+                    unfilledJobs.Add(job);
+                }
+
+                else if (job.worker != null)
+                {
+                    ResourceGatherer resourceGatherer = job.worker.GetComponent<ResourceGatherer>();
+                    BuildingConstructor buildingConstructor = job.worker.GetComponent<BuildingConstructor>();
+                    if (resourceGatherer != null &&
+                        !resourceGatherer.hasResourceTarget &&
+                        !resourceGatherer.hasLastTargetResource &&
+                        buildingConstructor != null &&
+                        !buildingConstructor.HasBuildTarget())
+                    {
+                        //print("found lazy worker " + name);
+                        job.ClearWorker();
+                        jobs.Remove(job);
+                        unfilledJobs.Add(job);
+                    }
+                }
+            }
         }
     }
 
@@ -129,7 +212,7 @@ public class EnemyAIController : MonoBehaviour
                     CollectableResource farm = building.GetComponent<CollectableResource>();
                     if (farm != null)
                     {
-                        WorkerJob job = new WorkerJob(newResource);
+                        WorkerJob job = new WorkerJob(farm, true);
                         unfilledJobs.Add(job);
                     }
                 }
@@ -284,55 +367,6 @@ public class EnemyAIController : MonoBehaviour
         }
     }
 
-    private void BuildFarmLogic(Unit newFarmer)
-    {
-        bool needMoreFarms = true;
-
-        if (farms.Count > 0)
-        {
-            foreach (Building building in farms)
-            {
-                if (building.BuildState() == Building.EBuildState.Placing ||
-                    building.BuildState() == Building.EBuildState.PlacingBad)
-                {
-                    needMoreFarms = false;
-                    continue;
-                }
-
-                else if (building.BuildState() == Building.EBuildState.Building)
-                {
-                    needMoreFarms = false;
-                    newFarmer.GetComponent<BuildingConstructor>().SetBuildTarget(building);
-                }
-
-                else if (building.BuildState() == Building.EBuildState.Complete)
-                {
-                    CollectableResource farm = building.GetComponent<CollectableResource>();
-
-                    if (farm != null && !farm.HasCollector)
-                    {
-                        newFarmer.SetTarget(farm);
-                        workers.Remove(newFarmer);
-                        foodGatherers.Add(newFarmer);
-                    }
-                }
-            }
-            if (farms.Count >= foodGathererTarget) needMoreFarms = false;
-        }
-
-        if (needMoreFarms)
-        {
-            BuildAFarm();
-        }
-    }
-
-    private void BuildAFarm()
-    {
-        List<BuildingConstructor> constructors = new List<BuildingConstructor>();
-        Building newFarm = faction.SpawnBuilding(Building.EBuildingType.Farm, constructors);
-        farms.Add(newFarm);
-    }
-
     private Building BuildFarm()
     {
         List<BuildingConstructor> constructors = new List<BuildingConstructor>();
@@ -346,66 +380,35 @@ public class EnemyAIController : MonoBehaviour
         BuildWorker();
         AllocateWorkersToRoles();
         FillJobs();
-
-        /*if (assignWorkersRoles == null)
-        {
-            assignWorkersRoles = AssignWorkersRoles();
-            StartCoroutine(assignWorkersRoles);
-        }*/
-
-
-        /*if (setFinishedGatherersBackToWorker == null)
-        {
-            setFinishedGatherersBackToWorker = SetFinishedGatherersBackToWorker();
-            StartCoroutine(setFinishedGatherersBackToWorker);
-        }*/
     }
 
     private void FillJobs()
     {
         if (unfilledJobs.Count > 0)
         {
-            List<Unit> unemployedFoodGatherers = UnemployedWorkers(FOOD);
-            List<Unit> unemployedWoodGatherers = UnemployedWorkers(WOOD);
-            List<Unit> unemployedGoldGatherers = UnemployedWorkers(GOLD);
-
             foreach (WorkerJob job in unfilledJobs.ToArray())
             {
-                if (!job.hasWorker)
+                if (job.needsWorker)
                 {
-                    if (job.type == FOOD && unemployedFoodGatherers.Count > 0)
+                    Unit worker = UnemployedWorker(job.type);
+                    if (worker != null)
                     {
-                        Unit worker = unemployedFoodGatherers.ToArray()[0];
                         job.AssignWorker(worker);
-                        unemployedFoodGatherers.Remove(worker);
-                        unfilledJobs.Remove(job);
-                        jobs.Add(job);
-                    }
-                    else if (job.type == WOOD && unemployedWoodGatherers.Count > 0)
-                    {
-                        Unit worker = unemployedWoodGatherers.ToArray()[0];
-                        job.AssignWorker(worker);
-                        unemployedWoodGatherers.Remove(worker);
-                        unfilledJobs.Remove(job);
-                        jobs.Add(job);
-                    }
-                    else if (job.type == WOOD && unemployedGoldGatherers.Count > 0)
-                    {
-                        Unit worker = unemployedGoldGatherers.ToArray()[0];
-                        job.AssignWorker(worker);
-                        unemployedGoldGatherers.Remove(worker);
-                        unfilledJobs.Remove(job);
-                        jobs.Add(job);
+
+                        if (job.worker != null)
+                        {
+                            unfilledJobs.Remove(job);
+                            jobs.Add(job);
+                        }    
                     }
                 }
             }
         }
     }
 
-    private List<Unit> UnemployedWorkers(CollectableResource.EResourceType type)
+    private Unit UnemployedWorker(CollectableResource.EResourceType type)
     {
         List<Unit> allWorkersOfType = new List<Unit>();
-        List<Unit> unemployedWorkers = new List<Unit>();
 
         switch (type)
         {
@@ -424,20 +427,21 @@ public class EnemyAIController : MonoBehaviour
 
         if (allWorkersOfType.Count > 0)
         {
-            foreach(Unit unit in allWorkersOfType)
+            foreach (Unit unit in allWorkersOfType)
             {
                 ResourceGatherer gatherer = unit.GetComponent<ResourceGatherer>();
-                if (gatherer != null)
+                BuildingConstructor constructor = unit.GetComponent<BuildingConstructor>();
+                if (gatherer != null && constructor != null)
                 {
-                    if (!gatherer.hasResourceTarget && !gatherer.hasResourceTarget && !gatherer.HasDropOffTarget())
+                    if (!gatherer.hasResourceTarget && !gatherer.hasResourceTarget && !gatherer.HasDropOffTarget() && !constructor.HasBuildTarget())
                     {
-                        unemployedWorkers.Add(unit);
+                        return unit;
                     }
                 }
             }
         }
 
-        return unemployedWorkers;
+        return null;
     }
 
     private void AllocateWorkersToRoles()
@@ -468,109 +472,6 @@ public class EnemyAIController : MonoBehaviour
                 }
             }
         }
-    }
-
-    private IEnumerator AssignWorkersRoles()
-    {
-        if (workers.Count > 0)
-        {
-            foreach(Unit worker in workers.ToArray())
-            {
-                if (worker.GetComponent<BuildingConstructor>().HasBuildTarget()) continue;
-
-                if (foodGatherers.Count < foodGathererTarget)
-                {
-                    if (HaveResourceInSight(FOOD))
-                    {
-                        AssignWorkerJob(worker, ResourceInSight(FOOD));
-                    }
-                    else
-                    {
-                        BuildFarmLogic(worker);
-                    }
-                }
-
-                else if (woodGatherers.Count < woodGathererTarget)
-                {
-                    if (HaveResourceInSight(WOOD)) AssignWorkerJob(worker, ResourceInSight(WOOD));
-                }
-
-                else if (goldGatherers.Count < goldGathererTarget)
-                {
-                    if (HaveResourceInSight(GOLD)) AssignWorkerJob(worker, ResourceInSight(GOLD));
-                }
-
-                else if (buildingConstructor == null)
-                {
-                    workers.Remove(worker);
-                    buildingConstructor = worker.GetComponent<BuildingConstructor>();
-                }
-
-                yield return null;
-
-            }
-        }
-
-        assignWorkersRoles = null;
-    }
-
-    private IEnumerator SetFinishedGatherersBackToWorker()
-    {
-        if (foodGatherers.Count > 0)
-        {
-            foreach (Unit unit in foodGatherers.ToArray())
-            {
-                if (!unit.GetComponent<ResourceGatherer>().hasResourceTarget && !unit.GetComponent<ResourceGatherer>().hasLastTargetResource && !unit.GetComponent<ResourceGatherer>().HasDropOffTarget())
-                {
-                    unit.ClearPreviousActions();
-                    foodGatherers.Remove(unit);
-                    if (!workers.Contains(unit)) workers.Add(unit);
-
-                    yield return null;
-                }
-
-                else if (!unit.IsWorking())
-                {
-                    unit.ClearPreviousActions();
-                    foodGatherers.Remove(unit);
-                    if (!workers.Contains(unit)) workers.Add(unit);
-                    unit.MoveTo(townCenter.transform.position);
-                    yield return null;
-                }
-            }
-        }
-
-        if (woodGatherers.Count > 0)
-        {
-            foreach (Unit unit in woodGatherers.ToArray())
-            {
-                if (!unit.GetComponent<ResourceGatherer>().hasResourceTarget && !unit.GetComponent<ResourceGatherer>().HasDropOffTarget())
-                {
-                    unit.ClearPreviousActions();
-                    woodGatherers.Remove(unit);
-                    if (!workers.Contains(unit)) workers.Add(unit);
-                }
-
-                yield return null;
-            }
-        }
-
-        if (goldGatherers.Count > 0)
-        {
-            foreach (Unit unit in goldGatherers.ToArray())
-            {
-                if (!unit.GetComponent<ResourceGatherer>().hasResourceTarget && !unit.GetComponent<ResourceGatherer>().HasDropOffTarget())
-                {
-                    unit.ClearPreviousActions();
-                    goldGatherers.Remove(unit);
-                    if (!workers.Contains(unit)) workers.Add(unit);
-                }
-            }
-
-            yield return null;
-        }
-
-        setFinishedGatherersBackToWorker = null;
     }
 
     private void BuildWorker()
@@ -655,30 +556,6 @@ public class EnemyAIController : MonoBehaviour
                 else if (building == barracks.GetComponent<Building>()) barracks = null;
                 else if (building == university.GetComponent<Building>()) university = null;
             }
-        }
-    }
-
-    private void AssignWorkerJob(Unit worker, CollectableResource newResource)
-    {
-        switch (newResource.ResourceType())
-        {
-            case FOOD:
-                workers.Remove(worker);
-                if(!foodGatherers.Contains(worker)) foodGatherers.Add(worker);
-                worker.SetTarget(newResource);
-                break;
-
-            case WOOD:
-                workers.Remove(worker);
-                if (!woodGatherers.Contains(worker)) woodGatherers.Add(worker);
-                worker.SetTarget(newResource);
-                break;
-
-            case GOLD:
-                workers.Remove(worker);
-                if (!goldGatherers.Contains(worker)) goldGatherers.Add(worker);
-                worker.SetTarget(newResource);
-                break;
         }
     }
 
@@ -787,9 +664,42 @@ public class EnemyAIController : MonoBehaviour
 
     public void ResourceConsumed(CollectableResource collectableResource)
     {
-        if (collectableResources.Contains(collectableResource))
+        Building farm = collectableResource.GetComponent<Building>();
+        if (!farm)
         {
-            collectableResources.Remove(collectableResource);
+            CompleteJob(collectableResource);
+
+            if (collectableResources.Contains(collectableResource))
+            {
+                collectableResources.Remove(collectableResource);
+            }
+        }
+    }
+
+    public void CompleteJob(CollectableResource collectableResource)
+    {
+        if (jobs.Count > 0)
+        {
+            foreach (WorkerJob job in jobs.ToArray())
+            {
+                if (job.resource == collectableResource)
+                {
+                    jobs.Remove(job);
+                    return;
+                }
+            }    
+        }
+
+        if (unfilledJobs.Count > 0)
+        {
+            foreach (WorkerJob unfilledJob in unfilledJobs.ToArray())
+            {
+                if (unfilledJob.resource == collectableResource)
+                {
+                    unfilledJobs.Remove(unfilledJob);
+                    return;
+                }
+            }
         }
     }
 
@@ -854,10 +764,10 @@ public class EnemyAIController : MonoBehaviour
         if (buildNextOutpost && faction.CanAfford(Building.EBuildingType.TownCenter))
         {
             buildNextOutpost = false;
-            print("Building next outpost");
+            
             Vector3 nextLocation = FindObjectOfType<GameController>().GetNearestOutpostLocation(townCenter.transform.position);
-
-            if (nextLocation != new Vector3())
+            print("Building next outpost at " + nextLocation);
+            if (nextLocation != Vector3.zero)
             {
                 Building newTownCenter = faction.SpawnBuilding(Building.EBuildingType.TownCenter, Constructors());
                 newTownCenter.transform.position = nextLocation;

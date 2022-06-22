@@ -9,7 +9,7 @@ public class BuildingConstructor : MonoBehaviour
     [SerializeField] private float buildRate = 100;
 
     private Unit unit;
-    private Building currentBuildTarget;
+    public Building currentBuildTarget;
     private bool buildingIsInRange = false;
     private GameObject tool;
 

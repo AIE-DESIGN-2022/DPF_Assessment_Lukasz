@@ -378,7 +378,7 @@ public class GameController : MonoBehaviour
 
     public Vector3 GetNearestOutpostLocation(Vector3 home)
     {
-        Vector3 nearestLocation = new Vector3();
+        Vector3 nearestLocation = Vector3.zero;
 
         if (outpostLocations.Count == 0)
         {
