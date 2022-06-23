@@ -37,6 +37,16 @@ public class Unit : Selectable
     private CollectableResource resourceTimedOut;
     private LayerMask terrainMask; // contains only the terrain layer
 
+    private Vector3 waypointDestination;
+    private Vector3 waypointFinalDestination;
+    private bool movingViaWaypoint = false;
+
+    private float tick = 0;
+    private float tickLength = 0.5f;
+    private float waypointingDistance = 30;
+
+    private Vector3 lastPosition;
+    private float velocity;
 
     public enum EUnitType
     {
@@ -77,6 +87,7 @@ public class Unit : Selectable
         if (leftHand == null) Debug.LogError(name + " missing left hand transform.");
         if (rightHand == null) Debug.LogError(name + " missing right hand transform.");
         terrainMask |= (1 << LayerMask.NameToLayer("Terrain"));
+        lastPosition = transform.position;
     }
 
     private new void Update()
@@ -87,6 +98,50 @@ public class Unit : Selectable
         PatrolAction();
         AttackMoveSelection();
         //TestIfBroken();
+
+        tick += Time.deltaTime;
+        if (tick > tickLength)
+        {
+            tick = 0;
+            CheckIfNextCheckPoint();
+            CheckIfUnitStoppedMoving();
+        }
+        
+
+    }
+
+    private void LateUpdate()
+    {
+        velocity = Vector3.Distance(lastPosition, transform.position) / Time.deltaTime;
+        if (velocity < 0) velocity = velocity * -1;
+        lastPosition = transform.position;
+
+        if (navMeshAgent.velocity.sqrMagnitude > Mathf.Epsilon)
+        {
+            transform.rotation = Quaternion.LookRotation(navMeshAgent.velocity.normalized);
+        }
+    }
+
+    private void CheckIfUnitStoppedMoving()
+    {
+        if(!isMoving && !isAtDestination)
+        {
+            //if (PlayerNumber() == 1) print(name + " reset destination on lazy walker.");
+            Move(destination);
+        }
+    }
+
+    private void CheckIfNextCheckPoint()
+    {
+        if (movingViaWaypoint)
+        {
+            if (Vector3.Distance(this.transform.position, waypointDestination) < 1)
+            {
+                //if (PlayerNumber() == 1) print(name + " arrived at waypoint. Distance to final =" + Vector3.Distance(this.transform.position, waypointFinalDestination));
+                movingViaWaypoint = false;
+                Move(waypointFinalDestination);
+            }
+        }
     }
 
     private void TestIfBroken()
@@ -114,8 +169,8 @@ public class Unit : Selectable
         }
         if (resourceGatherer != null && resourceTimedOut != null)
         {
-            Vector3 velocity = transform.InverseTransformDirection(navMeshAgent.velocity);
-            if (velocity.magnitude == 0)
+            //Vector3 velocity = transform.InverseTransformDirection(navMeshAgent.velocity);
+            if (velocity == 0)
             {
                 ClearPreviousActions();
                 SetTarget(resourceTimedOut);
@@ -215,22 +270,14 @@ public class Unit : Selectable
         }
     }
 
-    private void LateUpdate()
-    {
-        if (navMeshAgent.velocity.sqrMagnitude > Mathf.Epsilon)
-        {
-            transform.rotation = Quaternion.LookRotation(navMeshAgent.velocity.normalized);
-        }
-    }
-
     private void UpdateAnimation()
     {
         if (animator != null && navMeshAgent != null)
         {
-            Vector3 velocity = transform.InverseTransformDirection(navMeshAgent.velocity);
-            animator.SetFloat("speed", velocity.z);
+            //Vector3 velocity = transform.InverseTransformDirection(navMeshAgent.velocity);
+            animator.SetFloat("speed", velocity);
 
-            if (!hasStopped && DistanceToNavMeshTarget() < 1 && velocity.z < 0.5f)
+            if (!hasStopped && DistanceToNavMeshTarget() < 1 && velocity < 0.5f)
             {
                 hasStopped = true;
                 if (IsSelected()) HUD_StatusUpdate();
@@ -277,16 +324,29 @@ public class Unit : Selectable
     {
         NavMeshHit hit;
         if (!NavMesh.SamplePosition(newLocation, out hit, 3, NavMesh.AllAreas)) return;
+        destination = hit.position;
 
-        if (navMeshAgent != null)
+        if (Vector3.Distance(destination, this.transform.position) > waypointingDistance + 0.1f)
         {
-            
-            navMeshAgent.destination = GetClosestAvailablePosition(hit.position);
-
-            if (navMeshAgent.isStopped) navMeshAgent.isStopped = false;
+            movingViaWaypoint = true;
+            waypointFinalDestination = destination;
+            Vector3 direction = (newLocation - this.transform.position) / Vector3.Distance(destination, this.transform.position);
+            waypointDestination = this.transform.position + (direction * waypointingDistance);
+            //if (PlayerNumber() == 1) print(name + "set waypointDestination to " + waypointDestination);
+            Move(waypointDestination);
         }
+        else
+        {
+            if (navMeshAgent != null)
+            {
 
-        hasStopped = false;
+                navMeshAgent.destination = GetClosestAvailablePosition(destination);
+                //if (PlayerNumber() == 1) print(name + " moving to " + navMeshAgent.destination);
+                if (navMeshAgent.isStopped) navMeshAgent.isStopped = false;
+            }
+
+            hasStopped = false;
+        }
     }
 
     public void SetTarget(CollectableResource newCollectableResource)
@@ -561,9 +621,11 @@ public class Unit : Selectable
 
     public void AttackMove(Vector3 newLocation)
     {
+        if (attacker == null) return;
         attacker.IsAttackMove(true);
         MoveTo(newLocation);
         destination = newLocation;
+        //print(name + " attackMove to " + newLocation);
     }
 
     public void ContinueToDestination()
@@ -614,6 +676,32 @@ public class Unit : Selectable
         }
         while (!IsNear(newPosition));
         return newPosition;
+    }
+
+    public bool isMoving
+    {
+        get
+        {
+            //Vector3 velocity = transform.InverseTransformDirection(navMeshAgent.velocity);
+            return velocity > 0.1f;
+        }
+    }
+
+    public bool hasAttackTarget
+    {
+        get
+        {
+            if (attacker) return attacker.target != null;
+            else return false;
+        }
+    }
+
+    public bool isAtDestination
+    {
+        get
+        {
+            return (Vector3.Distance(this.transform.position, destination) < 1);
+        }
     }
 }
 // Writen by Lukasz Dziedziczak

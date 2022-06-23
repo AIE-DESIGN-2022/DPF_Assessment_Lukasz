@@ -166,12 +166,12 @@ NavMeshAgent:
   m_GameObject: {fileID: 8418730917576266226}
   m_Enabled: 1
   m_AgentTypeID: 0
-  m_Radius: 0.18
+  m_Radius: 0.12
   m_Speed: 4
   m_Acceleration: 8
   avoidancePriority: 50
   m_AngularSpeed: 120
-  m_StoppingDistance: 0
+  m_StoppingDistance: 0.3
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
   m_AutoRepath: 1
@@ -210,6 +210,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1e84dc7e3e8b4af47b530b781408c2e7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  targetResource: {fileID: 0}
+  lastTargetResource: {fileID: 0}
   maxCarry: 10
   woodCuttingTool: {fileID: 11400000, guid: 5c81ba8a793b19a41b9e59c2d5a3dcc0, type: 2}
   woodGatherRate: 1
@@ -261,6 +263,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   constructionTool: {fileID: 11400000, guid: e0536122beb3bf04b9c2cacf177e4be5, type: 2}
   buildRate: 25
+  currentBuildTarget: {fileID: 0}
 --- !u!1001 &1187043573979131050
 PrefabInstance:
   m_ObjectHideFlags: 0

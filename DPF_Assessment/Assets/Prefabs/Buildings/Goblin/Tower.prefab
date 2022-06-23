@@ -257,8 +257,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   unitWeapon: {fileID: 11400000, guid: 4e80b7c3808eaf24cb6ef4f83b65023c, type: 2}
   attackDamage: 10
-  attackRate: 1
-  attackRange: 10
+  attackRate: 2
+  attackRange: 15
+  target: {fileID: 0}
   towerStance: 1
 --- !u!1001 &4973327324861683208
 PrefabInstance:

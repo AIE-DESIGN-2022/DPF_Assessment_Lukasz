@@ -31,7 +31,7 @@ public class EnemyAIController : MonoBehaviour
     public List<Unit.EUnitType> unbuiltWave = new List<Unit.EUnitType>();
     public List<Unit> currentWave = new List<Unit>();
     private int waveNumber = 0;
-    private float waveTimer;
+    public float waveTimer;
     private bool buildNextOutpost = false;
     public List<WorkerJob> jobs = new List<WorkerJob>();
     public List<WorkerJob> unfilledJobs = new List<WorkerJob>();
@@ -156,8 +156,14 @@ public class EnemyAIController : MonoBehaviour
     {
         if (waveTimer <= 0 && currentWave.Count == unitsInWave)
         {
-            SendAttackWave();
+            attackCommandIssued = true;
+            print("Issueing attack orders");
             waveTimer = attackWaveCountdown;
+        }
+
+        if (attackCommandIssued)
+        {
+            SendAttackWave();
         }
     }
 
@@ -165,9 +171,16 @@ public class EnemyAIController : MonoBehaviour
     {
         Vector3 enemeyPosition = FindObjectOfType<GameController>().GetPlayerFaction().buildings[0].transform.position;
 
+        //Vector3 enemeyPosition = GetNearestOutpost().position;
+
         foreach (Unit unit in currentWave)
         {
-            unit.AttackMove(enemeyPosition);
+            if (!unit.hasAttackTarget && !unit.isMoving)
+            {
+                unit.AttackMove(enemeyPosition);
+            }
+
+            //unit.AttackMove(enemeyPosition);
         }
     }
 
@@ -303,14 +316,17 @@ public class EnemyAIController : MonoBehaviour
 
     private void ArmyUpkeep()
     {
-        if (barracks != null && 
-            barracks.GetComponent<Building>().ConstructionComplete() && 
-            unbuiltWave.Count == 0 && 
+        if (unbuiltWave.Count == 0 &&
             currentWave.Count == 0)
         {
             GenerateNextWave();
         }
 
+        BuildWave();
+    }
+
+    private void BuildWave()
+    {
         if (unbuiltWave.Count > 0)
         {
             if (faction.CanAfford(unbuiltWave[0]))
@@ -331,12 +347,12 @@ public class EnemyAIController : MonoBehaviour
 
                     else if (faction.CanAfford(newType))
                     {
-                        if (newType == Unit.EUnitType.Melee || newType == Unit.EUnitType.Ranged) barracks.AddToQue(newType);
-                        if (newType == Unit.EUnitType.Magic || newType == Unit.EUnitType.Healer) university.AddToQue(newType);
+                        if ((newType == Unit.EUnitType.Melee || newType == Unit.EUnitType.Ranged) && haveBarracks) barracks.AddToQue(newType);
+                        if ((newType == Unit.EUnitType.Magic || newType == Unit.EUnitType.Healer) && haveUniversity) university.AddToQue(newType);
                         unbuiltWave.Remove(newType);
                     }
                 }
-            }    
+            }
         }
     }
 
@@ -621,7 +637,7 @@ public class EnemyAIController : MonoBehaviour
             workerCount += foodGatherers.Count;
             workerCount += woodGatherers.Count;
             workerCount += goldGatherers.Count;
-            workerCount += townCenter.QueSize();
+            if (townCenter != null) workerCount += townCenter.QueSize();
             if (buildingConstructor != null) workerCount++;
 
             return workerCount;
@@ -797,26 +813,27 @@ public class EnemyAIController : MonoBehaviour
 
     private void GenerateNextWave()
     {
-        if (barracks == null && university == null) return;
+        if (!haveBarracks && !haveUniversity) return;
 
         waveNumber++;
+        attackCommandIssued = false;
 
         for (int index = 0 ; index < unitsInWave; index++)
         {
             int maxProbability = 0;
             int minProbability = 0;
 
-            if (barracks != null && university == null)
+            if (haveBarracks && !haveUniversity)
             {
                 minProbability = 1;
                 minProbability = 60;
             }
-            else if (barracks == null && university != null)
+            else if (!haveBarracks && haveUniversity)
             {
                 minProbability = 61;
                 minProbability = 100;
             }
-            else if (barracks != null && university != null)
+            else if (haveBarracks && haveUniversity)
             {
                 minProbability = 1;
                 minProbability = 100;
@@ -893,6 +910,24 @@ public class EnemyAIController : MonoBehaviour
         }
 
         return nearestOutpost;
+    }
+
+    private bool haveBarracks
+    {
+        get
+        {
+            if (barracks != null && barracks.GetComponent<Building>().ConstructionComplete()) return true;
+            else return false;
+        }
+    }
+
+    private bool haveUniversity
+    {
+        get
+        {
+            if (university != null && university.GetComponent<Building>().ConstructionComplete()) return true;
+            else return false;
+        }
     }
 
 }

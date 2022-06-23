@@ -61,7 +61,7 @@ public class Projectile : MonoBehaviour
         if (!flyingInAir) return;
 
         Selectable selectable = other.GetComponent<Selectable>();
-        if (selectable != null && selectable != owner && selectable.PlayerNumber() != owner.PlayerNumber() && selectable.IsAlive())
+        if (selectable != null && selectable.IsAlive() && selectable != owner && selectable.PlayerNumber() != owner.PlayerNumber())
         {
             Hit(selectable);
         }

@@ -110,14 +110,14 @@ public class Attacker : MonoBehaviour
             }
         }
 
-        if (building != null && building.IsAlive())
+        if (building != null && building.ConstructionComplete() && building.IsAlive())
         {
             if (towerStance == Unit.EUnitStance.Defensive)
             {
                 AttackEnemiesInRange();
             }
 
-            if (target != null && !TargetIsInSight())
+            if (target != null && !TargetIsInRange())
             {
                 ClearTarget();
             }
@@ -164,7 +164,7 @@ public class Attacker : MonoBehaviour
             }
              if (building != null)
             {
-                towerSpawn.LookAt(target.transform);
+                if (towerSpawn) towerSpawn.LookAt(target.transform);
                 AttackEffect();
             }
         }
