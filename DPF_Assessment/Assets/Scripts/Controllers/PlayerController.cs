@@ -224,6 +224,7 @@ public class PlayerController : MonoBehaviour
     {
         foreach (Selectable selectable in currentSelection)
         {
+            if (!selectable.IsAlive()) continue;
             Unit unit = selectable.GetComponent<Unit>();
             if (unit != null && unit.UnitType() == Unit.EUnitType.Worker) return true;
         }

@@ -89,7 +89,8 @@ public class Attacker : MonoBehaviour
                 }
                 else
                 {
-                    if (unit != null) unit.MoveTo(target);
+                    unit.Animator().SetTrigger("stop");
+                    unit.MoveTo(target);
                 }
             }
             else if (target != null && !target.IsAlive()) ClearTarget();
