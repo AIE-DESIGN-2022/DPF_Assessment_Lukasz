@@ -30,10 +30,6 @@ public class GameController : MonoBehaviour
     [SerializeField] int startingWood = 0;
     [SerializeField] int startingGold = 0;
 
-
-    private List<Vector3> outpostLocations = new List<Vector3>();
-    public int treeCount = 0;
-
     private void Awake()
     {
         hud_Manager = GetComponentInChildren<HUD_Manager>();
@@ -83,20 +79,8 @@ public class GameController : MonoBehaviour
         else SetupGame();
         BuildListOfNonPlayerSelectable();
         BuildListOfCollectableResources();
-        BuildListOfOutpostLocations();
         CollectableResource.onResourceDepleted += ResourceConsumed;
         if (pauseMenu != null) pauseMenu.Show(false);
-    }
-
-    private void BuildListOfOutpostLocations()
-    {
-        OutpostLocation[] locations = FindObjectsOfType<OutpostLocation>();
-
-        foreach (OutpostLocation location in locations)
-        {
-            outpostLocations.Add(location.transform.position);
-            Destroy(location);
-        }    
     }
 
     private void BuildListOfNonPlayerSelectable()
@@ -327,11 +311,6 @@ public class GameController : MonoBehaviour
         return mapTransform;
     }
 
-    public void CountTree()
-    {
-        treeCount++;
-    }
-
     public List<Faction> GetNonPlayerFactions()
     {
         List<Faction> list = new List<Faction>();
@@ -374,29 +353,6 @@ public class GameController : MonoBehaviour
         {
             collectableResources.Remove(collectableResource);
         }
-    }
-
-    public Vector3 GetNearestOutpostLocation(Vector3 home)
-    {
-        Vector3 nearestLocation = Vector3.zero;
-
-        if (outpostLocations.Count == 0)
-        {
-            float nearestDistance = Mathf.Infinity;
-
-            foreach (Vector3 outpostLocation in outpostLocations.ToArray())
-            {
-                float distance = Vector3.Distance(home, outpostLocation);
-                if (distance < nearestDistance)
-                {
-                    nearestLocation = outpostLocation;
-                    nearestDistance = distance;
-                }
-            }
-
-            outpostLocations.Remove(nearestLocation);
-        }
-        return nearestLocation;
     }
 }
 // Writen by Lukasz Dziedziczak

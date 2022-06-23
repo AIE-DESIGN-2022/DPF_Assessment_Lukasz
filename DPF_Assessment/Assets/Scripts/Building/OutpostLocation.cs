@@ -4,15 +4,14 @@ using UnityEngine;
 
 public class OutpostLocation : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    private bool occupied = false;
 
-    // Update is called once per frame
-    void Update()
+    public Vector3 position { get { return transform.position; } }
+
+    public bool isOccupied { get { return occupied; } }
+
+    public void Occupy() 
     {
-        
+        occupied = true; 
     }
 }

@@ -48,8 +48,6 @@ public class CollectableResource : Selectable
 
         if (amount < 1) Debug.LogError(name + " has no resource amount.");
 
-        if (resourceType == EResourceType.Wood) gameController.treeCount++;
-
         MoveToGroundLevel();
     }
 

@@ -17,7 +17,7 @@ public class EnemyAIController : MonoBehaviour
     public int foodGathererTarget = 3;
     public int woodGathererTarget = 3;
     public int goldGathererTarget = 1;
-    private List<CollectableResource> collectableResources = new List<CollectableResource>();
+    public List<CollectableResource> collectableResources = new List<CollectableResource>();
     private BuildingConstructor buildingConstructor;
     private UnitProducer barracks;
     private UnitProducer university;
@@ -28,16 +28,16 @@ public class EnemyAIController : MonoBehaviour
     private Vector3 offScreenLocation = new Vector3(-100, -100, -100);
     private float tick = 0;
     private float tickRate = 0.5f;
-    private IEnumerator assignWorkersRoles;
-    private IEnumerator setFinishedGatherersBackToWorker;
     public List<Unit.EUnitType> unbuiltWave = new List<Unit.EUnitType>();
     public List<Unit> currentWave = new List<Unit>();
     private int waveNumber = 0;
-    private float waveTimer = Mathf.Infinity;
-    private float waveRate = 120;
+    private float waveTimer;
     private bool buildNextOutpost = false;
     public List<WorkerJob> jobs = new List<WorkerJob>();
     public List<WorkerJob> unfilledJobs = new List<WorkerJob>();
+    [SerializeField] float firstAttackCountdown = 60 * 5;
+    [SerializeField] float attackWaveCountdown = 60 * 2;
+    private bool attackCommandIssued = false;
 
     const CollectableResource.EResourceType FOOD = CollectableResource.EResourceType.Food;
     const CollectableResource.EResourceType WOOD = CollectableResource.EResourceType.Wood;
@@ -127,6 +127,7 @@ public class EnemyAIController : MonoBehaviour
         collectableResources = townCenter.Building.GetResourcesInSight();
         terrainMask |= (1 << LayerMask.NameToLayer("Terrain"));
         selectableMask |= (1 << LayerMask.NameToLayer("Selectable"));
+        waveTimer = firstAttackCountdown;
     }
 
     private void Update()
@@ -139,7 +140,7 @@ public class EnemyAIController : MonoBehaviour
     private void Tick()
     {
         tick += Time.deltaTime;
-        waveTimer += Time.deltaTime;
+        waveTimer -= Time.deltaTime;
         if (tick > tickRate)
         {
             tick = 0;
@@ -147,6 +148,26 @@ public class EnemyAIController : MonoBehaviour
             WorkerUpkeep();
             BuildingsUpkeep();
             ArmyUpkeep();
+            AttackWaveLogic();
+        }
+    }
+
+    private void AttackWaveLogic()
+    {
+        if (waveTimer <= 0 && currentWave.Count == unitsInWave)
+        {
+            SendAttackWave();
+            waveTimer = attackWaveCountdown;
+        }
+    }
+
+    private void SendAttackWave()
+    {
+        Vector3 enemeyPosition = FindObjectOfType<GameController>().GetPlayerFaction().buildings[0].transform.position;
+
+        foreach (Unit unit in currentWave)
+        {
+            unit.AttackMove(enemeyPosition);
         }
     }
 
@@ -183,6 +204,12 @@ public class EnemyAIController : MonoBehaviour
                         jobs.Remove(job);
                         unfilledJobs.Add(job);
                     }
+                }
+
+                if (job.resource == null)
+                {
+                    if (job.worker != null) job.ClearWorker();
+                    jobs.Remove(job);
                 }
             }
         }
@@ -236,7 +263,7 @@ public class EnemyAIController : MonoBehaviour
 
         if (goldJobs < goldGathererTarget)
         {
-            int neededJobs = woodGathererTarget - woodJobs;
+            int neededJobs = goldGathererTarget - goldJobs;
 
             for (int i = 0; i < neededJobs; i++)
             {
@@ -276,13 +303,11 @@ public class EnemyAIController : MonoBehaviour
 
     private void ArmyUpkeep()
     {
-        if (waveTimer > waveRate && 
-            barracks != null && 
+        if (barracks != null && 
             barracks.GetComponent<Building>().ConstructionComplete() && 
             unbuiltWave.Count == 0 && 
             currentWave.Count == 0)
         {
-            waveTimer = 0;
             GenerateNextWave();
         }
 
@@ -292,9 +317,22 @@ public class EnemyAIController : MonoBehaviour
             {
                 foreach (Unit.EUnitType newType in unbuiltWave.ToArray())
                 {
-                    if (faction.CanAfford(newType))
+                    if ((newType == Unit.EUnitType.Melee || newType == Unit.EUnitType.Ranged) && barracks == null)
                     {
-                        barracks.AddToQue(newType);
+                        unbuiltWave.Remove(newType);
+                        continue;
+                    }
+
+                    else if ((newType == Unit.EUnitType.Magic || newType == Unit.EUnitType.Healer) && university == null)
+                    {
+                        unbuiltWave.Remove(newType);
+                        continue;
+                    }
+
+                    else if (faction.CanAfford(newType))
+                    {
+                        if (newType == Unit.EUnitType.Melee || newType == Unit.EUnitType.Ranged) barracks.AddToQue(newType);
+                        if (newType == Unit.EUnitType.Magic || newType == Unit.EUnitType.Healer) university.AddToQue(newType);
                         unbuiltWave.Remove(newType);
                     }
                 }
@@ -318,7 +356,7 @@ public class EnemyAIController : MonoBehaviour
         {
             foreach (Building building in unfinishedBuildings)
             {
-                Vector3 newLocation = RandomPointOnTerrain();
+                Vector3 newLocation = RandomPointInBuildableArea();
 
                 if (IsNear(newLocation, townCenter.GetComponent<Building>()))
                 {
@@ -471,12 +509,25 @@ public class EnemyAIController : MonoBehaviour
                     workers.Remove(worker);
                 }
             }
+
+            if (totalWorkers > totalWorkerTarget)
+            {
+                foreach (Unit worker in workers.ToArray())
+                {
+                    Health unitHeath = worker.GetComponent<Health>();
+                    if (unitHeath != null && unitHeath.IsAlive())
+                    {
+                        unitHeath.Kill();
+                        workers.Remove(worker);
+                    }
+                }
+            }
         }
     }
 
     private void BuildWorker()
     {
-        if (TotalWorkers() < totalWorkerTarget && faction.CanAfford(Unit.EUnitType.Worker))
+        if (totalWorkers < totalWorkerTarget && faction.CanAfford(Unit.EUnitType.Worker))
         {
             townCenter.AddToQue(Unit.EUnitType.Worker);
         }
@@ -523,6 +574,7 @@ public class EnemyAIController : MonoBehaviour
             else
             {
                 currentWave.Add(newUnit);
+                newUnit.ChangeUnitStance(Unit.EUnitStance.Offensive);
             }
 
         }
@@ -559,29 +611,21 @@ public class EnemyAIController : MonoBehaviour
         }
     }
 
-    private int TotalWorkers()
+    private int totalWorkers
     {
-        int workerCount = 0;
+        get
+        {
+            int workerCount = 0;
 
-        workerCount += workers.Count;
-        workerCount += foodGatherers.Count;
-        workerCount += woodGatherers.Count;
-        workerCount += goldGatherers.Count;
-        workerCount += townCenter.QueSize();
-        if (buildingConstructor != null) workerCount++;
+            workerCount += workers.Count;
+            workerCount += foodGatherers.Count;
+            workerCount += woodGatherers.Count;
+            workerCount += goldGatherers.Count;
+            workerCount += townCenter.QueSize();
+            if (buildingConstructor != null) workerCount++;
 
-        return workerCount;
-    }
-
-    private int TotalGatherers()
-    {
-        int workerCount = 0;
-
-        workerCount += foodGatherers.Count;
-        workerCount += woodGatherers.Count;
-        workerCount += goldGatherers.Count;
-
-        return workerCount;
+            return workerCount;
+        }
     }
 
     private CollectableResource ResourceInSight(CollectableResource.EResourceType resourceType)
@@ -637,11 +681,18 @@ public class EnemyAIController : MonoBehaviour
         return constructors;
     }
 
-    private Vector3 RandomPointOnTerrain()
+    private Vector3 RandomPointInBuildableArea()
     {
+        Building townCenterBuilding = townCenter.GetComponent<Building>();
+
+        float minX = townCenterBuilding.transform.position.x - townCenterBuilding.SightDistance();
+        float maxX = townCenterBuilding.transform.position.x + townCenterBuilding.SightDistance();
+        float minZ = townCenterBuilding.transform.position.z - townCenterBuilding.SightDistance();
+        float maxZ = townCenterBuilding.transform.position.z + townCenterBuilding.SightDistance();
+
         float mapsize = FindObjectOfType<GameController>().CameraController().MapSize();
-        float randomX = UnityEngine.Random.Range(0, mapsize);
-        float randomZ = UnityEngine.Random.Range(0, mapsize);
+        float randomX = UnityEngine.Random.Range(minX, maxX);
+        float randomZ = UnityEngine.Random.Range(minZ, maxZ);
         float y = TerrainLevel(randomX, randomZ);
 
         return new Vector3(randomX, y, randomZ);
@@ -736,23 +787,58 @@ public class EnemyAIController : MonoBehaviour
         return null;
     }
 
+    private int unitsInWave
+    {
+        get
+        {
+            return 2 + (waveNumber - 1);
+        }
+    }
+
     private void GenerateNextWave()
     {
+        if (barracks == null && university == null) return;
+
         waveNumber++;
 
-        int numberOfUnitsToGenerate = 3 + (waveNumber - 1);
-
-        for (int index = 0 ; index < numberOfUnitsToGenerate; index++)
+        for (int index = 0 ; index < unitsInWave; index++)
         {
-            int randomNumber = UnityEngine.Random.Range(0, 100);
+            int maxProbability = 0;
+            int minProbability = 0;
 
-            if (randomNumber > 50)
+            if (barracks != null && university == null)
+            {
+                minProbability = 1;
+                minProbability = 60;
+            }
+            else if (barracks == null && university != null)
+            {
+                minProbability = 61;
+                minProbability = 100;
+            }
+            else if (barracks != null && university != null)
+            {
+                minProbability = 1;
+                minProbability = 100;
+            }
+
+            int randomNumber = UnityEngine.Random.Range(minProbability, maxProbability);
+
+            if (randomNumber <= 30)
+            {
+                unbuiltWave.Add(Unit.EUnitType.Melee);
+            }
+            else if (randomNumber <= 60)
             {
                 unbuiltWave.Add(Unit.EUnitType.Ranged);
             }
-            else
+            else if (randomNumber <= 90)
             {
-                unbuiltWave.Add(Unit.EUnitType.Melee);
+                unbuiltWave.Add(Unit.EUnitType.Magic);
+            }
+            else if (randomNumber > 90)
+            {
+                unbuiltWave.Add(Unit.EUnitType.Healer);
             }
         }
 
@@ -764,19 +850,19 @@ public class EnemyAIController : MonoBehaviour
         if (buildNextOutpost && faction.CanAfford(Building.EBuildingType.TownCenter))
         {
             buildNextOutpost = false;
-            
-            Vector3 nextLocation = FindObjectOfType<GameController>().GetNearestOutpostLocation(townCenter.transform.position);
-            print("Building next outpost at " + nextLocation);
-            if (nextLocation != Vector3.zero)
+
+            OutpostLocation outpostLocation = GetNearestOutpost();
+
+            if (outpostLocation != null)
             {
                 Building newTownCenter = faction.SpawnBuilding(Building.EBuildingType.TownCenter, Constructors());
-                newTownCenter.transform.position = nextLocation;
+                newTownCenter.transform.position = new Vector3(outpostLocation.position.x, TerrainLevel(outpostLocation.position.x, outpostLocation.position.z), outpostLocation.position.z);
+                outpostLocation.Occupy();
                 newTownCenter.SetBuildState(Building.EBuildState.Building);
+                newTownCenter.GetComponent<Health>().NewBuilding();
 
                 if (townCenter2 == null) townCenter2 = newTownCenter.GetComponent<UnitProducer>();
                 else if (townCenter3 == null) townCenter3 = newTownCenter.GetComponent<UnitProducer>();
-
-                print("have " + newTownCenter);
             }
         }
 
@@ -784,5 +870,29 @@ public class EnemyAIController : MonoBehaviour
     }
 
     private int totalWorkerTarget { get {return foodGathererTarget + woodGathererTarget + goldGathererTarget + 1;} }
+
+    private OutpostLocation GetNearestOutpost()
+    {
+        OutpostLocation[] locations = FindObjectsOfType<OutpostLocation>();
+
+        OutpostLocation nearestOutpost = null;
+        float nearestDistance = Mathf.Infinity;
+
+        foreach (OutpostLocation location in locations)
+        {
+            if (!location.isOccupied)
+            {
+                float distance = Vector3.Distance(location.position, townCenter.transform.position);
+
+                if (distance < nearestDistance)
+                {
+                    nearestDistance = distance;
+                    nearestOutpost = location;
+                }    
+            }
+        }
+
+        return nearestOutpost;
+    }
 
 }
